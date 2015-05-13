@@ -43,24 +43,43 @@ levels(t$question) =
     "space plants > 15' apart", "prune low branches", "reduce tree density")
 t$own = c("rent", "own")[d$a5]
 
+likert5 =  c("Not all", "Slightly", "Neutral", "Quite", "Extremely")
+
 t[complete.cases(t), ] %>%
-ggplot(aes(x = effectiveness, y = behavior, color = own)) +
-  geom_point(position = "jitter", alpha = 1) + 
-  facet_wrap(~question, ncol = 2) + 
-  geom_smooth(method = "lm") +
-  scale_y_continuous(breaks = 0:1, labels = c("no", "yes")) +
-  scale_x_continuous(breaks = 1:5, labels = 
-                       c("Not all", "Slightly", "Neutral",
-                         "Quite", "Extremely")
-  ) +
-  theme_bw() +
-  theme(axis.text.x=element_text(angle = -45, hjust = 0))
+  ggplot(aes(x = effectiveness, y = behavior, color = own)) +
+    geom_point(position = "jitter", alpha = 1) + 
+    facet_wrap(~question, ncol = 2) + 
+    geom_smooth(method = "lm") +
+    scale_y_continuous(breaks = 0:1, labels = c("no", "yes")) +
+    scale_x_continuous(breaks = 1:5, labels = likert5) +
+    theme_bw() +
+    theme(axis.text.x=element_text(angle = -45, hjust = 0))
 # Some ds behaviors renters can't implement. We may want to remove them
 # from some analyses. They only make up 5% of the dataset:
 table(t$own)
 
-# Note some e1-Qs  (ds beliefs) are reverse coded
-d$f5b  # Personal home risk
+ggplot(d, aes(x = f5b, y = sumDSBehavior)) +
+  geom_point(position = "jitter") +
+  geom_smooth(method = "lm") +
+  scale_x_continuous(breaks = 1:5, labels = likert5) +
+  xlab("To what extent do you consider your own home to be at risk from wildland fire?") +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle = -45, hjust = 0))
+# Greater perceived risk is not at all or slightly negatively correlated
+# with defensible space behavior.
+# Maybe because DS-adopters feel like they've ameliorated the risk.
+# Check that by replacing their personal risk with community risk...
+
+ggplot(d, aes(x = f5a, y = sumDSBehavior)) +
+  geom_point(position = "jitter") +
+  geom_smooth(method = "lm") +
+  scale_x_continuous(breaks = 1:5, labels = likert5) +
+  xlab("To what extent do you consider the community in which you live
+       to be at risk from wildland fire?") +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle = -45, hjust = 0))
+# Same pattern! Maybe they feel their whole community is protected. Or maybe 
+# people are foolish.
 
 # USFS is like me
 fsAlike = names(d)[grepl("^g1", names(d))]
@@ -80,3 +99,6 @@ d$town[!(d$town %in% mainTowns)] = "other"
 ggplot(d, aes(x = town, y = sumDSBehavior)) +
   geom_violin()
 # Things are different in Alpine!
+
+
+# Note some e1-Qs  (ds beliefs) are reverse coded
