@@ -27,6 +27,18 @@ survey1[, which(names(survey1) %in% notapplic)] <-
     MARGIN = c(1, 2), function(x) 
       ifelse(x == '6', NA, x))
 
+# bring town names in parallel.
+########### Open Refine is a better way to do this!
+# make them all lower-case
+survey1$b3atwnct = tolower(survey1$b3atwnct)
+# San diego
+survey1$b3atwnct[(grepl("dieg", survey1$b3atwnct) &  # Town has "dieg"
+                    !grepl("ranch", survey1$b3atwnct)) |  # but not "ranch"
+                   grepl("^sd", survey1$b3atwnct)] = # or is "sd"
+  "san diego" 
+
+  
+sort(table(survey1$b3atwnct))
 # Write cleaned data to csv file to be read for analyses:
 write.csv(survey1, 'data/cleanData.csv')
 
