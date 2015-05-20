@@ -10,7 +10,7 @@ melt(d[dsBehavior]) %>%
   ggplot(aes(x = variable, y = value)) + 
   geom_violin()
 # Most people their gutters; other DS behaviors are rarer
-d$sumDSBehavior = apply(d[dsBehaviorPresent], 1, 
+d$sumDSBehavior = apply(d[dsBehavior], 1, 
                            function(x) sum(x, na.rm = TRUE))
 ggplot(d, aes(x = sumDSBehavior)) + geom_histogram()
 
@@ -58,13 +58,17 @@ t[complete.cases(t), ] %>%
 # from some analyses. They only make up 5% of the dataset:
 table(t$own)
 
-ggplot(d, aes(x = f5b, y = sumDSBehavior)) +
+# d[d$a5 == 2, ] %>% # Run this line instead of the next to plot only homeowners
+d %>%
+ggplot(aes(x = f5b, y = sumDSBehavior)) +
   geom_point(position = "jitter") +
   geom_smooth(method = "lm") +
   scale_x_continuous(breaks = 1:5, labels = likert5) +
-  xlab("To what extent do you consider your own home to be at risk from wildland fire?") +
+  xlab("To what extent do you consider your own home\nto be at risk from wildland fire?") +
+  ylab("Defensible space implementation") +
   theme_bw() +
   theme(axis.text.x=element_text(angle = -45, hjust = 0))
+
 # Greater perceived risk is not at all or slightly negatively correlated
 # with defensible space behavior.
 # Maybe because DS-adopters feel like they've ameliorated the risk.
