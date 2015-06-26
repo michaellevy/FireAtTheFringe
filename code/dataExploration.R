@@ -106,3 +106,51 @@ ggplot(d, aes(x = town, y = sumDSBehavior)) +
 
 
 # Note some e1-Qs  (ds beliefs) are reverse coded
+
+# Create a new dataframe having removed a few variables that can't be used for prediction
+
+# What variables have a lot of missingness?
+sort(sapply(d, function(x) sum(is.na(x))))
+
+# F2xx questions need to be removed (1's are the response, 2's are too close, I think)
+d2 = d[, !grepl("^f2", names(d))]
+
+# a5xx are involvement of home modification/construction.
+# These could be informative, but missing lots of entries, so ofr now removing
+d2 = d2[, !grepl("^a5.", names(d2))]
+
+# Some misc weird variables
+d2 = subset(d2, select = -(c(X, address, state, id, b1, i2b, i2c)))
+str(d2, list.len = 999)  # Not sure what the next-to-last ~10 columns are. 
+# Look like derived variables. Perhaps they should be deleted???
+
+# Some sub-question in income and ethinicity that were rarely answered
+d2 = subset(d2, select = -c(j5c, j6c, j5a, j6a))
+
+# Where did you live before moving here has too many levels
+d2 = d2[, !grepl("b3.", names(d2))]
+
+length(unique(substr(d2$zip, 1, 5)))  # 11 unique zips, 10 cities, so these are likely too colinear
+d2 = subset(d2, select = -zip)
+
+# Merge a8 (lot size) answer in sqft and acres and remove the other
+d2$a8acres = ifelse(is.na(d2$a8acres) & !is.na(d2$a8sqfeet),
+                    d2$a8sqfeet / 43560,
+                    d2$a8acres)
+d2 = subset(d2, select = -a8sqfeet)
+
+# Still have missing data on the majority of rows.
+sum(complete.cases(d2)) / nrow(d2)
+
+# So, let's impute. Will want to do something more principled eventually, for now jsut mean impute
+library(DMwR)
+dImp = knnImputation(d2, k = 3, scale = TRUE)
+
+# Let's try some prediction
+library(randomForest)
+set.seed(123)
+# Reserve 1/3 of the data for testing
+trainingRows = sample(1:nrow(dImp), nrow(dImp) * .67) 
+rf1 = randomForest(sumDSBehavior ~ ., data = dImp, subset = trainingRows,
+                   importance = TRUE)
+
