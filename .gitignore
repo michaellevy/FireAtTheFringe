@@ -1,4 +1,4 @@
 .Rhistory
 .Rproj
-.csv
-.sav
+*.csv
+*.sav
