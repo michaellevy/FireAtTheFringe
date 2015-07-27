@@ -2,14 +2,12 @@ setwd(file.path('~', 'GitHub', 'FireAtTheFringe'))  # Set working directory
 source("code/dataCleaning.R")
 d = read.csv('data/cleanData.csv')  # Read the data in
 
+str(d, list.len = 999)
+
+#compute current DS behavior
 dsBehavior = names(d)[grepl("f2.1", names(d))]
 d$sumDSBehavior = apply(d[dsBehavior], 1, 
                         function(x) sum(x, na.rm = TRUE))
-
-str(d, list.len = 999)
-# Not sure what the next-to-last ~10 columns are. 
-# Look like derived variables. Perhaps they should be deleted?
-# They are constructed scales and should be deleted
 
 # What variables have a lot of missingness?
 sort(sapply(d, function(x) sum(is.na(x))))
@@ -25,7 +23,7 @@ d2 = d[, !grepl("^f2", names(d))]
 d2 = d2[, !grepl("^a5.", names(d2))]
 
 # Some misc weird variables
-d2 = subset(d2, select = -(c(X, address, state, id, b1, i2b, i2c)))
+d2 = subset(d2, select = -(c(address, state, id, b1, i2b, i2c)))
 
 # Some sub-question in income and ethinicity that were rarely answered
 d2 = subset(d2, select = -c(j5c, j6c, j5a, j6a))

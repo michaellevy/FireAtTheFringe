@@ -1,0 +1,907 @@
+[
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column b1 using expression value.toUppercase()",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b1",
+    "expression": "value.toUppercase()",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b1",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b1",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "ALPIN",
+          "ALPINE, CA",
+          "ALPINE CA",
+          "APLINE",
+          "APLINE COMUNITY",
+          "ALPINE, CALIF",
+          "ALPINE, EXCEPT WHEN TRAVELING THEN NEAR SD",
+          "ALPINE-30 MILES EAST OF SAN DIEGO",
+          "NAME OF THE TOWN OF ALPINE, CA"
+        ],
+        "to": "ALPINE"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "BARONA INDIAN RESERVATIO"
+        ],
+        "to": "BARONA INDIAN RESERVATION"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "BLOSSOM VALLEY/EL CAJON",
+          "EL CAJON/BLOSSOM VALLEY"
+        ],
+        "to": "BLOSSOM VALLEY/EL CAJON"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "BOULEVARD",
+          "BOULEVARD, CA",
+          "BOULEVARD SAN DIEGO CA"
+        ],
+        "to": "BOULEVARD"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "CROWN HILLS",
+          "CROWN HILLS, ALPINE",
+          "CROWN HILLS IN ALPINE",
+          "CROWN HILLS SUBDIVISION"
+        ],
+        "to": "CROWN HILLS"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "DECANSO",
+          "DESCANSO, CALIF",
+          "DESCANSO, CALIFORNIA",
+          "DESCANSO-EVEN THOUGH MY"
+        ],
+        "to": "DESCANSO"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "DEHISA VALLEY",
+          "DEHESA VALLEY  CA",
+          "SEHESA VALLEY"
+        ],
+        "to": "DEHESA VALLEY"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "CAMPO-LAKE MORENA",
+          "CAMPO OR LAKE MORENA",
+          "CAMPO/LAKE MORENA VILLAGE",
+          "LAKE MORENA-CAMPO AREA",
+          "LAKE MORENA/ CAMPO"
+        ],
+        "to": "CAMPO-LAKE MORENA"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "LAKE MORENA",
+          "LAKE MORENO"
+        ],
+        "to": "LAKE MORENA"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "LAKE MORENA VILLAGE",
+          "MORENA VILLAGE"
+        ],
+        "to": "LAKE MORENA VILLAGE"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "FLINN SPRINGS",
+          "FLYNN SPRING",
+          "FLYNN SPRINGS"
+        ],
+        "to": "FLINN SPRINGS"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "JULIAN",
+          "JULIAN, CA"
+        ],
+        "to": "JULIAN"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "LAKESIDE",
+          "LAKESIDE, CA"
+        ],
+        "to": "LAKESIDE"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "ALPINE PALO VERDE RANCH",
+          "PALO VERDE RANCH, ALPINE",
+          "PALO VERDE RANCH",
+          "PALO VERDE RANCH IN ALPI"
+        ],
+        "to": "PALO VERDE RANCH, ALPINE"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "PINE VALLEY",
+          "PINE VALLEY CALIF",
+          "PINE VALLEY CA"
+        ],
+        "to": "PINE VALLEY"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "RAMONA CA",
+          "RAMONA CAL",
+          "RAMONA, CA",
+          "RAMONA, CALIF"
+        ],
+        "to": "RAMONA"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "COUNTRY ESTATES/RAMONA",
+          "RAMONA/SAN DIEGO COUNTRY ESTATES",
+          "RAMONA/SAN DIEGO ESTATES",
+          "RAMONA-SAN DIEGO COUNTRY ESTATES",
+          "RAMONA - SAN DIEGO COUNTRY ESTAT",
+          "RAMONA-THE ESTATES",
+          "RAMONA CA. SAN DIEGO COUNTRY ESTATES",
+          "RAMONA IN SAN DIEGO COUNTRY ESTATES",
+          "RAMONA OR SAN DIEGO COUNTRY ESTATES",
+          "RAMONA COUNTRY ESTATES",
+          "RAMONA OR COUNTRY ESTATES",
+          "RAMONA ON THE COUNTRY ESTATES",
+          "SAN DIEGO COUNTRY ESTATES IN RAMONA",
+          "THE ESTATES OR RAMONA"
+        ],
+        "to": "RAMONA/SAN DIEGO COUNTRY ESTATES"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "COUNTRY ESTATES",
+          "COUNTRY ESTATES SECTIONS",
+          "SAN DIEGO COUNTRY ESTATES",
+          "SAN DIEGO COUNTRY ESTATES RAMONA",
+          "SAN DIEGO COUNTY ESTATES",
+          "THE ESTATES"
+        ],
+        "to": "SAN DIEGO COUNTRY ESTATES"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "SAN VINCENTE",
+          "SAN VICENTE"
+        ],
+        "to": "SAN VICENTE"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "SAN VICENTE COUNTRY ESTATES",
+          "SAN VICINTE COUNTRY ESTATES"
+        ],
+        "to": "SAN VICENTE COUNTRY ESTATES"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "THE NAME OF MY COMMUNITY",
+          "THE NAME OF THE COMMUNITY"
+        ],
+        "to": "THE NAME OF MY COMMUNITY"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "THE RANC"
+        ],
+        "to": "THE RANCH"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "WOODCREEK",
+          "WOOD CREEK ESTATES"
+        ],
+        "to": "WOODCREEK ESTATES"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "CITY OF SD"
+        ],
+        "to": "SAN DIEGO"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "RAMONA/SANTA YSABEL"
+        ],
+        "to": "SANTA YSABEL/RAMONA"
+      }
+    ]
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column b3atwnct using expression value.toUppercase()",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value.toUppercase()",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column b3atwnct using expression value.replace(/\\s+/,' ')",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value.replace(/\\s+/,' ')",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column b3acount using expression value.toUppercase()",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3acount",
+    "expression": "value.toUppercase()",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3atwnct",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "EL CENTO",
+          "EL CENTS",
+          "EL CENTRO"
+        ],
+        "to": "EL CENTRO"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "MIRA MESA",
+          "MERA MESA"
+        ],
+        "to": "MIRA MESA"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "ESCONDIDO",
+          "ES CONDIDO"
+        ],
+        "to": "ESCONDIDO"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "RANCH SAN DIEGO",
+          "RANCHO SAN DIEGO"
+        ],
+        "to": "RANCHO SAN DIEGO"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "RANHO BERNARDO",
+          "RANCHO BERNARDO"
+        ],
+        "to": "RANCHO BERNARDO"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "SAN DIEGO",
+          "SAN DIEG"
+        ],
+        "to": "SAN DIEGO"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "PT LOMA",
+          "PT. LOMA"
+        ],
+        "to": "PT LOMA"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "DESCANSO",
+          "DESCANGO"
+        ],
+        "to": "DESCANSO"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "RANCHO PALOS VERDAS",
+          "RANCHOPALOS VERDAS"
+        ],
+        "to": "RANCHO PALOS VERDAS"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "IMPERIAL BEACH",
+          "INPERIAL BEACH"
+        ],
+        "to": "IMPERIAL BEACH"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3atwnct",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "HUNTINGTINGTON B",
+          "HUNTINGTON"
+        ],
+        "to": "HUNTINGTON BEACH"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "SCOTTSDALE",
+          "SCOTTSDA"
+        ],
+        "to": "SCOTTSDALE"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3atwnct",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "ESCONDIDO",
+          "ESCONDIS"
+        ],
+        "to": "ESCONDIDO"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "SAN DIEGO CITY",
+          "SAN DIEGO (INNER CITY)"
+        ],
+        "to": "SAN DIEGO"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "SEATTLE",
+          "SEATTLALE"
+        ],
+        "to": "SEATTLE"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "NEWPORT BEACH",
+          "NEWPORT"
+        ],
+        "to": "NEWPORT BEACH"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3atwnct",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "SAN DIEGO",
+          "SANDIEGO"
+        ],
+        "to": "SAN DIEGO"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "OCEANSIDE",
+          "OCEAN SIDE"
+        ],
+        "to": "OCEANSIDE"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "CLAIREMONT",
+          "CLAIRMONT"
+        ],
+        "to": "CLAIREMONT"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "PALM DALE",
+          "PALMDALE"
+        ],
+        "to": "PALMDALE"
+      },
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "CARISBAD",
+          "CARLSBAD"
+        ],
+        "to": "CARLSBAD"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3atwnct",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "CARDIFF"
+        ],
+        "to": "CARDIFF BY THE SEA"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3atwnct",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "CHULAVIST"
+        ],
+        "to": "CHULA VISTA"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3atwnct",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "LA"
+        ],
+        "to": "LOS ANGELES"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3acount",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3acount",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "AA"
+        ],
+        "to": "ANNE ARUNDEL"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3acount",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3acount",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "L.A.",
+          "LA"
+        ],
+        "to": "LOS ANGELES"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3acount",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3acount",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "LB"
+        ],
+        "to": "ORANGE"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3acount",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3acount",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "MANICOPA"
+        ],
+        "to": "MARICOPA"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3acount",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3acount",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "SAN BERNADINO",
+          "SAN BORNADINO"
+        ],
+        "to": "SAN BERNARDINO"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3acount",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3acount",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "SANTA CLARA",
+          "SANTA CLARE"
+        ],
+        "to": "SANTA CLARA"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3atwnct",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "COREGO SPRINGS"
+        ],
+        "to": "BORREGO SPRINGS"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3atwnct",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "LAKE HABASU CIY",
+          "LAKE HAVASU"
+        ],
+        "to": "LAKE HAVASU CITY"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3atwnct",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "O/B"
+        ],
+        "to": "OCEAN BEACH"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3atwnct",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "PACIFIC BEACH/SAN DIEGO"
+        ],
+        "to": "PACIFIC BEACH"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3atwnct",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "SAN CLEVNEUTE"
+        ],
+        "to": "SAN CLEMENTE"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3atwnct",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "columnName": "b3atwnct",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "SD"
+        ],
+        "to": "SAN DIEGO"
+      }
+    ]
+  },
+  {
+    "op": "core/mass-edit",
+    "description": "Mass edit cells in column b3acount",
+    "engineConfig": {
+      "facets": [
+        {
+          "expression": "value",
+          "invert": false,
+          "selectError": false,
+          "omitError": false,
+          "name": "b3atwnct",
+          "selectBlank": false,
+          "columnName": "b3atwnct",
+          "omitBlank": false,
+          "type": "list",
+          "selection": [
+            {
+              "v": {
+                "v": "SAN DIEGO",
+                "l": "SAN DIEGO"
+              }
+            }
+          ]
+        }
+      ],
+      "mode": "row-based"
+    },
+    "columnName": "b3acount",
+    "expression": "value",
+    "edits": [
+      {
+        "fromBlank": false,
+        "fromError": false,
+        "from": [
+          "EAST"
+        ],
+        "to": "SAN DIEGO"
+      }
+    ]
+  }
+]
