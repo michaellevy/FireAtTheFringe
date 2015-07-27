@@ -19,6 +19,9 @@ cleandata[, which(names(cleandata) %in% recode1)] <-
 # Change the id number of the duplicated entry
 cleandata[duplicated(cleandata$id), 'id'] <- cleandata[duplicated(cleandata$id), 'id'] + 1
 
+# Exclude renters and a5 = 5: "other" type homes:
+cleandata = cleandata[cleandata$a3 != 5, ]
+cleandata = cleandata[cleandata$a5 != 1, ]
 
 # Write cleaned data to csv file to be read for SPSS, STATA:
 write.csv(cleandata, 'data/cleanDataSPSS.csv', row.names = FALSE)
