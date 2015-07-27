@@ -1,8 +1,8 @@
 setwd(file.path('~', 'GitHub', 'FireAtTheFringe'))  # Set working directory
-survey <- read.csv('data/firedata.csv', header=TRUE)  # Read the raw data file
+survey <- read.csv('data/refineData.csv', header=TRUE)  # Read the refined data file
 
 #delete variables: jrecq4, identity, affect, depend, social, community, risk, trust
-cleandata <- subset(survey, select = -c(recaq4, identity, affect, depend, social, community, risk, trust))
+cleandata <- subset(survey, select = -c(region, recaq4, identity, affect, depend, social, community, risk, trust))
 
 
 # Change questions coded as yes = 1, no = 2 to yes = 1, no = 0:
@@ -18,22 +18,6 @@ cleandata[, which(names(cleandata) %in% recode1)] <-
 
 # Change the id number of the duplicated entry
 cleandata[duplicated(cleandata$id), 'id'] <- cleandata[duplicated(cleandata$id), 'id'] + 1
-
-# bring community and town names in parallel.
-########### OpenRefine is a better way to do this!
-# make them all upper-case
-cleandata$b1 = toupper(cleandata$b1)
-cleandata$b3atwnct = toupper(cleandata$b3atwnct)
-
-#frequencies
-data.frame(table(cleandata$b1))
-data.frame(table(cleandata$b3atwnct))
-
-# San diego
-cleandata$b3atwnct[(grepl("DIEG", cleandata$b3atwnct) &  # Town has "dieg"
-                      !grepl("RANCH", cleandata$b3atwnct)) |  # but not "ranch"
-                     grepl("^SD", cleandata$b3atwnct)] = # or is "sd"
-  "SAN DIEGO"
 
 
 # Write cleaned data to csv file to be read for SPSS, STATA:

@@ -30,7 +30,7 @@
           "ALPINE, CA",
           "ALPINE CA",
           "APLINE",
-          "APLINE COMUNITY",
+          "ALPINE COMUNITY",
           "ALPINE, CALIF",
           "ALPINE, EXCEPT WHEN TRAVELING THEN NEAR SD",
           "ALPINE-30 MILES EAST OF SAN DIEGO",
