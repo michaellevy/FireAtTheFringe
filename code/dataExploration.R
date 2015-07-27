@@ -95,16 +95,12 @@ ggplot(d, aes(x = medianfsAlike, y = sumDSBehavior)) +
   geom_smooth(method = 'lm')
 # No obvious relationship between relating to USFS and adopting DS behavior
 
-townTable = table(d$b3atwnct)
-mainTowns = names(townTable)[townTable > 5]
-# Assign "other" to towns for which we have 5 or fewer responses
-d$town = as.character(rep(d$b3atwnct))
-d$town[!(d$town %in% mainTowns)] = "other"
+townTable = table(d$city)
 
-ggplot(d, aes(x = town, y = sumDSBehavior)) +
-  geom_violin()
-# Things are different in Alpine!
-
+ggplot(d, aes(x = city, y = sumDSBehavior)) +
+  geom_boxplot(fill = "gray") +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle = -90, hjust = 0, size = 12))
 
 # Note some e1-Qs  (ds beliefs) are reverse coded
 
