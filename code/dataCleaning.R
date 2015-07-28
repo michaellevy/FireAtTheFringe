@@ -24,7 +24,7 @@ cleandata = cleandata[cleandata$a3 != 5, ]
 cleandata = cleandata[cleandata$a5 != 1, ]
 
 # Drop multiple responses from same address:
-cleandata = subset(cleandata, cleandata$id %in% c(955, 1925, 2041))
+cleandata = subset(cleandata, !(cleandata$id %in% c(955, 1925, 2041)))
 
 #change NA's meaning missing to blanks in data.frame for spss
 cleandata2 <- sapply(cleandata, as.character)
