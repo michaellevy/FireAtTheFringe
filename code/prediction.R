@@ -43,8 +43,7 @@ sum(complete.cases(d2)) / nrow(d2)
 rid = grep("a5|^b([4-9]|10|11)|^(c|d|e|f)1|^f(3|4|5)|^g|^i|^j(4|5|7|8)", names(d2))
 d2 = d2[, -rid]
 
-plot(d2$age, d2$j2)  # same so remove j2
-d2 = d2[, -which(names(d2) == "j2")]
+d2 = d2[, -which(names(d2) == "j2")] # same so remove j2
 
 # Maybe delete two rows with missing response variables:
 # d2 = d2[apply(d2, 1, function(x) sum(is.na(x[grep("^f", names(x))]))) == 0, ]
@@ -53,18 +52,43 @@ d2 = d2[, -which(names(d2) == "j2")]
 library(DMwR)
 dImp = knnImputation(d2, k = 10, scale = TRUE)
 
-# 2015-07-27: Predict each seperately
-#####################################
+# Predict each DS behavior each seperately
 library(randomForest)
 set.seed(7890)
-dvs = names(dImp)[grep("^f2", names(dImp))]
-iv = names(dImp)[!1:ncol(dImp) %in% dvs]
-tmpRF = lapply(dvs, function(y)
-  randomForest(y ~ ., data = dImp, type = classification))
-rfs = lapply(dvs, function(y) randomForest(y ~ iv, data = dImp))
-lapply(rfs, summary)
+dvs = grep("^f2", names(dImp))
+dv = dImp[, dvs]
+dv = as.data.frame(apply(dv, 1:2, function(x) ifelse(x >= .5, 1, 0)))  #Imputation puts some inbetween
+iv = dImp[, -dvs]
 
-# Let's try some prediction!
+dvLong = melt(dv)
+ggplot(dvLong, aes(x = variable, fill = as.factor(value))) +
+  geom_histogram(stat = "bin") + theme_minimal()
+
+RFs = lapply(dv, function(y) {
+    df = cbind(y = as.factor(y), iv)
+    train = sample(1:nrow(df), nrow(df) * .67) 
+    rf = randomForest(y ~ ., df, subset = train, 
+                      type = "classification", importance = TRUE,
+                      ntree = 5e3)
+    yhat = predict(rf, newdata = df[-train, ])
+    mse = mean((as.numeric(as.character(yhat)) - y[-train])^2)  # Test MSE
+    confMat = table(as.numeric(as.character(yhat)), y[-train])
+    print(varImpPlot(rf, n.var = 10))  # What are the key var's in the dataset for predicting DS Behav?
+    list(rf, mse, confMat)
+})
+
+library(caret)
+sapply(RFs[2:length(RFs)], function(x) {
+  mat = x[[3]]
+  print(mat)
+  c(sens = sensitivity(mat, positive = 1), spec = specificity(mat, positive = 1))
+})
+
+
+
+
+
+# Prediction on sum of defensible space behaviors:
 # Using random forests
 library(randomForest)
 set.seed(123)
