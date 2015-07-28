@@ -2,21 +2,16 @@ setwd(file.path('~', 'GitHub', 'FireAtTheFringe'))  # Set working directory
 source("code/dataCleaning.R")
 d = read.csv('data/cleanData.csv')  # Read the data in
 
-str(d, list.len = 999)
-
 #compute current DS behavior
 dsBehavior = names(d)[grepl("f2.1", names(d))]
-d$sumDSBehavior = apply(d[dsBehavior], 1, 
-                        function(x) sum(x, na.rm = TRUE))
-
-# What variables have a lot of missingness?
-sort(sapply(d, function(x) sum(is.na(x))))
+#d$sumDSBehavior = apply(d[dsBehavior], 1, 
+#                        function(x) sum(x, na.rm = TRUE))
 
 # Create a new dataframe removed a few variables that can't be used for prediction
 
 # F2xx questions need to be removed (1's are the dependent variable, 
 # 2's (future behavior) are too close, I think)
-d2 = d[, !grepl("^f2", names(d))]
+d2 = d[, !grepl("^f2.2", names(d))]
 
 # a5xx are involvement of home modification/construction.
 # These could be informative, but missing lots of entries, so for now removing
@@ -43,9 +38,31 @@ d2 = subset(d2, select = -a8sqfeet)
 sum(complete.cases(d2)) / nrow(d2)
 # Still have missing data on the majority of rows.
 
-# So, let's impute. Will want to do something more principled eventually, for now just use KNN
+# 2015-07-27: Missingingness on 71% of rows, but much of it in Qs we don't want
+# to use anyway, so go ahead and clear those out:
+rid = grep("a5|^b([4-9]|10|11)|^(c|d|e|f)1|^f(3|4|5)|^g|^i|^j(4|5|7|8)", names(d2))
+d2 = d2[, -rid]
+
+plot(d2$age, d2$j2)  # same so remove j2
+d2 = d2[, -which(names(d2) == "j2")]
+
+# Maybe delete two rows with missing response variables:
+# d2 = d2[apply(d2, 1, function(x) sum(is.na(x[grep("^f", names(x))]))) == 0, ]
+
+# Impute. Will want to do something more principled eventually, for now just use KNN
 library(DMwR)
-dImp = knnImputation(d2, k = 3, scale = TRUE)
+dImp = knnImputation(d2, k = 10, scale = TRUE)
+
+# 2015-07-27: Predict each seperately
+#####################################
+library(randomForest)
+set.seed(7890)
+dvs = names(dImp)[grep("^f2", names(dImp))]
+iv = names(dImp)[!1:ncol(dImp) %in% dvs]
+tmpRF = lapply(dvs, function(y)
+  randomForest(y ~ ., data = dImp, type = classification))
+rfs = lapply(dvs, function(y) randomForest(y ~ iv, data = dImp))
+lapply(rfs, summary)
 
 # Let's try some prediction!
 # Using random forests

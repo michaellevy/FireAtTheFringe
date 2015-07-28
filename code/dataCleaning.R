@@ -23,6 +23,9 @@ cleandata[duplicated(cleandata$id), 'id'] <- cleandata[duplicated(cleandata$id),
 cleandata = cleandata[cleandata$a3 != 5, ]
 cleandata = cleandata[cleandata$a5 != 1, ]
 
+# Drop multiple responses from same address:
+cleandata = subset(cleandata, cleandata$id %in% c(955, 1925, 2041))
+
 # Write cleaned data to csv file to be read for SPSS, STATA:
 write.csv(cleandata, 'data/cleanDataSPSS.csv', row.names = FALSE)
 
