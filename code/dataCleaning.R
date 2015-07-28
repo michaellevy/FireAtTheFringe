@@ -1,7 +1,7 @@
 setwd(file.path('~', 'GitHub', 'FireAtTheFringe'))  # Set working directory
 survey <- read.csv('data/refineData.csv', header=TRUE)  # Read the refined data file
 
-#delete variables: jrecq4, identity, affect, depend, social, community, risk, trust
+#delete variables: region, jrecq4, identity, affect, depend, social, community, risk, trust
 cleandata <- subset(survey, select = -c(region, recaq4, identity, affect, depend, social, community, risk, trust))
 
 
@@ -26,8 +26,12 @@ cleandata = cleandata[cleandata$a5 != 1, ]
 # Drop multiple responses from same address:
 cleandata = subset(cleandata, cleandata$id %in% c(955, 1925, 2041))
 
+#change NA's meaning missing to blanks in data.frame for spss
+cleandata2 <- sapply(cleandata, as.character)
+cleandata2[is.na(cleandata2)] <- " "
+
 # Write cleaned data to csv file to be read for SPSS, STATA:
-write.csv(cleandata, 'data/cleanDataSPSS.csv', row.names = FALSE)
+write.csv(cleandata2, 'data/cleanDataSPSS.csv', row.names = FALSE)
 
 
 # Assign NA to missing values that were coded 99 or 999:
