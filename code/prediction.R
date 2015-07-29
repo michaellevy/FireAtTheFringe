@@ -1,9 +1,10 @@
 setwd(file.path('~', 'GitHub', 'FireAtTheFringe'))  # Set working directory
 source("code/dataCleaning.R")
 d = read.csv('data/cleanData.csv')  # Read the data in
+source("code/addNeighborsDSBehavior.R")
 
 #compute current DS behavior
-dsBehavior = names(d)[grepl("f2.1", names(d))]
+# dsBehavior = names(d)[grepl("f2.1", names(d))]
 #d$sumDSBehavior = apply(d[dsBehavior], 1, 
 #                        function(x) sum(x, na.rm = TRUE))
 
@@ -40,7 +41,7 @@ sum(complete.cases(d2)) / nrow(d2)
 
 # 2015-07-27: Missingingness on 71% of rows, but much of it in Qs we don't want
 # to use anyway, so go ahead and clear those out:
-rid = grep("a5|^b([4-9]|10|11)|^(c|d|e|f)1|^f(3|4|5)|^g|^i|^j(4|5|7|8)", names(d2))
+rid = grep("a5|^a7|^b([4-9]|10|11)|^(c|d|e|f)1|^f(3|4|5)|^g|^i|^j(4|5|7|8)", names(d2))
 d2 = d2[, -rid]
 
 d2 = d2[, -which(names(d2) == "j2")] # same so remove j2
@@ -52,38 +53,78 @@ d2 = d2[, -which(names(d2) == "j2")] # same so remove j2
 library(DMwR)
 dImp = knnImputation(d2, k = 10, scale = TRUE)
 
-# Predict each DS behavior each seperately
-library(randomForest)
-set.seed(7890)
 dvs = grep("^f2", names(dImp))
 dv = dImp[, dvs]
 dv = as.data.frame(apply(dv, 1:2, function(x) ifelse(x >= .5, 1, 0)))  #Imputation puts some inbetween
 iv = dImp[, -dvs]
 
+# Predict each DS behavior each seperately
+library(ggplot2)
+library(reshape2)
 dvLong = melt(dv)
 ggplot(dvLong, aes(x = variable, fill = as.factor(value))) +
   geom_histogram(stat = "bin") + theme_minimal()
 
-RFs = lapply(dv, function(y) {
-    df = cbind(y = as.factor(y), iv)
+library(randomForest)
+set.seed(7890)
+RFs = lapply(seq_along(dv), function(y) {
+    df = cbind(y = as.factor(dv[[y]]), iv)
     train = sample(1:nrow(df), nrow(df) * .67) 
     rf = randomForest(y ~ ., df, subset = train, 
                       type = "classification", importance = TRUE,
-                      ntree = 5e3)
+                      ntree = 1e3)
     yhat = predict(rf, newdata = df[-train, ])
-    mse = mean((as.numeric(as.character(yhat)) - y[-train])^2)  # Test MSE
-    confMat = table(as.numeric(as.character(yhat)), y[-train])
-    print(varImpPlot(rf, n.var = 10))  # What are the key var's in the dataset for predicting DS Behav?
-    list(rf, mse, confMat)
+    confMat = table(as.numeric(as.character(yhat)), dv[[y]][-train])
+    varimp = varImp(rf, n.var = 10)  # What are the key var's in the dataset for predicting DS Behav?
+    list(mod = rf, cm = confMat, imp = varimp)
+})
+pdf("results/RFVarImpPlots.pdf", height = 8, width = 14)
+par(mfcol = c(2, 3))
+plots = lapply(seq_along(RFs), function(x) varImpPlot(RFs[[x]]$mod, main = names(dv)[x]))
+print(plots)
+dev.off()
+
+lapply(RFs, function(x) {
+  x = x$cm
+  if(nrow(x) == 1)
+    x = rbind("0" = c(0, 0), x)
+  x
 })
 
-library(caret)
-sapply(RFs[2:length(RFs)], function(x) {
-  mat = x[[3]]
-  print(mat)
-  c(sens = sensitivity(mat, positive = 1), spec = specificity(mat, positive = 1))
-})
 
+
+library(gbm)
+set.seed(90210)
+D = 3
+lam = .001
+train = sample(nrow(dImp), nrow(dImp) * .67)
+df = cbind(y = dv$f2a1, iv)
+gbmGutters = 
+  gbm(y ~ ., data = df, distribution = "bernoulli", n.trees = 5e3,
+             interaction.depth = D, shrinkage = lam)
+
+
+gbms = 
+  lapply(seq_along(dv[,5:7]), function(i) {
+    df = cbind(y = dv[, i], iv)
+    train = sample(nrow(dImp), nrow(dImp) * .67)
+    mod = gbm(y ~ ., data = df, distribution="bernoulli", n.trees = 5e3,
+              interaction.depth = D, shrinkage = lam)
+    pred = predict(mod, newdata = df[-train, ], n.trees = 5e3, type = "response")
+    cm = confusionMatrix(pred, df$y[-train])
+    list(model = mod, predictions = pred, confMat = cm)
+  })
+
+
+
+sapply(gbms, function(x) x$predictions)
+preds = 
+  lapply(gbms, predict, newdata = d)
+
+head(summary(gbmGutters))  # Note the plot probably won't display all the variable names
+plot(gbmGutters, i = "city")
+plot(boost1, i = "f3e1")  # f3b1 U-shaped too. Weird.
+boost1Yhat = predict(boost1, newdata = dImp[-trainingRows, ], n.trees = 5e3)
 
 
 
