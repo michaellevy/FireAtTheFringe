@@ -1,6 +1,3 @@
-setwd(file.path('~', 'GitHub', 'FireAtTheFringe'))  # Set working directory
-source("code/dataCleaning.R")
-d = read.csv('data/cleanData.csv')  # Read the data in
 neartab = read.csv("data/nearTableCleaned.csv")
 
 # attach nearest neighbors to each row

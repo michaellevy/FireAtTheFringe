@@ -1,4 +1,3 @@
-setwd(file.path('~', 'GitHub', 'FireAtTheFringe'))  # Set working directory
 survey <- read.csv('data/refineData.csv', header=TRUE)  # Read the refined data file
 
 #delete variables: region, jrecq4, identity, affect, depend, social, community, risk, trust
