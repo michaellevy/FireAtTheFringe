@@ -1,3 +1,4 @@
+;;;;;;;;;;;;  variable definitions  ;;;;;;;;;;;;
 globals [
   initial-trees   ;; how many trees (green patches) we started with
   VB  ;; multiplier from values to beliefs
@@ -8,14 +9,22 @@ turtles-own [
   values
   beliefs
   norms
-  ds
+  ds ;; [0, 1] currently just norms squashed into that interval. Represents something like likelihood of adoption.
+  small-clear
+  big-clear  ;; for each turtle these are 1 when they have cleared a radius (and they never go back)
 ]
 
+;;;;;;;;;;;;  setup  ;;;;;;;;;;;;
 to setup
   clear-all  ;; clear any stored values
-  ;; make some green trees
+  ;;  set global variable values
+  set VB .02    ;;  define constant parameters for values->beliefs and beliefs->norms
+  set BN .035   ;;  these will come from SEM estimation, and we'll probably need to apply some kind of squashing function.
+  set num-neighbors 10  ;; number of neighbors on which each homeowner determines local norms
+
+  ;; setup the forest
   ask patches [
-    if (random 100) < density
+    if (random 100) < tree-density
       [ set pcolor green ]  ;; green patches are available to burn, black are not
     ;; make a column of burning trees at the left-edge
     if pxcor = min-pxcor
@@ -23,16 +32,14 @@ to setup
   ]
   ;; initialize tree count
   set initial-trees count patches with [pcolor = green]
-  ;;  define constant parameters for values->beliefs and beliefs->norms
-  ;;  these will come from SEM estimation, and we'll probably need to apply some kind of squashing function.
-  set VB .02
-  set BN .035
 
   ;; place turtle homeowners at random, each with some VBN values
-  create-turtles 250
+  create-turtles 125 * 125 * housing-density / 100
   ask turtles [
     setxy random-xcor random-ycor
-    set values ( random 100 - 50 ) / 10
+    set small-clear 0
+    set big-clear 0  ;; all turtles start having not cleared any
+    set values random-float 6 - 3  ;; initialize each turtle's values (-1, 1)
     set beliefs values * (1 + VB)
     set norms beliefs * (1 + BN)
     set ds 1 / ( 1 + exp(- norms) ) ;; squash norms into ds-behavior likelihood with logistic
@@ -46,11 +53,12 @@ to setup
   reset-ticks  ;; reset the counter
 end
 
+;;;;;;;;;;;;  main routine  ;;;;;;;;;;;;
 to go
   ;; stop the model when there's no active fire
   if all? patches [ pcolor != red ] [ stop ]
 
-  ;; ask the burning trees to set fire to any neighboring non-burning trees
+  ;; ask the burning trees to set fire to any neighboring non-burning trees w/probability-of-spread
   ask patches with [ pcolor = red ] [ ;; ask the burning trees
     ask neighbors4 with [ pcolor = green ] [ ;; ask their non-burning neighbor trees
       ;; only burn if a random draw is greater than the probability of spread
@@ -59,7 +67,10 @@ to go
     set pcolor red - 3.5 ;; once the tree is burned, darken its color
   ]
 
-  ;;  Update turtles VBN and ds
+  ;;  Update turtles norms and ds likelihood every 20th tick
+  if ticks mod 20 = 0 [
+    update-ds
+  ]
 
   ;; turtles implement ds behavior
   implement-ds
@@ -68,26 +79,44 @@ to go
   tick ;; advance the clock by one “tick”
 end
 
-to implement-ds  ;; if each turtle's ds is very high clear a large radius, if somewhat high clear a smaller radius
+;;;;;;;;;;;;  sub routines  ;;;;;;;;;;;;
+to update-ds  ;;
+  update-norms  ;; update norms based on neighbors (move halfway to neighbors' mean norms)
   ask turtles [
-    if ds > .9 [
-      ask patches in-radius 6 [ set pcolor black ]
-    ]
-    if ds > .75 [
-      ask patches in-radius 3 [ set pcolor black ]
-    ]
+    set ds 1 / ( 1 + exp(- norms) )  ;; set ds "likelihood" same as before, but on socially-updated norms
   ]
 end
 
+to update-norms
+  ask turtles [
+    let my-neighbors min-n-of num-neighbors turtles [distance myself]  ;; find the nearest turtles
+    ;; Mean calculation is just leading to global convergence; also ds likelihood isn't observed. Leaving old code below, but
+    ;; instead have turtles observe clearing behavior of their neighbors; norms get bumped by .05 for each neighbor that's cleared
+    ;; a small radius and .1 for large radius.
+    set norms norms + (sum [small-clear] of my-neighbors + sum [big-clear] of my-neighbors) * norm-multiplier
+    ;    let neighbors-norms mean [norms] of my-neighbors  ;; calculate mean norm of the nearest turtles
+    ;    set norms (norms + neighbors-norms) / 2  ;; set each turtle's norms to the mean of its old norms and the mean of its neighbors
+  ]
+end
 
-; Started from Uri Wilensky's fire sim model.
-; See Info tab for full copyright and license.
+to implement-ds  ;; if each turtle's ds is very high clear a large radius, if somewhat high clear a smaller radius
+  ask turtles [
+    if ds > low-thresh [
+      ask patches in-radius small-radius [ set pcolor black ]
+      set small-clear 1
+    ]
+    if ds > high-thresh [
+      ask patches in-radius big-radius [ set pcolor black ]
+      set big-clear 1
+    ]
+  ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
-200
-10
-712
-543
+370
+260
+882
+793
 125
 125
 2.0
@@ -110,37 +139,26 @@ GRAPHICS-WINDOW
 ticks
 30.0
 
-MONITOR
-43
-131
-158
-176
-percent burned
-((count patches with [shade-of? pcolor red]) / initial-trees)\n* 100
-1
-1
-11
-
 SLIDER
-5
-38
-190
-71
-density
-density
+15
+130
+200
+163
+tree-density
+tree-density
 0.0
 99.0
-73
+80
 1.0
 1
 %
 HORIZONTAL
 
 BUTTON
-106
-79
-175
-115
+820
+60
+889
+96
 go
 go
 T
@@ -154,10 +172,10 @@ NIL
 0
 
 BUTTON
-26
-79
+640
+60
+710
 96
-115
 setup
 setup
 NIL
@@ -171,21 +189,233 @@ NIL
 1
 
 SLIDER
-4
-184
-189
-217
+15
+170
+200
+203
 probability-of-spread
 probability-of-spread
 0
 100
-81
+75
 1
 1
 %
 HORIZONTAL
 
+BUTTON
+730
+60
+800
+95
+step
+go
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+PLOT
+20
+295
+310
+520
+DS adoption
+NIL
+Fraction houses adopted
+0.0
+10.0
+0.0
+1.0
+true
+true
+"" ""
+PENS
+"Cleared big" 1.0 0 -10899396 true "" "plot sum [big-clear] of turtles / count turtles"
+"Cleared small" 1.0 0 -13791810 true "" "plot sum [small-clear] of turtles / count turtles"
+
+SLIDER
+15
+90
+200
+123
+housing-density
+housing-density
+0
+10
+3
+.1
+1
+%
+HORIZONTAL
+
+PLOT
+20
+530
+220
+680
+Fraction land burned
+NIL
+NIL
+0.0
+10.0
+0.0
+1.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -2674135 true "" "plot ((count patches with [shade-of? pcolor red]) / initial-trees)"
+
+SLIDER
+250
+75
+422
+108
+high-thresh
+high-thresh
+0
+1
+0.9
+.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+250
+115
+422
+148
+low-thresh
+low-thresh
+0
+1
+0.5
+.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+430
+75
+602
+108
+big-radius
+big-radius
+0
+20
+7
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+430
+115
+602
+148
+small-radius
+small-radius
+0
+20
+3
+1
+1
+NIL
+HORIZONTAL
+
+TEXTBOX
+250
+10
+575
+75
+high- and low-thresh are thresholds of pro-defensible space orientation that must be exceeded for the homeowner to clear a big- and small-radius of vegetation around their home, respectively.
+11
+0.0
+1
+
+TEXTBOX
+15
+10
+195
+85
+These sliders control the placement of trees and houses on the landscape and the probability that fire will spread from one cell to another.
+11
+0.0
+1
+
+TEXTBOX
+640
+11
+910
+56
+These buttons run the simulation. setup to drop trees and houses on the landscape; step to move forward one tick of time; go to run through time.
+11
+0.0
+1
+
+TEXTBOX
+20
+265
+170
+286
+Results\n
+18
+0.0
+1
+
+TEXTBOX
+250
+165
+600
+206
+How much of an effect do neighbors have on a homeowner's norms and how many neighbors should a homeowner consider?
+11
+0.0
+1
+
+SLIDER
+250
+200
+422
+233
+norm-multiplier
+norm-multiplier
+0
+.1
+0.01
+.001
+1
+NIL
+HORIZONTAL
+
+SLIDER
+430
+200
+602
+233
+num-neighbors
+num-neighbors
+0
+100
+10
+1
+1
+NIL
+HORIZONTAL
+
 @#$#@#$#@
+Everything below is for the fire module, pre-houses, pre-Fire at the Fringe.
+
+
 ## ACKNOWLEDGMENT
 
 This model is from Chapter Three of the book "Introduction to Agent-Based Modeling: Modeling Natural, Social and Engineered Complex Systems with NetLogo", by Uri Wilensky & William Rand.
