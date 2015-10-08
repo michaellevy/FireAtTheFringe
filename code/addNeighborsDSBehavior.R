@@ -1,7 +1,7 @@
 neartab = read.csv("data/nearTableCleaned.csv")
 
 # attach nearest neighbors to each row
-plot(density(neartab$NEAR_DIST))
+# plot(density(neartab$NEAR_DIST))
 
 neighborThresh = 500
 nearNeighbors = neartab[neartab$NEAR_DIST < neighborThresh, 1:2]

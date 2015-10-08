@@ -1,10 +1,18 @@
 setwd(file.path('~', 'GitHub', 'FireAtTheFringe'))  # Set working directory
-source("code/dataCleaning.R")
-d = read.csv('data/cleanData.csv')  # Read the data in
-source("code/addNeighborsDSBehavior.R")
-dists = read.csv("data/withDist.csv")
-dists = subset(dists, select = c("ID", "near_cnf", "near_03f"))
-d = merge(d, dists, by.x = "id", by.y = "ID")
+# or
+setwd(file.path('~', 'Dropbox', 'FireAtTheFringe'))  # Set working directory
+
+if(FALSE) { # This only needs to be read once. Just run the following read.csv
+            # line once you have the cleaned and merged data.
+    source("code/dataCleaning.R")
+    d = read.csv('data/cleanData.csv')  # Read the data in
+    source("code/addNeighborsDSBehavior.R")
+    dists = read.csv("data/withDist.csv")
+    dists = subset(dists, select = c("ID", "near_cnf", "near_03f"))
+    d = merge(d, dists, by.x = "id", by.y = "ID")
+    write.csv(d, "data/clean_with_neighborsDS_and_proximity.csv")
+}
+d = read.csv("data/clean_with_neighborsDS_and_proximity.csv")
 
 #compute current DS behavior
 # dsBehavior = names(d)[grepl("f2.1", names(d))]
