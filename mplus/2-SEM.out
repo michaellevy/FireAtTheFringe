@@ -1,0 +1,894 @@
+Mplus VERSION 6.12 (Mac)
+MUTHEN & MUTHEN
+10/14/2015  12:51 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE:        Confirmatory Factor Analysis;
+
+  DATA:        FILE = mplusdata.csv;
+
+  VARIABLE:        NAMES ARE id c1a-c1r f1a-f1g dsnow1-dsnow7 dsfut1-dsfut7 f5a-f5c;
+          MISSING ARE ALL (99);
+          USEVARIABLES ARE c1j-c1r f1a-f1g dsfut1-dsfut7 f5a-f5c;
+
+  MODEL:        respon BY c1j-c1n;
+          freedom BY c1o-c1r;
+          effect BY f1a-f1g;
+          risk BY f5a-f5c;
+          future BY dsfut1-dsfut7;
+
+          effect ON respon freedom;
+          risk ON respon freedom;
+          future ON effect risk;
+
+  OUTPUT:         MODINDICES;
+          TECH1;
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+Confirmatory Factor Analysis;
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         659
+
+Number of dependent variables                                   26
+Number of independent variables                                  0
+Number of continuous latent variables                            5
+
+Observed dependent variables
+
+  Continuous
+   C1J         C1K         C1L         C1M         C1N         C1O
+   C1P         C1Q         C1R         F1A         F1B         F1C
+   F1D         F1E         F1F         F1G         DSFUT1      DSFUT2
+   DSFUT3      DSFUT4      DSFUT5      DSFUT6      DSFUT7      F5A
+   F5B         F5C
+
+Continuous latent variables
+   RESPON      FREEDOM     EFFECT      RISK        FUTURE
+
+
+Estimator                                                       ML
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  mplusdata.csv
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns            58
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              C1J           C1K           C1L           C1M           C1N
+              ________      ________      ________      ________      ________
+ C1J            0.941
+ C1K            0.938         0.942
+ C1L            0.935         0.936         0.938
+ C1M            0.929         0.932         0.927         0.933
+ C1N            0.932         0.933         0.929         0.927         0.935
+ C1O            0.936         0.938         0.935         0.929         0.930
+ C1P            0.935         0.936         0.933         0.929         0.929
+ C1Q            0.939         0.941         0.938         0.932         0.933
+ C1R            0.935         0.935         0.932         0.927         0.929
+ F1A            0.935         0.936         0.932         0.927         0.929
+ F1B            0.932         0.933         0.929         0.924         0.926
+ F1C            0.935         0.936         0.932         0.927         0.929
+ F1D            0.935         0.936         0.932         0.927         0.929
+ F1E            0.926         0.927         0.923         0.918         0.920
+ F1F            0.930         0.932         0.927         0.923         0.924
+ F1G            0.935         0.936         0.932         0.927         0.929
+ DSFUT1         0.812         0.810         0.810         0.804         0.804
+ DSFUT2         0.941         0.942         0.938         0.933         0.935
+ DSFUT3         0.777         0.775         0.774         0.768         0.769
+ DSFUT4         0.941         0.942         0.938         0.933         0.935
+ DSFUT5         0.818         0.816         0.815         0.807         0.810
+ DSFUT6         0.941         0.942         0.938         0.933         0.935
+ DSFUT7         0.809         0.807         0.806         0.798         0.801
+ F5A            0.888         0.888         0.883         0.879         0.880
+ F5B            0.885         0.886         0.882         0.877         0.879
+ F5C            0.886         0.888         0.883         0.879         0.880
+
+
+           Covariance Coverage
+              C1O           C1P           C1Q           C1R           F1A
+              ________      ________      ________      ________      ________
+ C1O            0.939
+ C1P            0.935         0.938
+ C1Q            0.939         0.938         0.942
+ C1R            0.933         0.932         0.936         0.936
+ F1A            0.933         0.932         0.936         0.930         0.991
+ F1B            0.930         0.929         0.933         0.927         0.986
+ F1C            0.933         0.932         0.936         0.930         0.988
+ F1D            0.933         0.932         0.936         0.930         0.989
+ F1E            0.924         0.923         0.927         0.921         0.979
+ F1F            0.929         0.927         0.932         0.926         0.985
+ F1G            0.933         0.932         0.936         0.930         0.989
+ DSFUT1         0.809         0.809         0.810         0.807         0.845
+ DSFUT2         0.939         0.938         0.942         0.936         0.991
+ DSFUT3         0.774         0.774         0.775         0.771         0.812
+ DSFUT4         0.939         0.938         0.942         0.936         0.991
+ DSFUT5         0.815         0.813         0.816         0.812         0.851
+ DSFUT6         0.939         0.938         0.942         0.936         0.991
+ DSFUT7         0.806         0.804         0.807         0.803         0.842
+ F5A            0.885         0.883         0.888         0.883         0.926
+ F5B            0.883         0.882         0.886         0.880         0.924
+ F5C            0.885         0.883         0.888         0.882         0.926
+
+
+           Covariance Coverage
+              F1B           F1C           F1D           F1E           F1F
+              ________      ________      ________      ________      ________
+ F1B            0.988
+ F1C            0.985         0.989
+ F1D            0.986         0.989         0.991
+ F1E            0.977         0.979         0.979         0.980
+ F1F            0.983         0.983         0.985         0.976         0.986
+ F1G            0.986         0.988         0.989         0.979         0.985
+ DSFUT1         0.842         0.844         0.845         0.838         0.841
+ DSFUT2         0.988         0.989         0.991         0.980         0.986
+ DSFUT3         0.807         0.809         0.810         0.800         0.806
+ DSFUT4         0.988         0.989         0.991         0.980         0.986
+ DSFUT5         0.850         0.850         0.851         0.842         0.848
+ DSFUT6         0.988         0.989         0.991         0.980         0.986
+ DSFUT7         0.838         0.839         0.841         0.830         0.836
+ F5A            0.923         0.924         0.926         0.915         0.921
+ F5B            0.921         0.923         0.924         0.914         0.920
+ F5C            0.923         0.924         0.926         0.915         0.921
+
+
+           Covariance Coverage
+              F1G           DSFUT1        DSFUT2        DSFUT3        DSFUT4
+              ________      ________      ________      ________      ________
+ F1G            0.991
+ DSFUT1         0.845         0.850
+ DSFUT2         0.991         0.850         1.000
+ DSFUT3         0.810         0.785         0.815         0.815
+ DSFUT4         0.991         0.850         1.000         0.815         1.000
+ DSFUT5         0.853         0.819         0.856         0.798         0.856
+ DSFUT6         0.991         0.850         1.000         0.815         1.000
+ DSFUT7         0.841         0.815         0.845         0.797         0.845
+ F5A            0.926         0.847         0.930         0.812         0.930
+ F5B            0.924         0.842         0.929         0.807         0.929
+ F5C            0.926         0.844         0.930         0.809         0.930
+
+
+           Covariance Coverage
+              DSFUT5        DSFUT6        DSFUT7        F5A           F5B
+              ________      ________      ________      ________      ________
+ DSFUT5         0.856
+ DSFUT6         0.856         1.000
+ DSFUT7         0.830         0.845         0.845
+ F5A            0.853         0.930         0.842         0.930
+ F5B            0.848         0.929         0.838         0.926         0.929
+ F5C            0.850         0.930         0.839         0.927         0.926
+
+
+           Covariance Coverage
+              F5C
+              ________
+ F5C            0.930
+
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS      -0.549D-16.  PROBLEM INVOLVING PARAMETER 67.
+
+     THIS IS MOST LIKELY DUE TO VARIABLE DSFUT2 BEING DICHOTOMOUS BUT
+     DECLARED AS CONTINUOUS.
+
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       85
+
+Loglikelihood
+
+          H0 Value                      -19012.680
+          H1 Value                      -18130.395
+
+Information Criteria
+
+          Akaike (AIC)                   38195.361
+          Bayesian (BIC)                 38577.072
+          Sample-Size Adjusted BIC       38307.195
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                           1764.570
+          Degrees of Freedom                   292
+          P-Value                           0.0000
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.087
+          90 Percent C.I.                    0.084  0.091
+          Probability RMSEA <= .05           0.000
+
+CFI/TLI
+
+          CFI                                0.744
+          TLI                                0.715
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                           6070.262
+          Degrees of Freedom                   325
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.074
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ RESPON   BY
+    C1J                1.000      0.000    999.000    999.000
+    C1K                0.805      0.188      4.286      0.000
+    C1L                0.643      0.176      3.655      0.000
+    C1M               -2.446      0.453     -5.402      0.000
+    C1N               -2.617      0.463     -5.658      0.000
+
+ FREEDOM  BY
+    C1O                1.000      0.000    999.000    999.000
+    C1P               -0.801      0.052    -15.284      0.000
+    C1Q                0.892      0.060     14.924      0.000
+    C1R                0.458      0.066      6.977      0.000
+
+ EFFECT   BY
+    F1A                1.000      0.000    999.000    999.000
+    F1B                0.973      0.076     12.815      0.000
+    F1C                0.658      0.060     11.021      0.000
+    F1D                1.103      0.081     13.563      0.000
+    F1E                1.383      0.096     14.474      0.000
+    F1F                1.492      0.110     13.605      0.000
+    F1G                1.304      0.098     13.346      0.000
+
+ RISK     BY
+    F5A                1.000      0.000    999.000    999.000
+    F5B                1.004      0.079     12.659      0.000
+    F5C                0.879      0.072     12.244      0.000
+
+ FUTURE   BY
+    DSFUT1             1.000      0.000    999.000    999.000
+    DSFUT2             0.429      0.048      8.994      0.000
+    DSFUT3             1.547      0.146     10.601      0.000
+    DSFUT4             0.482      0.052      9.299      0.000
+    DSFUT5             1.752      0.167     10.484      0.000
+    DSFUT6             0.557      0.057      9.693      0.000
+    DSFUT7             2.032      0.190     10.682      0.000
+
+ EFFECT   ON
+    RESPON             0.042      0.095      0.445      0.656
+    FREEDOM            0.042      0.034      1.222      0.222
+
+ RISK     ON
+    RESPON            -0.137      0.157     -0.867      0.386
+    FREEDOM           -0.159      0.055     -2.891      0.004
+
+ FUTURE   ON
+    EFFECT             0.610      0.080      7.598      0.000
+    RISK               0.040      0.036      1.115      0.265
+
+ FREEDOM  WITH
+    RESPON            -0.051      0.014     -3.544      0.000
+
+ Intercepts
+    C1J                3.689      0.040     91.359      0.000
+    C1K                4.062      0.036    112.307      0.000
+    C1L                2.313      0.036     63.977      0.000
+    C1M                2.767      0.038     72.243      0.000
+    C1N                2.842      0.041     69.661      0.000
+    C1O                2.066      0.036     56.642      0.000
+    C1P                3.899      0.035    111.890      0.000
+    C1Q                2.103      0.037     57.411      0.000
+    C1R                3.219      0.045     72.158      0.000
+    F1A                4.095      0.033    122.812      0.000
+    F1B                4.076      0.032    125.999      0.000
+    F1C                4.441      0.025    175.927      0.000
+    F1D                4.058      0.032    127.372      0.000
+    F1E                3.686      0.035    104.066      0.000
+    F1F                3.611      0.040     90.749      0.000
+    F1G                3.858      0.036    106.340      0.000
+    DSFUT1             3.748      0.050     74.315      0.000
+    DSFUT2             0.554      0.019     28.625      0.000
+    DSFUT3             3.473      0.054     64.001      0.000
+    DSFUT4             0.486      0.019     24.965      0.000
+    DSFUT5             3.294      0.058     57.209      0.000
+    DSFUT6             0.640      0.019     34.302      0.000
+    DSFUT7             3.449      0.058     59.445      0.000
+    F5A                3.998      0.038    105.271      0.000
+    F5B                3.136      0.045     69.961      0.000
+    F5C                3.545      0.043     82.576      0.000
+
+ Variances
+    RESPON             0.082      0.028      2.968      0.003
+    FREEDOM            0.563      0.053     10.567      0.000
+
+ Residual Variances
+    C1J                0.929      0.055     16.884      0.000
+    C1K                0.760      0.045     17.019      0.000
+    C1L                0.774      0.045     17.235      0.000
+    C1M                0.415      0.054      7.700      0.000
+    C1N                0.467      0.061      7.607      0.000
+    C1O                0.262      0.033      7.972      0.000
+    C1P                0.391      0.029     13.478      0.000
+    C1Q                0.385      0.033     11.627      0.000
+    C1R                1.111      0.065     17.129      0.000
+    F1A                0.469      0.029     16.200      0.000
+    F1B                0.438      0.027     16.140      0.000
+    F1C                0.304      0.018     16.924      0.000
+    F1D                0.350      0.023     15.143      0.000
+    F1E                0.323      0.024     13.469      0.000
+    F1F                0.459      0.033     13.851      0.000
+    F1G                0.422      0.029     14.491      0.000
+    DSFUT1             1.111      0.071     15.715      0.000
+    DSFUT2             0.184      0.011     16.720      0.000
+    DSFUT3             0.855      0.066     13.042      0.000
+    DSFUT4             0.170      0.011     16.101      0.000
+    DSFUT5             0.904      0.070     12.997      0.000
+    DSFUT6             0.123      0.009     13.864      0.000
+    DSFUT7             0.596      0.066      9.065      0.000
+    F5A                0.294      0.043      6.829      0.000
+    F5B                0.636      0.054     11.751      0.000
+    F5C                0.674      0.050     13.600      0.000
+    EFFECT             0.257      0.033      7.733      0.000
+    RISK               0.574      0.061      9.429      0.000
+    FUTURE             0.245      0.044      5.556      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.143E-03
+       (ratio of smallest to largest eigenvalue)
+
+
+MODEL MODIFICATION INDICES
+
+NOTE:  Modification indices for direct effects of observed dependent variables
+regressed on covariates may not be included.  To include these, request
+MODINDICES (ALL).
+
+Minimum M.I. value for printing the modification index    10.000
+
+                            M.I.     E.P.C.  Std E.P.C.  StdYX E.P.C.
+
+BY Statements
+
+FREEDOM  BY C1L            32.398     0.314      0.235        0.262
+EFFECT   BY C1R            18.788     0.396      0.201        0.181
+EFFECT   BY DSFUT1         12.349     0.425      0.216        0.179
+EFFECT   BY DSFUT6         15.725    -0.160     -0.081       -0.170
+FUTURE   BY F1C            13.778    -0.193     -0.113       -0.175
+FUTURE   BY F1D            22.314    -0.279     -0.163       -0.200
+FUTURE   BY F1F            14.300     0.266      0.156        0.153
+FUTURE   BY F1G            36.923     0.400      0.234        0.252
+
+ON/BY Statements
+
+EFFECT   ON RISK     /
+RISK     BY EFFECT         12.585     0.118      0.178        0.178
+RISK     ON EFFECT   /
+EFFECT   BY RISK           12.585     0.263      0.174        0.174
+RISK     ON FUTURE   /
+FUTURE   BY RISK           11.142     0.394      0.301        0.301
+
+WITH Statements
+
+C1K      WITH C1J          45.175     0.235      0.235        0.280
+C1L      WITH C1J          15.341     0.138      0.138        0.162
+C1L      WITH C1K          28.393     0.168      0.168        0.220
+C1M      WITH C1J          11.931     0.145      0.145        0.233
+C1N      WITH C1K          16.952     0.158      0.158        0.266
+C1N      WITH C1M          30.907     0.838      0.838        1.904
+C1O      WITH C1L          25.326     0.118      0.118        0.263
+C1P      WITH C1J          15.528     0.106      0.106        0.177
+C1P      WITH C1N          12.016     0.081      0.081        0.190
+C1Q      WITH C1O          11.221    -0.202     -0.202       -0.638
+C1R      WITH C1J          10.663     0.137      0.137        0.135
+C1R      WITH C1K          51.199     0.270      0.270        0.294
+C1R      WITH C1L          18.896     0.165      0.165        0.178
+F1B      WITH F1A         130.768     0.226      0.226        0.498
+F1C      WITH F1B          15.017     0.060      0.060        0.165
+F1D      WITH F1C          29.306     0.078      0.078        0.239
+F1E      WITH F1D          38.491     0.110      0.110        0.328
+F1F      WITH F1A          25.380    -0.111     -0.111       -0.240
+F1F      WITH F1B          29.618    -0.116     -0.116       -0.259
+F1F      WITH F1C          10.694    -0.056     -0.056       -0.151
+F1G      WITH F1A          15.444    -0.081     -0.081       -0.181
+F1G      WITH F1B          12.179    -0.069     -0.069       -0.161
+F1G      WITH F1D          25.563    -0.095     -0.095       -0.246
+F1G      WITH F1F          90.489     0.217      0.217        0.493
+DSFUT1   WITH F1D          61.184     0.225      0.225        0.361
+DSFUT2   WITH F1E          16.621     0.045      0.045        0.185
+DSFUT3   WITH F1E          15.698     0.109      0.109        0.207
+DSFUT3   WITH DSFUT1       73.913     0.413      0.413        0.424
+DSFUT3   WITH DSFUT2      140.572     0.228      0.228        0.576
+DSFUT4   WITH F1F          39.048     0.078      0.078        0.279
+DSFUT4   WITH DSFUT1       16.783    -0.081     -0.081       -0.185
+DSFUT4   WITH DSFUT3       22.731    -0.090     -0.090       -0.236
+DSFUT5   WITH F1F          39.747     0.205      0.205        0.318
+DSFUT5   WITH DSFUT2       22.763    -0.095     -0.095       -0.232
+DSFUT5   WITH DSFUT4      164.524     0.249      0.249        0.637
+DSFUT6   WITH F1D          14.111    -0.035     -0.035       -0.169
+DSFUT6   WITH F1G          20.142     0.047      0.047        0.204
+DSFUT6   WITH DSFUT1       35.666    -0.104     -0.104       -0.282
+DSFUT6   WITH DSFUT3       56.257    -0.128     -0.128       -0.393
+DSFUT6   WITH DSFUT5       52.320    -0.128     -0.128       -0.384
+DSFUT7   WITH F1E          12.160    -0.089     -0.089       -0.202
+DSFUT7   WITH F1G          26.930     0.144      0.144        0.287
+DSFUT7   WITH DSFUT2       46.023    -0.127     -0.127       -0.384
+DSFUT7   WITH DSFUT4       41.105    -0.119     -0.119       -0.375
+DSFUT7   WITH DSFUT6      242.181     0.273      0.273        1.008
+RISK     WITH EFFECT       12.585     0.068      0.176        0.176
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION
+
+
+           NU
+              C1J           C1K           C1L           C1M           C1N
+              ________      ________      ________      ________      ________
+      1           1             2             3             4             5
+
+
+           NU
+              C1O           C1P           C1Q           C1R           F1A
+              ________      ________      ________      ________      ________
+      1           6             7             8             9            10
+
+
+           NU
+              F1B           F1C           F1D           F1E           F1F
+              ________      ________      ________      ________      ________
+      1          11            12            13            14            15
+
+
+           NU
+              F1G           DSFUT1        DSFUT2        DSFUT3        DSFUT4
+              ________      ________      ________      ________      ________
+      1          16            17            18            19            20
+
+
+           NU
+              DSFUT5        DSFUT6        DSFUT7        F5A           F5B
+              ________      ________      ________      ________      ________
+      1          21            22            23            24            25
+
+
+           NU
+              F5C
+              ________
+      1          26
+
+
+           LAMBDA
+              RESPON        FREEDOM       EFFECT        RISK          FUTURE
+              ________      ________      ________      ________      ________
+ C1J                0             0             0             0             0
+ C1K               27             0             0             0             0
+ C1L               28             0             0             0             0
+ C1M               29             0             0             0             0
+ C1N               30             0             0             0             0
+ C1O                0             0             0             0             0
+ C1P                0            31             0             0             0
+ C1Q                0            32             0             0             0
+ C1R                0            33             0             0             0
+ F1A                0             0             0             0             0
+ F1B                0             0            34             0             0
+ F1C                0             0            35             0             0
+ F1D                0             0            36             0             0
+ F1E                0             0            37             0             0
+ F1F                0             0            38             0             0
+ F1G                0             0            39             0             0
+ DSFUT1             0             0             0             0             0
+ DSFUT2             0             0             0             0            40
+ DSFUT3             0             0             0             0            41
+ DSFUT4             0             0             0             0            42
+ DSFUT5             0             0             0             0            43
+ DSFUT6             0             0             0             0            44
+ DSFUT7             0             0             0             0            45
+ F5A                0             0             0             0             0
+ F5B                0             0             0            46             0
+ F5C                0             0             0            47             0
+
+
+           THETA
+              C1J           C1K           C1L           C1M           C1N
+              ________      ________      ________      ________      ________
+ C1J               48
+ C1K                0            49
+ C1L                0             0            50
+ C1M                0             0             0            51
+ C1N                0             0             0             0            52
+ C1O                0             0             0             0             0
+ C1P                0             0             0             0             0
+ C1Q                0             0             0             0             0
+ C1R                0             0             0             0             0
+ F1A                0             0             0             0             0
+ F1B                0             0             0             0             0
+ F1C                0             0             0             0             0
+ F1D                0             0             0             0             0
+ F1E                0             0             0             0             0
+ F1F                0             0             0             0             0
+ F1G                0             0             0             0             0
+ DSFUT1             0             0             0             0             0
+ DSFUT2             0             0             0             0             0
+ DSFUT3             0             0             0             0             0
+ DSFUT4             0             0             0             0             0
+ DSFUT5             0             0             0             0             0
+ DSFUT6             0             0             0             0             0
+ DSFUT7             0             0             0             0             0
+ F5A                0             0             0             0             0
+ F5B                0             0             0             0             0
+ F5C                0             0             0             0             0
+
+
+           THETA
+              C1O           C1P           C1Q           C1R           F1A
+              ________      ________      ________      ________      ________
+ C1O               53
+ C1P                0            54
+ C1Q                0             0            55
+ C1R                0             0             0            56
+ F1A                0             0             0             0            57
+ F1B                0             0             0             0             0
+ F1C                0             0             0             0             0
+ F1D                0             0             0             0             0
+ F1E                0             0             0             0             0
+ F1F                0             0             0             0             0
+ F1G                0             0             0             0             0
+ DSFUT1             0             0             0             0             0
+ DSFUT2             0             0             0             0             0
+ DSFUT3             0             0             0             0             0
+ DSFUT4             0             0             0             0             0
+ DSFUT5             0             0             0             0             0
+ DSFUT6             0             0             0             0             0
+ DSFUT7             0             0             0             0             0
+ F5A                0             0             0             0             0
+ F5B                0             0             0             0             0
+ F5C                0             0             0             0             0
+
+
+           THETA
+              F1B           F1C           F1D           F1E           F1F
+              ________      ________      ________      ________      ________
+ F1B               58
+ F1C                0            59
+ F1D                0             0            60
+ F1E                0             0             0            61
+ F1F                0             0             0             0            62
+ F1G                0             0             0             0             0
+ DSFUT1             0             0             0             0             0
+ DSFUT2             0             0             0             0             0
+ DSFUT3             0             0             0             0             0
+ DSFUT4             0             0             0             0             0
+ DSFUT5             0             0             0             0             0
+ DSFUT6             0             0             0             0             0
+ DSFUT7             0             0             0             0             0
+ F5A                0             0             0             0             0
+ F5B                0             0             0             0             0
+ F5C                0             0             0             0             0
+
+
+           THETA
+              F1G           DSFUT1        DSFUT2        DSFUT3        DSFUT4
+              ________      ________      ________      ________      ________
+ F1G               63
+ DSFUT1             0            64
+ DSFUT2             0             0            65
+ DSFUT3             0             0             0            66
+ DSFUT4             0             0             0             0            67
+ DSFUT5             0             0             0             0             0
+ DSFUT6             0             0             0             0             0
+ DSFUT7             0             0             0             0             0
+ F5A                0             0             0             0             0
+ F5B                0             0             0             0             0
+ F5C                0             0             0             0             0
+
+
+           THETA
+              DSFUT5        DSFUT6        DSFUT7        F5A           F5B
+              ________      ________      ________      ________      ________
+ DSFUT5            68
+ DSFUT6             0            69
+ DSFUT7             0             0            70
+ F5A                0             0             0            71
+ F5B                0             0             0             0            72
+ F5C                0             0             0             0             0
+
+
+           THETA
+              F5C
+              ________
+ F5C               73
+
+
+           ALPHA
+              RESPON        FREEDOM       EFFECT        RISK          FUTURE
+              ________      ________      ________      ________      ________
+      1           0             0             0             0             0
+
+
+           BETA
+              RESPON        FREEDOM       EFFECT        RISK          FUTURE
+              ________      ________      ________      ________      ________
+ RESPON             0             0             0             0             0
+ FREEDOM            0             0             0             0             0
+ EFFECT            74            75             0             0             0
+ RISK              76            77             0             0             0
+ FUTURE             0             0            78            79             0
+
+
+           PSI
+              RESPON        FREEDOM       EFFECT        RISK          FUTURE
+              ________      ________      ________      ________      ________
+ RESPON            80
+ FREEDOM           81            82
+ EFFECT             0             0            83
+ RISK               0             0             0            84
+ FUTURE             0             0             0             0            85
+
+
+     STARTING VALUES
+
+
+           NU
+              C1J           C1K           C1L           C1M           C1N
+              ________      ________      ________      ________      ________
+      1         3.690         4.063         2.314         2.766         2.841
+
+
+           NU
+              C1O           C1P           C1Q           C1R           F1A
+              ________      ________      ________      ________      ________
+      1         2.066         3.898         2.103         3.220         4.095
+
+
+           NU
+              F1B           F1C           F1D           F1E           F1F
+              ________      ________      ________      ________      ________
+      1         4.074         4.442         4.058         3.686         3.614
+
+
+           NU
+              F1G           DSFUT1        DSFUT2        DSFUT3        DSFUT4
+              ________      ________      ________      ________      ________
+      1         3.856         3.707         0.554         3.374         0.486
+
+
+           NU
+              DSFUT5        DSFUT6        DSFUT7        F5A           F5B
+              ________      ________      ________      ________      ________
+      1         3.184         0.640         3.318         3.998         3.136
+
+
+           NU
+              F5C
+              ________
+      1         3.545
+
+
+           LAMBDA
+              RESPON        FREEDOM       EFFECT        RISK          FUTURE
+              ________      ________      ________      ________      ________
+ C1J            1.000         0.000         0.000         0.000         0.000
+ C1K            0.872         0.000         0.000         0.000         0.000
+ C1L            0.705         0.000         0.000         0.000         0.000
+ C1M           -1.024         0.000         0.000         0.000         0.000
+ C1N           -0.811         0.000         0.000         0.000         0.000
+ C1O            0.000         1.000         0.000         0.000         0.000
+ C1P            0.000        -0.805         0.000         0.000         0.000
+ C1Q            0.000         0.893         0.000         0.000         0.000
+ C1R            0.000         0.436         0.000         0.000         0.000
+ F1A            0.000         0.000         1.000         0.000         0.000
+ F1B            0.000         0.000         0.982         0.000         0.000
+ F1C            0.000         0.000         0.577         0.000         0.000
+ F1D            0.000         0.000         0.805         0.000         0.000
+ F1E            0.000         0.000         1.005         0.000         0.000
+ F1F            0.000         0.000         0.935         0.000         0.000
+ F1G            0.000         0.000         0.826         0.000         0.000
+ DSFUT1         0.000         0.000         0.000         0.000         1.000
+ DSFUT2         0.000         0.000         0.000         0.000         0.380
+ DSFUT3         0.000         0.000         0.000         0.000         1.644
+ DSFUT4         0.000         0.000         0.000         0.000         0.206
+ DSFUT5         0.000         0.000         0.000         0.000         1.222
+ DSFUT6         0.000         0.000         0.000         0.000         0.293
+ DSFUT7         0.000         0.000         0.000         0.000         1.266
+ F5A            0.000         0.000         0.000         1.000         0.000
+ F5B            0.000         0.000         0.000         1.005         0.000
+ F5C            0.000         0.000         0.000         0.874         0.000
+
+
+           THETA
+              C1J           C1K           C1L           C1M           C1N
+              ________      ________      ________      ________      ________
+ C1J            0.506
+ C1K            0.000         0.407
+ C1L            0.000         0.000         0.404
+ C1M            0.000         0.000         0.000         0.453
+ C1N            0.000         0.000         0.000         0.000         0.514
+ C1O            0.000         0.000         0.000         0.000         0.000
+ C1P            0.000         0.000         0.000         0.000         0.000
+ C1Q            0.000         0.000         0.000         0.000         0.000
+ C1R            0.000         0.000         0.000         0.000         0.000
+ F1A            0.000         0.000         0.000         0.000         0.000
+ F1B            0.000         0.000         0.000         0.000         0.000
+ F1C            0.000         0.000         0.000         0.000         0.000
+ F1D            0.000         0.000         0.000         0.000         0.000
+ F1E            0.000         0.000         0.000         0.000         0.000
+ F1F            0.000         0.000         0.000         0.000         0.000
+ F1G            0.000         0.000         0.000         0.000         0.000
+ DSFUT1         0.000         0.000         0.000         0.000         0.000
+ DSFUT2         0.000         0.000         0.000         0.000         0.000
+ DSFUT3         0.000         0.000         0.000         0.000         0.000
+ DSFUT4         0.000         0.000         0.000         0.000         0.000
+ DSFUT5         0.000         0.000         0.000         0.000         0.000
+ DSFUT6         0.000         0.000         0.000         0.000         0.000
+ DSFUT7         0.000         0.000         0.000         0.000         0.000
+ F5A            0.000         0.000         0.000         0.000         0.000
+ F5B            0.000         0.000         0.000         0.000         0.000
+ F5C            0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              C1O           C1P           C1Q           C1R           F1A
+              ________      ________      ________      ________      ________
+ C1O            0.413
+ C1P            0.000         0.376
+ C1Q            0.000         0.000         0.417
+ C1R            0.000         0.000         0.000         0.615
+ F1A            0.000         0.000         0.000         0.000         0.364
+ F1B            0.000         0.000         0.000         0.000         0.000
+ F1C            0.000         0.000         0.000         0.000         0.000
+ F1D            0.000         0.000         0.000         0.000         0.000
+ F1E            0.000         0.000         0.000         0.000         0.000
+ F1F            0.000         0.000         0.000         0.000         0.000
+ F1G            0.000         0.000         0.000         0.000         0.000
+ DSFUT1         0.000         0.000         0.000         0.000         0.000
+ DSFUT2         0.000         0.000         0.000         0.000         0.000
+ DSFUT3         0.000         0.000         0.000         0.000         0.000
+ DSFUT4         0.000         0.000         0.000         0.000         0.000
+ DSFUT5         0.000         0.000         0.000         0.000         0.000
+ DSFUT6         0.000         0.000         0.000         0.000         0.000
+ DSFUT7         0.000         0.000         0.000         0.000         0.000
+ F5A            0.000         0.000         0.000         0.000         0.000
+ F5B            0.000         0.000         0.000         0.000         0.000
+ F5C            0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              F1B           F1C           F1D           F1E           F1F
+              ________      ________      ________      ________      ________
+ F1B            0.342
+ F1C            0.000         0.208
+ F1D            0.000         0.000         0.331
+ F1E            0.000         0.000         0.000         0.410
+ F1F            0.000         0.000         0.000         0.000         0.516
+ F1G            0.000         0.000         0.000         0.000         0.000
+ DSFUT1         0.000         0.000         0.000         0.000         0.000
+ DSFUT2         0.000         0.000         0.000         0.000         0.000
+ DSFUT3         0.000         0.000         0.000         0.000         0.000
+ DSFUT4         0.000         0.000         0.000         0.000         0.000
+ DSFUT5         0.000         0.000         0.000         0.000         0.000
+ DSFUT6         0.000         0.000         0.000         0.000         0.000
+ DSFUT7         0.000         0.000         0.000         0.000         0.000
+ F5A            0.000         0.000         0.000         0.000         0.000
+ F5B            0.000         0.000         0.000         0.000         0.000
+ F5C            0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              F1G           DSFUT1        DSFUT2        DSFUT3        DSFUT4
+              ________      ________      ________      ________      ________
+ F1G            0.431
+ DSFUT1         0.000         0.726
+ DSFUT2         0.000         0.000         0.124
+ DSFUT3         0.000         0.000         0.000         0.832
+ DSFUT4         0.000         0.000         0.000         0.000         0.125
+ DSFUT5         0.000         0.000         0.000         0.000         0.000
+ DSFUT6         0.000         0.000         0.000         0.000         0.000
+ DSFUT7         0.000         0.000         0.000         0.000         0.000
+ F5A            0.000         0.000         0.000         0.000         0.000
+ F5B            0.000         0.000         0.000         0.000         0.000
+ F5C            0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              DSFUT5        DSFUT6        DSFUT7        F5A           F5B
+              ________      ________      ________      ________      ________
+ DSFUT5         0.979
+ DSFUT6         0.000         0.115
+ DSFUT7         0.000         0.000         1.013
+ F5A            0.000         0.000         0.000         0.442
+ F5B            0.000         0.000         0.000         0.000         0.615
+ F5C            0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              F5C
+              ________
+ F5C            0.565
+
+
+           ALPHA
+              RESPON        FREEDOM       EFFECT        RISK          FUTURE
+              ________      ________      ________      ________      ________
+      1         0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              RESPON        FREEDOM       EFFECT        RISK          FUTURE
+              ________      ________      ________      ________      ________
+ RESPON         0.000         0.000         0.000         0.000         0.000
+ FREEDOM        0.000         0.000         0.000         0.000         0.000
+ EFFECT         0.000         0.000         0.000         0.000         0.000
+ RISK           0.000         0.000         0.000         0.000         0.000
+ FUTURE         0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              RESPON        FREEDOM       EFFECT        RISK          FUTURE
+              ________      ________      ________      ________      ________
+ RESPON         0.050
+ FREEDOM        0.000         0.050
+ EFFECT         0.000         0.000         0.050
+ RISK           0.000         0.000         0.000         0.050
+ FUTURE         0.000         0.000         0.000         0.000         0.050
+
+
+     Beginning Time:  12:51:49
+        Ending Time:  12:51:52
+       Elapsed Time:  00:00:03
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2011 Muthen & Muthen

@@ -1,0 +1,15 @@
+TITLE:	Confirmatory Factor Analysis;
+	
+DATA:	FILE = mplusdata.csv;
+
+VARIABLE:	NAMES ARE id c1a-c1r f1a-f1g dsnow1-dsnow7 dsfut1-dsfut7 f5a-f5c;
+	MISSING ARE ALL (99);
+	USEVARIABLES ARE c1j-c1n f1a-f1g dsfut1-dsfut7 f5a-f5c;
+	
+MODEL:	respon BY c1j-c1n;
+	effect BY f1a-f1g;
+	future BY dsfut1-dsfut7;
+	risk BY f5a-f5c;
+	
+OUTPUT: 	STANDARDIZED; 
+	MODINDICES;

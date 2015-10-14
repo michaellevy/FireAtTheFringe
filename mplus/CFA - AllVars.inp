@@ -1,0 +1,12 @@
+TITLE:	Confirmatory Factor Analysis;	
+DATA:	FILE = mplusdata.csv;
+VARIABLE:	NAMES ARE id c1a-c1r f1a-f1g dsnow1-dsnow7 dsfut1-dsfut7 f5a-f5c;
+	MISSING ARE ALL (99);
+	USEVARIABLES ARE c1a-c1r f1a-f1g dsfut1-dsfut7 f5a-f5c;
+MODEL:	biocen BY c1a-c1d;
+	anthro BY c1e-c1i;
+	respon BY c1j-c1n;
+	freedom BY c1o-c1r;
+	effect BY f1a-f1g;
+	future BY dsfut1-dsfut7;
+	risk BY f5a-f5c;

@@ -1,0 +1,13 @@
+TITLE:	Model 1 - Configural invariance;	
+DATA:	FILE = mplusdata.csv;
+VARIABLE:	NAMES ARE id c1a-c1r f1a-f1g dsnow1-dsnow7 dsfut1-dsfut7 f5a-f5c;
+	MISSING ARE ALL (99);
+	USEVARIABLES ARE c1a-c1r f1a-f1g dsfut1-dsfut7 f5a-f5c;
+MODEL:	f1 BY c1a-c1d;
+	f2 BY c1e-c1i;
+	f3 BY c1j-c1n;
+	f4 BY c1o-c1r;
+	f5 BY f1a-f1g;
+	f6 BY dsfut1-dsfut7;
+	f7 BY f5a-f5c;
+	[f1@0 f2@0 f3@0 f4@0 f5@0 f6@0 f7@0];
