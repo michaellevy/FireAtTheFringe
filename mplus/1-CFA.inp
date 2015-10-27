@@ -1,42 +1,56 @@
 TITLE:	Confirmatory Factor Analysis with all variables;
+	!respons3 not sig
 
 DATA:	FILE = mplusdata.csv;
 
-VARIABLE:NAMES ARE id biocen1-biocen4 anthro1-anthro5 
+VARIABLE:
+	NAMES ARE ! Every variable in data set
+		id biocen1-biocen4 anthro1-anthro5 
 		respons1-respons5 freedom1-freedom4 effect1-effect7 
 		dsnow1-dsnow7 dsfut1-dsfut7 risk1-risk3 
 		trust1-trust3 trustFS1-trustFS4 exp1-exp3 
 		neighb1-neighb7 nearcnf near03f;
-	CATEGORICAL ARE 
-		dsnow1-dsnow7 
-		exp1-exp3;
+
+	!CATEGORICAL ARE 
+		!dsnow1-dsnow7 
+
 	MISSING ARE ALL (99);
+
 	USEVARIABLES ARE 
-		biocen1-biocen4 
-		anthro1-anthro5 
-		respons1-respons5 
-		freedom1-freedom4 
-		effect1-effect7 
-		dsnow1-dsnow7 
-		dsfut1-dsfut7 
-		risk1-risk3 
-		trust1-trust3 
-		trustFS1-trustFS4 
-		exp1-exp3 
+		!biocen1-biocen4 
+		!anthro1-anthro5 
+		!respons1 respons2 respons4 respons5 
+		!freedom1-freedom4 
+		effect1-effect7
+		!dsnow1-dsnow7
+		dsfut1-dsfut7
+		risk1-risk3
+		trust1-trust3
+		trustFS1-trustFS4
+		!exp2-exp3 !drop exp1 (injured) because only 2% yes
 		neighb1-neighb7;
 
-MODEL:	biocen BY biocen1-biocen4;
-	anthro BY anthro1-anthro5;
-	respons BY respons1-respons5;
-	freedom BY freedom1-freedom4;
+ANALYSIS:
+	ESTIMATOR IS MLR; ! For continuous items whose residuals may not be normal
+
+MODEL:	
+	!biocen BY biocen1-biocen4;
+	!anthro BY anthro1-anthro5;
+	!respons BY respons1 respons2 respons4 respons5;
+	!freedom BY freedom1-freedom4;
+	!experien BY exp2-exp3;
 	effect BY effect1-effect7;
-	current BY dsnow1-dsnow7;
-	future BY dsfut1-dsfut7;
 	risk BY risk1-risk3;
 	trust BY trust1-trust3;
-	trustFS BY trustFS1-trustFS4;
-	experien BY exp1-exp3;
+	trust BY trustFS1-trustFS4;
 	norm BY neighb1-neighb7;
-
-OUTPUT: 	STANDARDIZED; 
-	MODINDICES;
+	!current BY dsnow1-dsnow7;
+	future BY dsfut1-dsfut7;
+	
+OUTPUT: 	
+	!SAMPSTAT;	! Descriptive stats for variables
+	!RESIDUAL;	! Requests standardized and normalized residuals
+	STDYX;		! Requests fully standardized solution
+	MODINDICES (4);	! Method to improve model (at p<.05)
+	
+!Notes: 
