@@ -1,0 +1,1884 @@
+Mplus VERSION 6.12 (Mac)
+MUTHEN & MUTHEN
+10/28/2015  12:19 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE:        Structural Equation Model - Behavioral intention;
+
+  DATA:        FILE = mplusdata.csv;
+          !LISTWISE = ON;
+
+  VARIABLE:
+          NAMES ARE id biocen1-biocen4 anthro1-anthro5
+                  respons1-respons5 freedom1-freedom4 effect1-effect7
+                  dsnow1-dsnow7 dsfut1-dsfut7 risk1-risk3
+                  trust1-trust3 trustFS1-trustFS4 exp1-exp3
+                  neighb1-neighb7 nearcnf near03f;
+          !CATEGORICAL ARE
+                  !dsnow1-dsnow7;
+                  !exp1-exp3;
+          MISSING ARE ALL (99);
+          USEVARIABLES ARE
+                  !biocen1-biocen4
+                  !anthro1-anthro5
+                  !respons1-respons5
+                  !freedom1-freedom4
+                  effect1-effect7
+                  !dsnow1-dsnow7
+                  dsfut1-dsfut7
+                  risk1-risk3
+                  trust1-trust3
+                  trustFS1-trustFS4
+                  !exp1 !only 2% yes to exp1 (injured)
+                  exp2
+                  exp3
+                  neighb1-neighb7
+                  near03f
+                  ;
+
+  ANALYSIS:
+          ESTIMATOR IS MLR; ! For continuous items whose residuals may not be normal
+          !ESTIMATOR IS WLSMV;
+          !ITERATIONS = 10000;
+
+  MODEL:
+
+  ! Measurement Models
+
+          !biocen BY biocen1-biocen4;
+          !anthro BY anthro1-anthro5;
+          !respons BY respons1-respons5;
+          !respons BY respons1 respons2 respons4 respons5;        ! drop respons3 (not sig)
+          !freedom BY freedom1-freedom4;
+          !experien BY exp2 exp3;                ! drop exp1 (injured) because only 2% yes
+          effect BY effect1-effect7;
+          risk BY risk1-risk3;
+          trust BY trust1-trust3;
+          trust BY trustFS1-trustFS4;
+          norm BY neighb1-neighb7;
+          !current BY dsnow1-dsnow7;
+          future BY dsfut1-dsfut7;
+
+  ! Structural Models
+
+          !effect ON respons freedom exp2 exp3;
+          !risk ON respons freedom exp2 exp3;
+          !trust ON respons freedom exp2 exp3;
+          !norm ON effect risk trust;
+
+          !effect ON exp2 exp3;
+          !risk ON exp2 exp3;
+          !trust ON exp2 exp3;
+
+          future ON exp2;
+          future ON exp3;
+          future ON near03f;
+          future ON effect;
+          future ON risk;
+          future ON trust;
+          future ON norm;
+
+  OUTPUT:
+          !SAMPSTAT;        ! Descriptive stats for variables
+          RESIDUAL;        ! Requests standardized and normalized residuals
+          STDYX;                ! Requests fully standardized solution
+          !MODINDICES (ALL);        ! Method to improve model (at p<.05)
+          TECH1;                ! Identifies paramaters for error messages
+
+
+
+*** WARNING
+  Data set contains cases with missing on x-variables.
+  These cases were not included in the analysis.
+  Number of cases with missing on x-variables:  3
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+Structural Equation Model - Behavioral intention;
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         635
+
+Number of dependent variables                                   31
+Number of independent variables                                  3
+Number of continuous latent variables                            5
+
+Observed dependent variables
+
+  Continuous
+   EFFECT1     EFFECT2     EFFECT3     EFFECT4     EFFECT5     EFFECT6
+   EFFECT7     DSFUT1      DSFUT2      DSFUT3      DSFUT4      DSFUT5
+   DSFUT6      DSFUT7      RISK1       RISK2       RISK3       TRUST1
+   TRUST2      TRUST3      TRUSTFS1    TRUSTFS2    TRUSTFS3    TRUSTFS4
+   NEIGHB1     NEIGHB2     NEIGHB3     NEIGHB4     NEIGHB5     NEIGHB6
+   NEIGHB7
+
+Observed independent variables
+   EXP2        EXP3        NEAR03F
+
+Continuous latent variables
+   EFFECT      RISK        TRUST       NORM        FUTURE
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  mplusdata.csv
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns            94
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              EFFECT1       EFFECT2       EFFECT3       EFFECT4       EFFECT5
+              ________      ________      ________      ________      ________
+ EFFECT1        0.994
+ EFFECT2        0.989         0.991
+ EFFECT3        0.991         0.987         0.992
+ EFFECT4        0.992         0.989         0.992         0.994
+ EFFECT5        0.981         0.980         0.981         0.981         0.983
+ EFFECT6        0.987         0.986         0.986         0.987         0.978
+ EFFECT7        0.992         0.989         0.991         0.992         0.981
+ DSFUT1         0.838         0.833         0.835         0.836         0.827
+ DSFUT2         0.808         0.805         0.806         0.808         0.798
+ DSFUT3         0.824         0.819         0.820         0.822         0.811
+ DSFUT4         0.846         0.843         0.844         0.846         0.838
+ DSFUT5         0.817         0.813         0.814         0.816         0.805
+ DSFUT6         0.855         0.854         0.854         0.855         0.846
+ DSFUT7         0.846         0.841         0.843         0.844         0.833
+ RISK1          0.928         0.924         0.926         0.928         0.917
+ RISK2          0.926         0.923         0.924         0.926         0.915
+ RISK3          0.928         0.924         0.926         0.928         0.917
+ TRUST1         0.984         0.981         0.983         0.984         0.973
+ TRUST2         0.989         0.986         0.987         0.989         0.978
+ TRUST3         0.983         0.980         0.981         0.983         0.972
+ TRUSTFS1       0.924         0.923         0.924         0.924         0.917
+ TRUSTFS2       0.929         0.926         0.928         0.929         0.918
+ TRUSTFS3       0.928         0.924         0.926         0.928         0.917
+ TRUSTFS4       0.929         0.926         0.928         0.929         0.918
+ NEIGHB1        0.857         0.855         0.855         0.857         0.850
+ NEIGHB2        0.857         0.855         0.855         0.857         0.850
+ NEIGHB3        0.857         0.855         0.855         0.857         0.850
+ NEIGHB4        0.857         0.855         0.855         0.857         0.850
+ NEIGHB5        0.857         0.855         0.855         0.857         0.850
+ NEIGHB6        0.857         0.855         0.855         0.857         0.850
+ NEIGHB7        0.857         0.855         0.855         0.857         0.850
+ EXP2           0.994         0.991         0.992         0.994         0.983
+ EXP3           0.994         0.991         0.992         0.994         0.983
+ NEAR03F        0.994         0.991         0.992         0.994         0.983
+
+
+           Covariance Coverage
+              EFFECT6       EFFECT7       DSFUT1        DSFUT2        DSFUT3
+              ________      ________      ________      ________      ________
+ EFFECT6        0.989
+ EFFECT7        0.987         0.994
+ DSFUT1         0.831         0.836         0.841
+ DSFUT2         0.803         0.808         0.800         0.813
+ DSFUT3         0.817         0.822         0.814         0.787         0.827
+ DSFUT4         0.841         0.846         0.816         0.792         0.803
+ DSFUT5         0.811         0.816         0.789         0.764         0.780
+ DSFUT6         0.852         0.857         0.817         0.792         0.806
+ DSFUT7         0.839         0.844         0.819         0.792         0.808
+ RISK1          0.923         0.928         0.836         0.809         0.824
+ RISK2          0.921         0.926         0.835         0.805         0.820
+ RISK3          0.923         0.928         0.835         0.806         0.820
+ TRUST1         0.980         0.984         0.833         0.805         0.819
+ TRUST2         0.984         0.989         0.836         0.808         0.822
+ TRUST3         0.978         0.983         0.831         0.803         0.817
+ TRUSTFS1       0.923         0.924         0.833         0.805         0.819
+ TRUSTFS2       0.926         0.929         0.836         0.808         0.822
+ TRUSTFS3       0.924         0.928         0.835         0.806         0.820
+ TRUSTFS4       0.926         0.929         0.836         0.808         0.822
+ NEIGHB1        0.852         0.857         0.724         0.702         0.712
+ NEIGHB2        0.852         0.857         0.724         0.702         0.712
+ NEIGHB3        0.852         0.857         0.724         0.702         0.712
+ NEIGHB4        0.852         0.857         0.724         0.702         0.712
+ NEIGHB5        0.852         0.857         0.724         0.702         0.712
+ NEIGHB6        0.852         0.857         0.724         0.702         0.712
+ NEIGHB7        0.852         0.857         0.724         0.702         0.712
+ EXP2           0.989         0.994         0.841         0.813         0.827
+ EXP3           0.989         0.994         0.841         0.813         0.827
+ NEAR03F        0.989         0.994         0.841         0.813         0.827
+
+
+           Covariance Coverage
+              DSFUT4        DSFUT5        DSFUT6        DSFUT7        RISK1
+              ________      ________      ________      ________      ________
+ DSFUT4         0.850
+ DSFUT5         0.789         0.820
+ DSFUT6         0.822         0.803         0.860
+ DSFUT7         0.817         0.802         0.833         0.849
+ RISK1          0.847         0.817         0.857         0.846         0.932
+ RISK2          0.843         0.813         0.852         0.841         0.928
+ RISK3          0.844         0.814         0.854         0.843         0.929
+ TRUST1         0.841         0.813         0.852         0.841         0.923
+ TRUST2         0.846         0.816         0.855         0.844         0.928
+ TRUST3         0.841         0.811         0.850         0.839         0.921
+ TRUSTFS1       0.841         0.813         0.854         0.841         0.923
+ TRUSTFS2       0.846         0.816         0.855         0.844         0.928
+ TRUSTFS3       0.844         0.814         0.854         0.843         0.926
+ TRUSTFS4       0.846         0.816         0.855         0.844         0.928
+ NEIGHB1        0.734         0.707         0.745         0.731         0.806
+ NEIGHB2        0.734         0.707         0.745         0.731         0.806
+ NEIGHB3        0.734         0.707         0.745         0.731         0.806
+ NEIGHB4        0.734         0.707         0.745         0.731         0.806
+ NEIGHB5        0.734         0.707         0.745         0.731         0.806
+ NEIGHB6        0.734         0.707         0.745         0.731         0.806
+ NEIGHB7        0.734         0.707         0.745         0.731         0.806
+ EXP2           0.850         0.820         0.860         0.849         0.932
+ EXP3           0.850         0.820         0.860         0.849         0.932
+ NEAR03F        0.850         0.820         0.860         0.849         0.932
+
+
+           Covariance Coverage
+              RISK2         RISK3         TRUST1        TRUST2        TRUST3
+              ________      ________      ________      ________      ________
+ RISK2          0.931
+ RISK3          0.928         0.932
+ TRUST1         0.921         0.923         0.989
+ TRUST2         0.926         0.928         0.989         0.994
+ TRUST3         0.920         0.921         0.983         0.986         0.987
+ TRUSTFS1       0.921         0.923         0.921         0.926         0.920
+ TRUSTFS2       0.926         0.928         0.926         0.931         0.924
+ TRUSTFS3       0.926         0.926         0.924         0.929         0.923
+ TRUSTFS4       0.926         0.928         0.926         0.931         0.924
+ NEIGHB1        0.802         0.803         0.855         0.858         0.854
+ NEIGHB2        0.802         0.803         0.855         0.858         0.854
+ NEIGHB3        0.802         0.803         0.855         0.858         0.854
+ NEIGHB4        0.802         0.803         0.855         0.858         0.854
+ NEIGHB5        0.802         0.803         0.855         0.858         0.854
+ NEIGHB6        0.802         0.803         0.855         0.858         0.854
+ NEIGHB7        0.802         0.803         0.855         0.858         0.854
+ EXP2           0.931         0.932         0.989         0.994         0.987
+ EXP3           0.931         0.932         0.989         0.994         0.987
+ NEAR03F        0.931         0.932         0.989         0.994         0.987
+
+
+           Covariance Coverage
+              TRUSTFS1      TRUSTFS2      TRUSTFS3      TRUSTFS4      NEIGHB1
+              ________      ________      ________      ________      ________
+ TRUSTFS1       0.929
+ TRUSTFS2       0.929         0.934
+ TRUSTFS3       0.926         0.931         0.932
+ TRUSTFS4       0.928         0.932         0.932         0.934
+ NEIGHB1        0.798         0.803         0.802         0.803         0.863
+ NEIGHB2        0.798         0.803         0.802         0.803         0.863
+ NEIGHB3        0.798         0.803         0.802         0.803         0.863
+ NEIGHB4        0.798         0.803         0.802         0.803         0.863
+ NEIGHB5        0.798         0.803         0.802         0.803         0.863
+ NEIGHB6        0.798         0.803         0.802         0.803         0.863
+ NEIGHB7        0.798         0.803         0.802         0.803         0.863
+ EXP2           0.929         0.934         0.932         0.934         0.863
+ EXP3           0.929         0.934         0.932         0.934         0.863
+ NEAR03F        0.929         0.934         0.932         0.934         0.863
+
+
+           Covariance Coverage
+              NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5       NEIGHB6
+              ________      ________      ________      ________      ________
+ NEIGHB2        0.863
+ NEIGHB3        0.863         0.863
+ NEIGHB4        0.863         0.863         0.863
+ NEIGHB5        0.863         0.863         0.863         0.863
+ NEIGHB6        0.863         0.863         0.863         0.863         0.863
+ NEIGHB7        0.863         0.863         0.863         0.863         0.863
+ EXP2           0.863         0.863         0.863         0.863         0.863
+ EXP3           0.863         0.863         0.863         0.863         0.863
+ NEAR03F        0.863         0.863         0.863         0.863         0.863
+
+
+           Covariance Coverage
+              NEIGHB7       EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________
+ NEIGHB7        0.863
+ EXP2           0.863         1.000
+ EXP3           0.863         1.000         1.000
+ NEAR03F        0.863         1.000         1.000         1.000
+
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES COULD NOT BE
+     COMPUTED.  THE MODEL MAY NOT BE IDENTIFIED.  CHECK YOUR MODEL.
+     PROBLEM INVOLVING PARAMETER 92.
+
+     THE CONDITION NUMBER IS       0.831D-11.
+
+     THE ROBUST CHI-SQUARE COULD NOT BE COMPUTED.
+
+
+
+MODEL RESULTS
+
+                    Estimate
+
+ EFFECT   BY
+    EFFECT1            1.000
+    EFFECT2            0.984
+    EFFECT3            0.668
+    EFFECT4            1.130
+    EFFECT5            1.401
+    EFFECT6            1.470
+    EFFECT7            1.286
+
+ RISK     BY
+    RISK1              1.000
+    RISK2              0.991
+    RISK3              0.886
+
+ TRUST    BY
+    TRUST1             1.000
+    TRUST2             0.756
+    TRUST3             1.270
+    TRUSTFS1           1.962
+    TRUSTFS2           2.106
+    TRUSTFS3           1.910
+    TRUSTFS4           2.337
+
+ NORM     BY
+    NEIGHB1            1.000
+    NEIGHB2            4.032
+    NEIGHB3            3.670
+    NEIGHB4            4.223
+    NEIGHB5            8.365
+    NEIGHB6            6.403
+    NEIGHB7            8.763
+
+ FUTURE   BY
+    DSFUT1             1.000
+    DSFUT2             1.550
+    DSFUT3             1.451
+    DSFUT4             2.046
+    DSFUT5             2.590
+    DSFUT6             2.636
+    DSFUT7             2.748
+
+ FUTURE   ON
+    EFFECT             0.440
+    RISK               0.047
+    TRUST             -0.071
+    NORM               0.498
+
+ FUTURE   ON
+    EXP2               0.040
+    EXP3               0.006
+    NEAR03F            0.000
+
+ RISK     WITH
+    EFFECT             0.064
+
+ TRUST    WITH
+    EFFECT             0.050
+    RISK              -0.006
+
+ NORM     WITH
+    EFFECT             0.000
+    RISK               0.000
+    TRUST              0.000
+
+ Intercepts
+    EFFECT1            4.091
+    EFFECT2            4.070
+    EFFECT3            4.436
+    EFFECT4            4.051
+    EFFECT5            3.675
+    EFFECT6            3.600
+    EFFECT7            3.854
+    DSFUT1             4.264
+    DSFUT2             4.022
+    DSFUT3             4.114
+    DSFUT4             3.666
+    DSFUT5             3.343
+    DSFUT6             3.152
+    DSFUT7             3.303
+    RISK1              3.987
+    RISK2              3.104
+    RISK3              3.530
+    TRUST1             3.354
+    TRUST2             3.623
+    TRUST3             3.394
+    TRUSTFS1           3.774
+    TRUSTFS2           3.686
+    TRUSTFS3           3.839
+    TRUSTFS4           3.582
+    NEIGHB1            0.943
+    NEIGHB2            0.781
+    NEIGHB3            0.836
+    NEIGHB4            0.705
+    NEIGHB5            0.533
+    NEIGHB6            0.468
+    NEIGHB7            0.636
+
+ Variances
+    EFFECT             0.251
+    RISK               0.574
+    TRUST              0.160
+    NORM               0.000
+
+ Residual Variances
+    EFFECT1            0.473
+    EFFECT2            0.440
+    EFFECT3            0.306
+    EFFECT4            0.330
+    EFFECT5            0.315
+    EFFECT6            0.484
+    EFFECT7            0.441
+    DSFUT1             0.582
+    DSFUT2             1.021
+    DSFUT3             0.859
+    DSFUT4             0.884
+    DSFUT5             0.742
+    DSFUT6             1.007
+    DSFUT7             0.970
+    RISK1              0.308
+    RISK2              0.643
+    RISK3              0.679
+    TRUST1             0.805
+    TRUST2             0.629
+    TRUST3             0.844
+    TRUSTFS1           0.255
+    TRUSTFS2           0.214
+    TRUSTFS3           0.269
+    TRUSTFS4           0.310
+    NEIGHB1            0.009
+    NEIGHB2            0.029
+    NEIGHB3            0.042
+    NEIGHB4            0.051
+    NEIGHB5            0.033
+    NEIGHB6            0.048
+    NEIGHB7            0.024
+    FUTURE             0.086
+
+
+STANDARDIZED MODEL RESULTS
+
+                      StdYX
+                    Estimate
+
+ EFFECT   BY
+    EFFECT1            0.589
+    EFFECT2            0.596
+    EFFECT3            0.518
+    EFFECT4            0.702
+    EFFECT5            0.781
+    EFFECT6            0.727
+    EFFECT7            0.696
+
+ RISK     BY
+    RISK1              0.807
+    RISK2              0.684
+    RISK3              0.632
+
+ TRUST    BY
+    TRUST1             0.407
+    TRUST2             0.356
+    TRUST3             0.484
+    TRUSTFS1           0.841
+    TRUSTFS2           0.876
+    TRUSTFS3           0.827
+    TRUSTFS4           0.859
+
+ NORM     BY
+    NEIGHB1            0.185
+    NEIGHB2            0.391
+    NEIGHB3            0.304
+    NEIGHB4            0.316
+    NEIGHB5            0.633
+    NEIGHB6            0.461
+    NEIGHB7            0.711
+
+ FUTURE   BY
+    DSFUT1             0.438
+    DSFUT2             0.496
+    DSFUT3             0.503
+    DSFUT4             0.629
+    DSFUT5             0.745
+    DSFUT6             0.699
+    DSFUT7             0.720
+
+ FUTURE   ON
+    EFFECT             0.594
+    RISK               0.095
+    TRUST             -0.076
+    NORM               0.024
+
+ FUTURE   ON
+    EXP2               0.050
+    EXP3               0.007
+    NEAR03F           -0.075
+
+ RISK     WITH
+    EFFECT             0.169
+
+ TRUST    WITH
+    EFFECT             0.248
+    RISK              -0.021
+
+ NORM     WITH
+    EFFECT             0.036
+    RISK              -0.011
+    TRUST              0.062
+
+ Intercepts
+    EFFECT1            4.807
+    EFFECT2            4.923
+    EFFECT3            6.860
+    EFFECT4            5.021
+    EFFECT5            4.088
+    EFFECT6            3.551
+    EFFECT7            4.163
+    DSFUT1             5.024
+    DSFUT2             3.458
+    DSFUT3             3.837
+    DSFUT4             3.031
+    DSFUT5             2.587
+    DSFUT6             2.247
+    DSFUT7             2.328
+    RISK1              4.244
+    RISK2              2.825
+    RISK3              3.320
+    TRUST1             3.414
+    TRUST2             4.268
+    TRUST3             3.233
+    TRUSTFS1           4.046
+    TRUSTFS2           3.835
+    TRUSTFS3           4.156
+    TRUSTFS4           3.293
+    NEIGHB1            9.800
+    NEIGHB2            4.250
+    NEIGHB3            3.888
+    NEIGHB4            2.953
+    NEIGHB5            2.264
+    NEIGHB6            1.888
+    NEIGHB7            2.893
+
+ Variances
+    EFFECT             1.000
+    RISK               1.000
+    TRUST              1.000
+    NORM               1.000
+
+ Residual Variances
+    EFFECT1            0.653
+    EFFECT2            0.644
+    EFFECT3            0.732
+    EFFECT4            0.507
+    EFFECT5            0.390
+    EFFECT6            0.471
+    EFFECT7            0.515
+    DSFUT1             0.808
+    DSFUT2             0.754
+    DSFUT3             0.747
+    DSFUT4             0.604
+    DSFUT5             0.445
+    DSFUT6             0.512
+    DSFUT7             0.482
+    RISK1              0.349
+    RISK2              0.533
+    RISK3              0.601
+    TRUST1             0.834
+    TRUST2             0.873
+    TRUST3             0.766
+    TRUSTFS1           0.293
+    TRUSTFS2           0.232
+    TRUSTFS3           0.316
+    TRUSTFS4           0.262
+    NEIGHB1            0.966
+    NEIGHB2            0.847
+    NEIGHB3            0.907
+    NEIGHB4            0.900
+    NEIGHB5            0.599
+    NEIGHB6            0.788
+    NEIGHB7            0.494
+    FUTURE             0.625
+
+
+MODEL COMMAND WITH FINAL ESTIMATES USED AS STARTING VALUES
+
+     effect BY effect1@1;
+     effect BY effect2*0.984;
+     effect BY effect3*0.668;
+     effect BY effect4*1.130;
+     effect BY effect5*1.401;
+     effect BY effect6*1.470;
+     effect BY effect7*1.286;
+     risk BY risk1@1;
+     risk BY risk2*0.991;
+     risk BY risk3*0.886;
+     trust BY trust1@1;
+     trust BY trust2*0.756;
+     trust BY trust3*1.270;
+     trust BY trustfs1*1.962;
+     trust BY trustfs2*2.106;
+     trust BY trustfs3*1.910;
+     trust BY trustfs4*2.337;
+     norm BY neighb1@1;
+     norm BY neighb2*4.032;
+     norm BY neighb3*3.670;
+     norm BY neighb4*4.223;
+     norm BY neighb5*8.365;
+     norm BY neighb6*6.403;
+     norm BY neighb7*8.763;
+     future BY dsfut1@1;
+     future BY dsfut2*1.550;
+     future BY dsfut3*1.451;
+     future BY dsfut4*2.046;
+     future BY dsfut5*2.590;
+     future BY dsfut6*2.636;
+     future BY dsfut7*2.748;
+
+     future ON exp2*0.040;
+     future ON exp3*0.006;
+     future ON near03f*0;
+     future ON effect*0.440;
+     future ON risk*0.047;
+     future ON trust*-0.071;
+     future ON norm*0.498;
+
+     risk WITH effect*0.064;
+     trust WITH effect*0.050;
+     trust WITH risk*-0.006;
+     norm WITH effect*0;
+     norm WITH risk*0;
+     norm WITH trust*0;
+
+     [ effect1*4.091 ];
+     [ effect2*4.070 ];
+     [ effect3*4.436 ];
+     [ effect4*4.051 ];
+     [ effect5*3.675 ];
+     [ effect6*3.600 ];
+     [ effect7*3.854 ];
+     [ dsfut1*4.264 ];
+     [ dsfut2*4.022 ];
+     [ dsfut3*4.114 ];
+     [ dsfut4*3.666 ];
+     [ dsfut5*3.343 ];
+     [ dsfut6*3.152 ];
+     [ dsfut7*3.303 ];
+     [ risk1*3.987 ];
+     [ risk2*3.104 ];
+     [ risk3*3.530 ];
+     [ trust1*3.354 ];
+     [ trust2*3.623 ];
+     [ trust3*3.394 ];
+     [ trustfs1*3.774 ];
+     [ trustfs2*3.686 ];
+     [ trustfs3*3.839 ];
+     [ trustfs4*3.582 ];
+     [ neighb1*0.943 ];
+     [ neighb2*0.781 ];
+     [ neighb3*0.836 ];
+     [ neighb4*0.705 ];
+     [ neighb5*0.533 ];
+     [ neighb6*0.468 ];
+     [ neighb7*0.636 ];
+
+     effect1*0.473;
+     effect2*0.440;
+     effect3*0.306;
+     effect4*0.330;
+     effect5*0.315;
+     effect6*0.484;
+     effect7*0.441;
+     dsfut1*0.582;
+     dsfut2*1.021;
+     dsfut3*0.859;
+     dsfut4*0.884;
+     dsfut5*0.742;
+     dsfut6*1.007;
+     dsfut7*0.970;
+     risk1*0.308;
+     risk2*0.643;
+     risk3*0.679;
+     trust1*0.805;
+     trust2*0.629;
+     trust3*0.844;
+     trustfs1*0.255;
+     trustfs2*0.214;
+     trustfs3*0.269;
+     trustfs4*0.310;
+     neighb1*0.009;
+     neighb2*0.029;
+     neighb3*0.042;
+     neighb4*0.051;
+     neighb5*0.033;
+     neighb6*0.048;
+     neighb7*0.024;
+     effect*0.251;
+     risk*0.574;
+     trust*0.160;
+     norm*0;
+     future*0.086;
+
+
+
+RESIDUAL OUTPUT
+
+
+     ESTIMATED MODEL AND RESIDUALS (OBSERVED - ESTIMATED)
+
+
+           Model Estimated Means/Intercepts/Thresholds
+              EFFECT1       EFFECT2       EFFECT3       EFFECT4       EFFECT5
+              ________      ________      ________      ________      ________
+      1         4.091         4.070         4.436         4.051         3.675
+
+
+           Model Estimated Means/Intercepts/Thresholds
+              EFFECT6       EFFECT7       DSFUT1        DSFUT2        DSFUT3
+              ________      ________      ________      ________      ________
+      1         3.600         3.854         4.269         4.030         4.122
+
+
+           Model Estimated Means/Intercepts/Thresholds
+              DSFUT4        DSFUT5        DSFUT6        DSFUT7        RISK1
+              ________      ________      ________      ________      ________
+      1         3.676         3.356         3.165         3.317         3.987
+
+
+           Model Estimated Means/Intercepts/Thresholds
+              RISK2         RISK3         TRUST1        TRUST2        TRUST3
+              ________      ________      ________      ________      ________
+      1         3.104         3.530         3.354         3.623         3.394
+
+
+           Model Estimated Means/Intercepts/Thresholds
+              TRUSTFS1      TRUSTFS2      TRUSTFS3      TRUSTFS4      NEIGHB1
+              ________      ________      ________      ________      ________
+      1         3.774         3.686         3.839         3.582         0.943
+
+
+           Model Estimated Means/Intercepts/Thresholds
+              NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5       NEIGHB6
+              ________      ________      ________      ________      ________
+      1         0.781         0.836         0.705         0.533         0.468
+
+
+           Model Estimated Means/Intercepts/Thresholds
+              NEIGHB7       EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________
+      1         0.636         0.310         0.786      1473.304
+
+
+           Residuals for Means/Intercepts/Thresholds
+              EFFECT1       EFFECT2       EFFECT3       EFFECT4       EFFECT5
+              ________      ________      ________      ________      ________
+      1         0.000         0.000        -0.001         0.000         0.000
+
+
+           Residuals for Means/Intercepts/Thresholds
+              EFFECT6       EFFECT7       DSFUT1        DSFUT2        DSFUT3
+              ________      ________      ________      ________      ________
+      1         0.001        -0.002        -0.001        -0.016        -0.009
+
+
+           Residuals for Means/Intercepts/Thresholds
+              DSFUT4        DSFUT5        DSFUT6        DSFUT7        RISK1
+              ________      ________      ________      ________      ________
+      1         0.009         0.005         0.007        -0.001         0.000
+
+
+           Residuals for Means/Intercepts/Thresholds
+              RISK2         RISK3         TRUST1        TRUST2        TRUST3
+              ________      ________      ________      ________      ________
+      1        -0.005        -0.002        -0.001        -0.002        -0.001
+
+
+           Residuals for Means/Intercepts/Thresholds
+              TRUSTFS1      TRUSTFS2      TRUSTFS3      TRUSTFS4      NEIGHB1
+              ________      ________      ________      ________      ________
+      1        -0.001         0.001        -0.002        -0.001         0.002
+
+
+           Residuals for Means/Intercepts/Thresholds
+              NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5       NEIGHB6
+              ________      ________      ________      ________      ________
+      1         0.002        -0.007        -0.003         0.001         0.003
+
+
+           Residuals for Means/Intercepts/Thresholds
+              NEIGHB7       EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________
+      1        -0.001         0.000         0.000         0.000
+
+
+           Model Estimated Covariances/Correlations/Residual Correlations
+              EFFECT1       EFFECT2       EFFECT3       EFFECT4       EFFECT5
+              ________      ________      ________      ________      ________
+ EFFECT1        1.198
+ EFFECT2        0.713         1.141
+ EFFECT3        0.484         0.476         0.629
+ EFFECT4        0.818         0.805         0.547         1.254
+ EFFECT5        1.015         0.998         0.678         1.146         1.736
+ EFFECT6        1.065         1.048         0.711         1.203         1.492
+ EFFECT7        0.932         0.917         0.622         1.052         1.305
+ DSFUT1         0.352         0.346         0.235         0.398         0.493
+ DSFUT2         0.546         0.537         0.365         0.617         0.764
+ DSFUT3         0.511         0.503         0.341         0.577         0.716
+ DSFUT4         0.720         0.708         0.481         0.813         1.009
+ DSFUT5         0.912         0.897         0.609         1.030         1.277
+ DSFUT6         0.928         0.913         0.620         1.048         1.300
+ DSFUT7         0.967         0.952         0.646         1.093         1.355
+ RISK1          0.247         0.243         0.165         0.279         0.346
+ RISK2          0.245         0.241         0.164         0.277         0.343
+ RISK3          0.219         0.216         0.146         0.248         0.307
+ TRUST1         0.168         0.165         0.112         0.190         0.235
+ TRUST2         0.127         0.125         0.085         0.143         0.178
+ TRUST3         0.213         0.210         0.142         0.241         0.299
+ TRUSTFS1       0.329         0.324         0.220         0.372         0.461
+ TRUSTFS2       0.354         0.348         0.236         0.399         0.495
+ TRUSTFS3       0.321         0.316         0.214         0.362         0.449
+ TRUSTFS4       0.392         0.386         0.262         0.443         0.549
+ NEIGHB1        0.284         0.279         0.190         0.321         0.398
+ NEIGHB2        1.145         1.126         0.765         1.293         1.603
+ NEIGHB3        1.042         1.025         0.696         1.177         1.459
+ NEIGHB4        1.199         1.180         0.801         1.354         1.679
+ NEIGHB5        2.375         2.336         1.586         2.683         3.326
+ NEIGHB6        1.818         1.788         1.214         2.054         2.546
+ NEIGHB7        2.488         2.447         1.662         2.810         3.485
+ EXP2           0.370         0.363         0.247         0.417         0.518
+ EXP3           0.323         0.318         0.216         0.365         0.453
+ NEAR03F        0.110         0.109         0.074         0.125         0.155
+
+
+           Model Estimated Covariances/Correlations/Residual Correlations
+              EFFECT6       EFFECT7       DSFUT1        DSFUT2        DSFUT3
+              ________      ________      ________      ________      ________
+ EFFECT6        2.050
+ EFFECT7        1.370         1.640
+ DSFUT1         0.518         0.453         1.390
+ DSFUT2         0.802         0.702         1.253         2.964
+ DSFUT3         0.751         0.657         1.173         1.819         2.561
+ DSFUT4         1.059         0.926         1.654         2.564         2.400
+ DSFUT5         1.340         1.173         2.093         3.246         3.038
+ DSFUT6         1.364         1.194         2.131         3.304         3.092
+ DSFUT7         1.422         1.244         2.221         3.444         3.223
+ RISK1          0.363         0.318         0.346         0.537         0.503
+ RISK2          0.360         0.315         0.343         0.532         0.498
+ RISK3          0.322         0.282         0.307         0.476         0.445
+ TRUST1         0.247         0.216         0.235         0.365         0.341
+ TRUST2         0.186         0.163         0.178         0.275         0.258
+ TRUST3         0.313         0.274         0.299         0.463         0.433
+ TRUSTFS1       0.484         0.424         0.461         0.715         0.669
+ TRUSTFS2       0.520         0.455         0.495         0.768         0.719
+ TRUSTFS3       0.471         0.413         0.449         0.696         0.652
+ TRUSTFS4       0.577         0.505         0.549         0.852         0.797
+ NEIGHB1        0.417         0.365         0.398         0.617         0.577
+ NEIGHB2        1.683         1.472         1.603         2.486         2.327
+ NEIGHB3        1.532         1.340         1.459         2.263         2.118
+ NEIGHB4        1.763         1.542         1.679         2.604         2.437
+ NEIGHB5        3.491         3.055         3.326         5.157         4.827
+ NEIGHB6        2.673         2.338         2.546         3.948         3.695
+ NEIGHB7        3.658         3.200         3.485         5.403         5.057
+ EXP2           0.543         0.475         0.518         0.802         0.751
+ EXP3           0.475         0.416         0.453         0.702         0.657
+ NEAR03F        0.162         0.142         0.155         0.240         0.224
+
+
+           Model Estimated Covariances/Correlations/Residual Correlations
+              DSFUT4        DSFUT5        DSFUT6        DSFUT7        RISK1
+              ________      ________      ________      ________      ________
+ DSFUT4         4.267
+ DSFUT5         4.282         6.164
+ DSFUT6         4.359         5.519         6.624
+ DSFUT7         4.544         5.753         5.855         7.073
+ RISK1          0.708         0.897         0.913         0.952         0.992
+ RISK2          0.702         0.889         0.905         0.943         0.678
+ RISK3          0.628         0.795         0.809         0.843         0.606
+ TRUST1         0.481         0.609         0.620         0.646         0.165
+ TRUST2         0.363         0.460         0.468         0.488         0.125
+ TRUST3         0.611         0.773         0.787         0.821         0.210
+ TRUSTFS1       0.944         1.195         1.216         1.268         0.324
+ TRUSTFS2       1.013         1.283         1.306         1.361         0.348
+ TRUSTFS3       0.919         1.163         1.184         1.234         0.316
+ TRUSTFS4       1.124         1.423         1.448         1.510         0.386
+ NEIGHB1        0.813         1.030         1.048         1.093         0.279
+ NEIGHB2        3.280         4.152         4.226         4.406         1.126
+ NEIGHB3        2.985         3.780         3.847         4.010         1.025
+ NEIGHB4        3.436         4.350         4.427         4.615         1.180
+ NEIGHB5        6.805         8.615         8.769         9.141         2.336
+ NEIGHB6        5.209         6.595         6.712         6.997         1.788
+ NEIGHB7        7.129         9.025         9.186         9.576         2.447
+ EXP2           1.059         1.340         1.364         1.422         0.363
+ EXP3           0.926         1.173         1.194         1.244         0.318
+ NEAR03F        0.316         0.400         0.407         0.425         0.109
+
+
+           Model Estimated Covariances/Correlations/Residual Correlations
+              RISK2         RISK3         TRUST1        TRUST2        TRUST3
+              ________      ________      ________      ________      ________
+ RISK2          1.315
+ RISK3          0.601         1.216
+ TRUST1         0.164         0.146         1.223
+ TRUST2         0.124         0.111         0.316         0.868
+ TRUST3         0.208         0.186         0.531         0.401         1.518
+ TRUSTFS1       0.321         0.287         0.820         0.620         1.041
+ TRUSTFS2       0.345         0.308         0.880         0.665         1.118
+ TRUSTFS3       0.313         0.280         0.799         0.603         1.014
+ TRUSTFS4       0.383         0.342         0.977         0.738         1.240
+ NEIGHB1        0.277         0.248         0.190         0.143         0.241
+ NEIGHB2        1.116         0.998         0.765         0.578         0.971
+ NEIGHB3        1.016         0.908         0.696         0.526         0.884
+ NEIGHB4        1.169         1.045         0.801         0.605         1.017
+ NEIGHB5        2.316         2.070         1.586         1.199         2.015
+ NEIGHB6        1.773         1.585         1.214         0.918         1.542
+ NEIGHB7        2.427         2.169         1.662         1.256         2.111
+ EXP2           0.360         0.322         0.247         0.186         0.313
+ EXP3           0.315         0.282         0.216         0.163         0.274
+ NEAR03F        0.108         0.096         0.074         0.056         0.094
+
+
+           Model Estimated Covariances/Correlations/Residual Correlations
+              TRUSTFS1      TRUSTFS2      TRUSTFS3      TRUSTFS4      NEIGHB1
+              ________      ________      ________      ________      ________
+ TRUSTFS1       1.863
+ TRUSTFS2       1.727         2.069
+ TRUSTFS3       1.566         1.682         1.795
+ TRUSTFS4       1.916         2.057         1.866         2.592
+ NEIGHB1        0.372         0.399         0.362         0.443         0.660
+ NEIGHB2        1.500         1.610         1.461         1.787         2.624
+ NEIGHB3        1.365         1.466         1.330         1.626         2.389
+ NEIGHB4        1.571         1.687         1.530         1.872         2.749
+ NEIGHB5        3.112         3.341         3.030         3.707         5.444
+ NEIGHB6        2.382         2.558         2.320         2.838         4.168
+ NEIGHB7        3.260         3.500         3.175         3.883         5.703
+ EXP2           0.484         0.520         0.471         0.577         0.417
+ EXP3           0.424         0.455         0.413         0.505         0.365
+ NEAR03F        0.145         0.155         0.141         0.172         0.125
+
+
+           Model Estimated Covariances/Correlations/Residual Correlations
+              NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5       NEIGHB6
+              ________      ________      ________      ________      ________
+ NEIGHB2       10.608
+ NEIGHB3        9.630         8.808
+ NEIGHB4       11.082        10.088        11.661
+ NEIGHB5       21.950        19.981        22.994        45.575
+ NEIGHB6       16.803        15.295        17.602        34.863        26.736
+ NEIGHB7       22.994        20.932        24.088        47.709        36.522
+ EXP2           1.683         1.532         1.763         3.491         2.673
+ EXP3           1.472         1.340         1.542         3.055         2.338
+ NEAR03F        0.502         0.457         0.526         1.042         0.798
+
+
+           Model Estimated Covariances/Correlations/Residual Correlations
+              NEIGHB7       EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________
+ NEIGHB7       50.004
+ EXP2           3.658         1.028
+ EXP3           3.200         0.475         0.857
+ NEAR03F        1.092         0.162         0.142         0.720
+
+
+           Residuals for Covariances/Correlations/Residual Correlations
+              EFFECT1       EFFECT2       EFFECT3       EFFECT4       EFFECT5
+              ________      ________      ________      ________      ________
+ EFFECT1       -0.474
+ EFFECT2       -0.284        -0.458
+ EFFECT3       -0.301        -0.264        -0.211
+ EFFECT4       -0.524        -0.546        -0.304        -0.605
+ EFFECT5       -0.686        -0.669        -0.480        -0.688        -0.923
+ EFFECT6       -0.768        -0.765        -0.505        -0.824        -0.950
+ EFFECT7       -0.667        -0.646        -0.404        -0.748        -0.878
+ DSFUT1        -0.143        -0.176        -0.156        -0.291        -0.388
+ DSFUT2        -0.419        -0.204        -0.209        -0.485        -0.575
+ DSFUT3        -0.428        -0.396        -0.170        -0.431        -0.623
+ DSFUT4        -0.568        -0.553        -0.321        -0.439        -0.696
+ DSFUT5        -0.647        -0.640        -0.509        -0.752        -0.834
+ DSFUT6        -0.645        -0.616        -0.504        -0.829        -0.913
+ DSFUT7        -0.641        -0.629        -0.496        -0.866        -0.979
+ RISK1         -0.178        -0.161        -0.128        -0.225        -0.281
+ RISK2         -0.182        -0.216        -0.151        -0.226        -0.235
+ RISK3         -0.122        -0.146        -0.104        -0.128        -0.164
+ TRUST1        -0.111        -0.099        -0.112        -0.106        -0.100
+ TRUST2        -0.060        -0.063        -0.031        -0.077        -0.080
+ TRUST3        -0.135        -0.152        -0.121        -0.160        -0.203
+ TRUSTFS1      -0.224        -0.222        -0.142        -0.275        -0.335
+ TRUSTFS2      -0.244        -0.249        -0.181        -0.276        -0.330
+ TRUSTFS3      -0.213        -0.213        -0.135        -0.258        -0.309
+ TRUSTFS4      -0.249        -0.249        -0.187        -0.293        -0.339
+ NEIGHB1       -0.282        -0.279        -0.190        -0.324        -0.396
+ NEIGHB2       -1.131        -1.118        -0.771        -1.296        -1.605
+ NEIGHB3       -1.043        -1.019        -0.686        -1.176        -1.464
+ NEIGHB4       -1.192        -1.170        -0.789        -1.339        -1.676
+ NEIGHB5       -2.377        -2.329        -1.593        -2.684        -3.321
+ NEIGHB6       -1.809        -1.778        -1.219        -2.049        -2.539
+ NEIGHB7       -2.479        -2.441        -1.658        -2.798        -3.483
+ EXP2          -0.359        -0.360        -0.231        -0.427        -0.524
+ EXP3          -0.338        -0.331        -0.222        -0.367        -0.471
+ NEAR03F      -36.269      -147.318      -146.577        94.559       150.451
+
+
+           Residuals for Covariances/Correlations/Residual Correlations
+              EFFECT6       EFFECT7       DSFUT1        DSFUT2        DSFUT3
+              ________      ________      ________      ________      ________
+ EFFECT6       -1.023
+ EFFECT7       -0.744        -0.781
+ DSFUT1        -0.391        -0.391        -0.668
+ DSFUT2        -0.583        -0.493        -0.792        -1.597
+ DSFUT3        -0.645        -0.473        -0.847        -1.355        -1.411
+ DSFUT4        -0.749        -0.633        -1.367        -2.133        -1.844
+ DSFUT5        -0.892        -0.753        -1.810        -2.755        -2.538
+ DSFUT6        -0.696        -0.679        -1.772        -2.761        -2.696
+ DSFUT7        -0.902        -0.605        -1.952        -2.958        -2.764
+ RISK1         -0.299        -0.261        -0.227        -0.453        -0.311
+ RISK2         -0.214        -0.231        -0.276        -0.500        -0.370
+ RISK3         -0.176        -0.169        -0.212        -0.449        -0.328
+ TRUST1        -0.100        -0.112        -0.235        -0.351        -0.333
+ TRUST2        -0.061        -0.043        -0.143        -0.206        -0.171
+ TRUST3        -0.185        -0.189        -0.274        -0.390        -0.484
+ TRUSTFS1      -0.369        -0.346        -0.482        -0.675        -0.697
+ TRUSTFS2      -0.411        -0.399        -0.526        -0.749        -0.732
+ TRUSTFS3      -0.368        -0.354        -0.426        -0.646        -0.667
+ TRUSTFS4      -0.430        -0.401        -0.539        -0.751        -0.796
+ NEIGHB1       -0.419        -0.366        -0.393        -0.612        -0.580
+ NEIGHB2       -1.686        -1.470        -1.592        -2.466        -2.332
+ NEIGHB3       -1.535        -1.340        -1.474        -2.258        -2.108
+ NEIGHB4       -1.759        -1.528        -1.696        -2.605        -2.414
+ NEIGHB5       -3.488        -3.058        -3.315        -5.129        -4.816
+ NEIGHB6       -2.672        -2.336        -2.537        -3.936        -3.698
+ NEIGHB7       -3.659        -3.200        -3.483        -5.384        -5.042
+ EXP2          -0.529        -0.458        -0.520        -0.783        -0.678
+ EXP3          -0.482        -0.432        -0.444        -0.719        -0.637
+ NEAR03F      152.936        66.750        36.553       -89.792      -759.935
+
+
+           Residuals for Covariances/Correlations/Residual Correlations
+              DSFUT4        DSFUT5        DSFUT6        DSFUT7        RISK1
+              ________      ________      ________      ________      ________
+ DSFUT4        -2.811
+ DSFUT5        -3.432        -4.495
+ DSFUT6        -3.779        -4.602        -4.663
+ DSFUT7        -3.852        -4.747        -4.632        -5.061
+ RISK1         -0.562        -0.797        -0.816        -0.834        -0.110
+ RISK2         -0.501        -0.741        -0.761        -0.864        -0.103
+ RISK3         -0.513        -0.629        -0.607        -0.731        -0.096
+ TRUST1        -0.370        -0.506        -0.580        -0.583        -0.215
+ TRUST2        -0.247        -0.368        -0.414        -0.329        -0.107
+ TRUST3        -0.553        -0.686        -0.743        -0.741        -0.314
+ TRUSTFS1      -0.876        -1.119        -1.225        -1.201        -0.341
+ TRUSTFS2      -0.972        -1.213        -1.343        -1.305        -0.378
+ TRUSTFS3      -0.910        -1.119        -1.144        -1.121        -0.280
+ TRUSTFS4      -1.093        -1.338        -1.402        -1.416        -0.407
+ NEIGHB1       -0.811        -1.023        -1.045        -1.089        -0.281
+ NEIGHB2       -3.279        -4.149        -4.218        -4.390        -1.134
+ NEIGHB3       -2.964        -3.755        -3.858        -3.996        -1.015
+ NEIGHB4       -3.413        -4.359        -4.440        -4.616        -1.170
+ NEIGHB5       -6.801        -8.614        -8.763        -9.134        -2.334
+ NEIGHB6       -5.218        -6.582        -6.696        -6.993        -1.771
+ NEIGHB7       -7.114        -9.019        -9.195        -9.590        -2.451
+ EXP2          -1.011        -1.336        -1.314        -1.373        -0.297
+ EXP3          -0.901        -1.175        -1.171        -1.253        -0.274
+ NEAR03F     -378.527      -172.830        74.116      -276.712      -193.580
+
+
+           Residuals for Covariances/Correlations/Residual Correlations
+              RISK2         RISK3         TRUST1        TRUST2        TRUST3
+              ________      ________      ________      ________      ________
+ RISK2         -0.106
+ RISK3         -0.104        -0.084
+ TRUST1        -0.276        -0.221        -0.258
+ TRUST2        -0.150        -0.158         0.224        -0.145
+ TRUST3        -0.273        -0.275         0.036         0.070        -0.417
+ TRUSTFS1      -0.274        -0.322        -0.531        -0.410        -0.661
+ TRUSTFS2      -0.323        -0.346        -0.616        -0.474        -0.747
+ TRUSTFS3      -0.269        -0.282        -0.538        -0.398        -0.659
+ TRUSTFS4      -0.394        -0.426        -0.646        -0.520        -0.800
+ NEIGHB1       -0.284        -0.242        -0.180        -0.142        -0.235
+ NEIGHB2       -1.105        -1.005        -0.765        -0.572        -0.962
+ NEIGHB3       -1.026        -0.920        -0.710        -0.537        -0.905
+ NEIGHB4       -1.170        -1.060        -0.798        -0.613        -1.004
+ NEIGHB5       -2.318        -2.074        -1.586        -1.191        -2.005
+ NEIGHB6       -1.775        -1.562        -1.206        -0.913        -1.540
+ NEIGHB7       -2.429        -2.181        -1.660        -1.260        -2.108
+ EXP2          -0.252        -0.294        -0.272        -0.195        -0.358
+ EXP3          -0.251        -0.261        -0.234        -0.199        -0.311
+ NEAR03F      -31.638       397.851       198.073       159.286       296.379
+
+
+           Residuals for Covariances/Correlations/Residual Correlations
+              TRUSTFS1      TRUSTFS2      TRUSTFS3      TRUSTFS4      NEIGHB1
+              ________      ________      ________      ________      ________
+ TRUSTFS1      -1.000
+ TRUSTFS2      -1.056        -1.152
+ TRUSTFS3      -0.964        -1.054        -0.948
+ TRUSTFS4      -1.213        -1.259        -1.143        -1.417
+ NEIGHB1       -0.371        -0.395        -0.364        -0.441        -0.650
+ NEIGHB2       -1.493        -1.596        -1.453        -1.766        -2.622
+ NEIGHB3       -1.365        -1.465        -1.339        -1.632        -2.388
+ NEIGHB4       -1.568        -1.672        -1.531        -1.864        -2.749
+ NEIGHB5       -3.113        -3.325        -3.025        -3.698        -5.442
+ NEIGHB6       -2.372        -2.538        -2.306        -2.814        -4.164
+ NEIGHB7       -3.267        -3.491        -3.190        -3.879        -5.701
+ EXP2          -0.473        -0.515        -0.468        -0.591        -0.420
+ EXP3          -0.458        -0.479        -0.447        -0.558        -0.369
+ NEAR03F        8.377        59.685        90.361        82.904        32.474
+
+
+           Residuals for Covariances/Correlations/Residual Correlations
+              NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5       NEIGHB6
+              ________      ________      ________      ________      ________
+ NEIGHB2      -10.574
+ NEIGHB3       -9.627        -8.759
+ NEIGHB4      -11.077       -10.075       -11.603
+ NEIGHB5      -21.938       -19.976       -22.981       -45.520
+ NEIGHB6      -16.796       -15.289       -17.601       -34.843       -26.674
+ NEIGHB7      -22.984       -20.919       -24.077       -47.686       -36.504
+ EXP2          -1.678        -1.519        -1.756        -3.489        -2.674
+ EXP3          -1.478        -1.336        -1.545        -3.056        -2.340
+ NEAR03F       11.632      -349.843      -175.359       -16.899        77.711
+
+
+           Residuals for Covariances/Correlations/Residual Correlations
+              NEIGHB7       EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________
+ NEIGHB7      -49.955
+ EXP2          -3.653        -0.814
+ EXP3          -3.201        -0.436        -0.689
+ NEAR03F      -46.585      -260.565      -324.564   ***********
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION
+
+
+           NU
+              EFFECT1       EFFECT2       EFFECT3       EFFECT4       EFFECT5
+              ________      ________      ________      ________      ________
+      1           1             2             3             4             5
+
+
+           NU
+              EFFECT6       EFFECT7       DSFUT1        DSFUT2        DSFUT3
+              ________      ________      ________      ________      ________
+      1           6             7             8             9            10
+
+
+           NU
+              DSFUT4        DSFUT5        DSFUT6        DSFUT7        RISK1
+              ________      ________      ________      ________      ________
+      1          11            12            13            14            15
+
+
+           NU
+              RISK2         RISK3         TRUST1        TRUST2        TRUST3
+              ________      ________      ________      ________      ________
+      1          16            17            18            19            20
+
+
+           NU
+              TRUSTFS1      TRUSTFS2      TRUSTFS3      TRUSTFS4      NEIGHB1
+              ________      ________      ________      ________      ________
+      1          21            22            23            24            25
+
+
+           NU
+              NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5       NEIGHB6
+              ________      ________      ________      ________      ________
+      1          26            27            28            29            30
+
+
+           NU
+              NEIGHB7       EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________
+      1          31             0             0             0
+
+
+           LAMBDA
+              EFFECT        RISK          TRUST         NORM          FUTURE
+              ________      ________      ________      ________      ________
+ EFFECT1            0             0             0             0             0
+ EFFECT2           32             0             0             0             0
+ EFFECT3           33             0             0             0             0
+ EFFECT4           34             0             0             0             0
+ EFFECT5           35             0             0             0             0
+ EFFECT6           36             0             0             0             0
+ EFFECT7           37             0             0             0             0
+ DSFUT1             0             0             0             0             0
+ DSFUT2             0             0             0             0            38
+ DSFUT3             0             0             0             0            39
+ DSFUT4             0             0             0             0            40
+ DSFUT5             0             0             0             0            41
+ DSFUT6             0             0             0             0            42
+ DSFUT7             0             0             0             0            43
+ RISK1              0             0             0             0             0
+ RISK2              0            44             0             0             0
+ RISK3              0            45             0             0             0
+ TRUST1             0             0             0             0             0
+ TRUST2             0             0            46             0             0
+ TRUST3             0             0            47             0             0
+ TRUSTFS1           0             0            48             0             0
+ TRUSTFS2           0             0            49             0             0
+ TRUSTFS3           0             0            50             0             0
+ TRUSTFS4           0             0            51             0             0
+ NEIGHB1            0             0             0             0             0
+ NEIGHB2            0             0             0            52             0
+ NEIGHB3            0             0             0            53             0
+ NEIGHB4            0             0             0            54             0
+ NEIGHB5            0             0             0            55             0
+ NEIGHB6            0             0             0            56             0
+ NEIGHB7            0             0             0            57             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+
+
+           LAMBDA
+              EXP2          EXP3          NEAR03F
+              ________      ________      ________
+ EFFECT1            0             0             0
+ EFFECT2            0             0             0
+ EFFECT3            0             0             0
+ EFFECT4            0             0             0
+ EFFECT5            0             0             0
+ EFFECT6            0             0             0
+ EFFECT7            0             0             0
+ DSFUT1             0             0             0
+ DSFUT2             0             0             0
+ DSFUT3             0             0             0
+ DSFUT4             0             0             0
+ DSFUT5             0             0             0
+ DSFUT6             0             0             0
+ DSFUT7             0             0             0
+ RISK1              0             0             0
+ RISK2              0             0             0
+ RISK3              0             0             0
+ TRUST1             0             0             0
+ TRUST2             0             0             0
+ TRUST3             0             0             0
+ TRUSTFS1           0             0             0
+ TRUSTFS2           0             0             0
+ TRUSTFS3           0             0             0
+ TRUSTFS4           0             0             0
+ NEIGHB1            0             0             0
+ NEIGHB2            0             0             0
+ NEIGHB3            0             0             0
+ NEIGHB4            0             0             0
+ NEIGHB5            0             0             0
+ NEIGHB6            0             0             0
+ NEIGHB7            0             0             0
+ EXP2               0             0             0
+ EXP3               0             0             0
+ NEAR03F            0             0             0
+
+
+           THETA
+              EFFECT1       EFFECT2       EFFECT3       EFFECT4       EFFECT5
+              ________      ________      ________      ________      ________
+ EFFECT1           58
+ EFFECT2            0            59
+ EFFECT3            0             0            60
+ EFFECT4            0             0             0            61
+ EFFECT5            0             0             0             0            62
+ EFFECT6            0             0             0             0             0
+ EFFECT7            0             0             0             0             0
+ DSFUT1             0             0             0             0             0
+ DSFUT2             0             0             0             0             0
+ DSFUT3             0             0             0             0             0
+ DSFUT4             0             0             0             0             0
+ DSFUT5             0             0             0             0             0
+ DSFUT6             0             0             0             0             0
+ DSFUT7             0             0             0             0             0
+ RISK1              0             0             0             0             0
+ RISK2              0             0             0             0             0
+ RISK3              0             0             0             0             0
+ TRUST1             0             0             0             0             0
+ TRUST2             0             0             0             0             0
+ TRUST3             0             0             0             0             0
+ TRUSTFS1           0             0             0             0             0
+ TRUSTFS2           0             0             0             0             0
+ TRUSTFS3           0             0             0             0             0
+ TRUSTFS4           0             0             0             0             0
+ NEIGHB1            0             0             0             0             0
+ NEIGHB2            0             0             0             0             0
+ NEIGHB3            0             0             0             0             0
+ NEIGHB4            0             0             0             0             0
+ NEIGHB5            0             0             0             0             0
+ NEIGHB6            0             0             0             0             0
+ NEIGHB7            0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+
+
+           THETA
+              EFFECT6       EFFECT7       DSFUT1        DSFUT2        DSFUT3
+              ________      ________      ________      ________      ________
+ EFFECT6           63
+ EFFECT7            0            64
+ DSFUT1             0             0            65
+ DSFUT2             0             0             0            66
+ DSFUT3             0             0             0             0            67
+ DSFUT4             0             0             0             0             0
+ DSFUT5             0             0             0             0             0
+ DSFUT6             0             0             0             0             0
+ DSFUT7             0             0             0             0             0
+ RISK1              0             0             0             0             0
+ RISK2              0             0             0             0             0
+ RISK3              0             0             0             0             0
+ TRUST1             0             0             0             0             0
+ TRUST2             0             0             0             0             0
+ TRUST3             0             0             0             0             0
+ TRUSTFS1           0             0             0             0             0
+ TRUSTFS2           0             0             0             0             0
+ TRUSTFS3           0             0             0             0             0
+ TRUSTFS4           0             0             0             0             0
+ NEIGHB1            0             0             0             0             0
+ NEIGHB2            0             0             0             0             0
+ NEIGHB3            0             0             0             0             0
+ NEIGHB4            0             0             0             0             0
+ NEIGHB5            0             0             0             0             0
+ NEIGHB6            0             0             0             0             0
+ NEIGHB7            0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+
+
+           THETA
+              DSFUT4        DSFUT5        DSFUT6        DSFUT7        RISK1
+              ________      ________      ________      ________      ________
+ DSFUT4            68
+ DSFUT5             0            69
+ DSFUT6             0             0            70
+ DSFUT7             0             0             0            71
+ RISK1              0             0             0             0            72
+ RISK2              0             0             0             0             0
+ RISK3              0             0             0             0             0
+ TRUST1             0             0             0             0             0
+ TRUST2             0             0             0             0             0
+ TRUST3             0             0             0             0             0
+ TRUSTFS1           0             0             0             0             0
+ TRUSTFS2           0             0             0             0             0
+ TRUSTFS3           0             0             0             0             0
+ TRUSTFS4           0             0             0             0             0
+ NEIGHB1            0             0             0             0             0
+ NEIGHB2            0             0             0             0             0
+ NEIGHB3            0             0             0             0             0
+ NEIGHB4            0             0             0             0             0
+ NEIGHB5            0             0             0             0             0
+ NEIGHB6            0             0             0             0             0
+ NEIGHB7            0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+
+
+           THETA
+              RISK2         RISK3         TRUST1        TRUST2        TRUST3
+              ________      ________      ________      ________      ________
+ RISK2             73
+ RISK3              0            74
+ TRUST1             0             0            75
+ TRUST2             0             0             0            76
+ TRUST3             0             0             0             0            77
+ TRUSTFS1           0             0             0             0             0
+ TRUSTFS2           0             0             0             0             0
+ TRUSTFS3           0             0             0             0             0
+ TRUSTFS4           0             0             0             0             0
+ NEIGHB1            0             0             0             0             0
+ NEIGHB2            0             0             0             0             0
+ NEIGHB3            0             0             0             0             0
+ NEIGHB4            0             0             0             0             0
+ NEIGHB5            0             0             0             0             0
+ NEIGHB6            0             0             0             0             0
+ NEIGHB7            0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+
+
+           THETA
+              TRUSTFS1      TRUSTFS2      TRUSTFS3      TRUSTFS4      NEIGHB1
+              ________      ________      ________      ________      ________
+ TRUSTFS1          78
+ TRUSTFS2           0            79
+ TRUSTFS3           0             0            80
+ TRUSTFS4           0             0             0            81
+ NEIGHB1            0             0             0             0            82
+ NEIGHB2            0             0             0             0             0
+ NEIGHB3            0             0             0             0             0
+ NEIGHB4            0             0             0             0             0
+ NEIGHB5            0             0             0             0             0
+ NEIGHB6            0             0             0             0             0
+ NEIGHB7            0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+
+
+           THETA
+              NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5       NEIGHB6
+              ________      ________      ________      ________      ________
+ NEIGHB2           83
+ NEIGHB3            0            84
+ NEIGHB4            0             0            85
+ NEIGHB5            0             0             0            86
+ NEIGHB6            0             0             0             0            87
+ NEIGHB7            0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+
+
+           THETA
+              NEIGHB7       EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________
+ NEIGHB7           88
+ EXP2               0             0
+ EXP3               0             0             0
+ NEAR03F            0             0             0             0
+
+
+           ALPHA
+              EFFECT        RISK          TRUST         NORM          FUTURE
+              ________      ________      ________      ________      ________
+      1           0             0             0             0             0
+
+
+           ALPHA
+              EXP2          EXP3          NEAR03F
+              ________      ________      ________
+      1           0             0             0
+
+
+           BETA
+              EFFECT        RISK          TRUST         NORM          FUTURE
+              ________      ________      ________      ________      ________
+ EFFECT             0             0             0             0             0
+ RISK               0             0             0             0             0
+ TRUST              0             0             0             0             0
+ NORM               0             0             0             0             0
+ FUTURE            89            90            91            92             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+
+
+           BETA
+              EXP2          EXP3          NEAR03F
+              ________      ________      ________
+ EFFECT             0             0             0
+ RISK               0             0             0
+ TRUST              0             0             0
+ NORM               0             0             0
+ FUTURE            93            94            95
+ EXP2               0             0             0
+ EXP3               0             0             0
+ NEAR03F            0             0             0
+
+
+           PSI
+              EFFECT        RISK          TRUST         NORM          FUTURE
+              ________      ________      ________      ________      ________
+ EFFECT            96
+ RISK              97            98
+ TRUST             99           100           101
+ NORM             102           103           104           105
+ FUTURE             0             0             0             0           106
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+
+
+           PSI
+              EXP2          EXP3          NEAR03F
+              ________      ________      ________
+ EXP2               0
+ EXP3               0             0
+ NEAR03F            0             0             0
+
+
+     STARTING VALUES
+
+
+           NU
+              EFFECT1       EFFECT2       EFFECT3       EFFECT4       EFFECT5
+              ________      ________      ________      ________      ________
+      1         4.092         4.068         4.437         4.052         3.676
+
+
+           NU
+              EFFECT6       EFFECT7       DSFUT1        DSFUT2        DSFUT3
+              ________      ________      ________      ________      ________
+      1         3.604         3.853         4.283         4.048         4.139
+
+
+           NU
+              DSFUT4        DSFUT5        DSFUT6        DSFUT7        RISK1
+              ________      ________      ________      ________      ________
+      1         3.694         3.355         3.165         3.317         3.988
+
+
+           NU
+              RISK2         RISK3         TRUST1        TRUST2        TRUST3
+              ________      ________      ________      ________      ________
+      1         3.105         3.530         3.352         3.621         3.391
+
+
+           NU
+              TRUSTFS1      TRUSTFS2      TRUSTFS3      TRUSTFS4      NEIGHB1
+              ________      ________      ________      ________      ________
+      1         3.780         3.690         3.840         3.583         0.943
+
+
+           NU
+              NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5       NEIGHB6
+              ________      ________      ________      ________      ________
+      1         0.781         0.836         0.705         0.533         0.468
+
+
+           NU
+              NEIGHB7       EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________
+      1         0.636         0.000         0.000         0.000
+
+
+           LAMBDA
+              EFFECT        RISK          TRUST         NORM          FUTURE
+              ________      ________      ________      ________      ________
+ EFFECT1        1.000         0.000         0.000         0.000         0.000
+ EFFECT2        0.990         0.000         0.000         0.000         0.000
+ EFFECT3        0.573         0.000         0.000         0.000         0.000
+ EFFECT4        0.801         0.000         0.000         0.000         0.000
+ EFFECT5        0.998         0.000         0.000         0.000         0.000
+ EFFECT6        0.917         0.000         0.000         0.000         0.000
+ EFFECT7        0.823         0.000         0.000         0.000         0.000
+ DSFUT1         0.000         0.000         0.000         0.000         1.000
+ DSFUT2         0.000         0.000         0.000         0.000         1.457
+ DSFUT3         0.000         0.000         0.000         0.000         1.131
+ DSFUT4         0.000         0.000         0.000         0.000         1.230
+ DSFUT5         0.000         0.000         0.000         0.000         1.435
+ DSFUT6         0.000         0.000         0.000         0.000         1.360
+ DSFUT7         0.000         0.000         0.000         0.000         1.516
+ RISK1          0.000         1.000         0.000         0.000         0.000
+ RISK2          0.000         0.975         0.000         0.000         0.000
+ RISK3          0.000         0.864         0.000         0.000         0.000
+ TRUST1         0.000         0.000         1.000         0.000         0.000
+ TRUST2         0.000         0.000         0.812         0.000         0.000
+ TRUST3         0.000         0.000         0.932         0.000         0.000
+ TRUSTFS1       0.000         0.000         0.573         0.000         0.000
+ TRUSTFS2       0.000         0.000         0.580         0.000         0.000
+ TRUSTFS3       0.000         0.000         0.571         0.000         0.000
+ TRUSTFS4       0.000         0.000         0.637         0.000         0.000
+ NEIGHB1        0.000         0.000         0.000         1.000         0.000
+ NEIGHB2        0.000         0.000         0.000         2.250         0.000
+ NEIGHB3        0.000         0.000         0.000         1.295         0.000
+ NEIGHB4        0.000         0.000         0.000         1.610         0.000
+ NEIGHB5        0.000         0.000         0.000         4.849         0.000
+ NEIGHB6        0.000         0.000         0.000         5.458         0.000
+ NEIGHB7        0.000         0.000         0.000         4.835         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              EXP2          EXP3          NEAR03F
+              ________      ________      ________
+ EFFECT1        0.000         0.000         0.000
+ EFFECT2        0.000         0.000         0.000
+ EFFECT3        0.000         0.000         0.000
+ EFFECT4        0.000         0.000         0.000
+ EFFECT5        0.000         0.000         0.000
+ EFFECT6        0.000         0.000         0.000
+ EFFECT7        0.000         0.000         0.000
+ DSFUT1         0.000         0.000         0.000
+ DSFUT2         0.000         0.000         0.000
+ DSFUT3         0.000         0.000         0.000
+ DSFUT4         0.000         0.000         0.000
+ DSFUT5         0.000         0.000         0.000
+ DSFUT6         0.000         0.000         0.000
+ DSFUT7         0.000         0.000         0.000
+ RISK1          0.000         0.000         0.000
+ RISK2          0.000         0.000         0.000
+ RISK3          0.000         0.000         0.000
+ TRUST1         0.000         0.000         0.000
+ TRUST2         0.000         0.000         0.000
+ TRUST3         0.000         0.000         0.000
+ TRUSTFS1       0.000         0.000         0.000
+ TRUSTFS2       0.000         0.000         0.000
+ TRUSTFS3       0.000         0.000         0.000
+ TRUSTFS4       0.000         0.000         0.000
+ NEIGHB1        0.000         0.000         0.000
+ NEIGHB2        0.000         0.000         0.000
+ NEIGHB3        0.000         0.000         0.000
+ NEIGHB4        0.000         0.000         0.000
+ NEIGHB5        0.000         0.000         0.000
+ NEIGHB6        0.000         0.000         0.000
+ NEIGHB7        0.000         0.000         0.000
+ EXP2           1.000         0.000         0.000
+ EXP3           0.000         1.000         0.000
+ NEAR03F        0.000         0.000         1.000
+
+
+           THETA
+              EFFECT1       EFFECT2       EFFECT3       EFFECT4       EFFECT5
+              ________      ________      ________      ________      ________
+ EFFECT1        0.362
+ EFFECT2        0.000         0.342
+ EFFECT3        0.000         0.000         0.209
+ EFFECT4        0.000         0.000         0.000         0.325
+ EFFECT5        0.000         0.000         0.000         0.000         0.407
+ EFFECT6        0.000         0.000         0.000         0.000         0.000
+ EFFECT7        0.000         0.000         0.000         0.000         0.000
+ DSFUT1         0.000         0.000         0.000         0.000         0.000
+ DSFUT2         0.000         0.000         0.000         0.000         0.000
+ DSFUT3         0.000         0.000         0.000         0.000         0.000
+ DSFUT4         0.000         0.000         0.000         0.000         0.000
+ DSFUT5         0.000         0.000         0.000         0.000         0.000
+ DSFUT6         0.000         0.000         0.000         0.000         0.000
+ DSFUT7         0.000         0.000         0.000         0.000         0.000
+ RISK1          0.000         0.000         0.000         0.000         0.000
+ RISK2          0.000         0.000         0.000         0.000         0.000
+ RISK3          0.000         0.000         0.000         0.000         0.000
+ TRUST1         0.000         0.000         0.000         0.000         0.000
+ TRUST2         0.000         0.000         0.000         0.000         0.000
+ TRUST3         0.000         0.000         0.000         0.000         0.000
+ TRUSTFS1       0.000         0.000         0.000         0.000         0.000
+ TRUSTFS2       0.000         0.000         0.000         0.000         0.000
+ TRUSTFS3       0.000         0.000         0.000         0.000         0.000
+ TRUSTFS4       0.000         0.000         0.000         0.000         0.000
+ NEIGHB1        0.000         0.000         0.000         0.000         0.000
+ NEIGHB2        0.000         0.000         0.000         0.000         0.000
+ NEIGHB3        0.000         0.000         0.000         0.000         0.000
+ NEIGHB4        0.000         0.000         0.000         0.000         0.000
+ NEIGHB5        0.000         0.000         0.000         0.000         0.000
+ NEIGHB6        0.000         0.000         0.000         0.000         0.000
+ NEIGHB7        0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              EFFECT6       EFFECT7       DSFUT1        DSFUT2        DSFUT3
+              ________      ________      ________      ________      ________
+ EFFECT6        0.514
+ EFFECT7        0.000         0.430
+ DSFUT1         0.000         0.000         0.359
+ DSFUT2         0.000         0.000         0.000         0.672
+ DSFUT3         0.000         0.000         0.000         0.000         0.573
+ DSFUT4         0.000         0.000         0.000         0.000         0.000
+ DSFUT5         0.000         0.000         0.000         0.000         0.000
+ DSFUT6         0.000         0.000         0.000         0.000         0.000
+ DSFUT7         0.000         0.000         0.000         0.000         0.000
+ RISK1          0.000         0.000         0.000         0.000         0.000
+ RISK2          0.000         0.000         0.000         0.000         0.000
+ RISK3          0.000         0.000         0.000         0.000         0.000
+ TRUST1         0.000         0.000         0.000         0.000         0.000
+ TRUST2         0.000         0.000         0.000         0.000         0.000
+ TRUST3         0.000         0.000         0.000         0.000         0.000
+ TRUSTFS1       0.000         0.000         0.000         0.000         0.000
+ TRUSTFS2       0.000         0.000         0.000         0.000         0.000
+ TRUSTFS3       0.000         0.000         0.000         0.000         0.000
+ TRUSTFS4       0.000         0.000         0.000         0.000         0.000
+ NEIGHB1        0.000         0.000         0.000         0.000         0.000
+ NEIGHB2        0.000         0.000         0.000         0.000         0.000
+ NEIGHB3        0.000         0.000         0.000         0.000         0.000
+ NEIGHB4        0.000         0.000         0.000         0.000         0.000
+ NEIGHB5        0.000         0.000         0.000         0.000         0.000
+ NEIGHB6        0.000         0.000         0.000         0.000         0.000
+ NEIGHB7        0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              DSFUT4        DSFUT5        DSFUT6        DSFUT7        RISK1
+              ________      ________      ________      ________      ________
+ DSFUT4         0.732
+ DSFUT5         0.000         0.836
+ DSFUT6         0.000         0.000         0.986
+ DSFUT7         0.000         0.000         0.000         1.012
+ RISK1          0.000         0.000         0.000         0.000         0.442
+ RISK2          0.000         0.000         0.000         0.000         0.000
+ RISK3          0.000         0.000         0.000         0.000         0.000
+ TRUST1         0.000         0.000         0.000         0.000         0.000
+ TRUST2         0.000         0.000         0.000         0.000         0.000
+ TRUST3         0.000         0.000         0.000         0.000         0.000
+ TRUSTFS1       0.000         0.000         0.000         0.000         0.000
+ TRUSTFS2       0.000         0.000         0.000         0.000         0.000
+ TRUSTFS3       0.000         0.000         0.000         0.000         0.000
+ TRUSTFS4       0.000         0.000         0.000         0.000         0.000
+ NEIGHB1        0.000         0.000         0.000         0.000         0.000
+ NEIGHB2        0.000         0.000         0.000         0.000         0.000
+ NEIGHB3        0.000         0.000         0.000         0.000         0.000
+ NEIGHB4        0.000         0.000         0.000         0.000         0.000
+ NEIGHB5        0.000         0.000         0.000         0.000         0.000
+ NEIGHB6        0.000         0.000         0.000         0.000         0.000
+ NEIGHB7        0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              RISK2         RISK3         TRUST1        TRUST2        TRUST3
+              ________      ________      ________      ________      ________
+ RISK2          0.605
+ RISK3          0.000         0.566
+ TRUST1         0.000         0.000         0.483
+ TRUST2         0.000         0.000         0.000         0.361
+ TRUST3         0.000         0.000         0.000         0.000         0.552
+ TRUSTFS1       0.000         0.000         0.000         0.000         0.000
+ TRUSTFS2       0.000         0.000         0.000         0.000         0.000
+ TRUSTFS3       0.000         0.000         0.000         0.000         0.000
+ TRUSTFS4       0.000         0.000         0.000         0.000         0.000
+ NEIGHB1        0.000         0.000         0.000         0.000         0.000
+ NEIGHB2        0.000         0.000         0.000         0.000         0.000
+ NEIGHB3        0.000         0.000         0.000         0.000         0.000
+ NEIGHB4        0.000         0.000         0.000         0.000         0.000
+ NEIGHB5        0.000         0.000         0.000         0.000         0.000
+ NEIGHB6        0.000         0.000         0.000         0.000         0.000
+ NEIGHB7        0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              TRUSTFS1      TRUSTFS2      TRUSTFS3      TRUSTFS4      NEIGHB1
+              ________      ________      ________      ________      ________
+ TRUSTFS1       0.432
+ TRUSTFS2       0.000         0.459
+ TRUSTFS3       0.000         0.000         0.424
+ TRUSTFS4       0.000         0.000         0.000         0.588
+ NEIGHB1        0.000         0.000         0.000         0.000         0.005
+ NEIGHB2        0.000         0.000         0.000         0.000         0.000
+ NEIGHB3        0.000         0.000         0.000         0.000         0.000
+ NEIGHB4        0.000         0.000         0.000         0.000         0.000
+ NEIGHB5        0.000         0.000         0.000         0.000         0.000
+ NEIGHB6        0.000         0.000         0.000         0.000         0.000
+ NEIGHB7        0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5       NEIGHB6
+              ________      ________      ________      ________      ________
+ NEIGHB2        0.017
+ NEIGHB3        0.000         0.023
+ NEIGHB4        0.000         0.000         0.029
+ NEIGHB5        0.000         0.000         0.000         0.028
+ NEIGHB6        0.000         0.000         0.000         0.000         0.031
+ NEIGHB7        0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              NEIGHB7       EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________
+ NEIGHB7        0.024
+ EXP2           0.000         0.000
+ EXP3           0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              EFFECT        RISK          TRUST         NORM          FUTURE
+              ________      ________      ________      ________      ________
+      1         0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              EXP2          EXP3          NEAR03F
+              ________      ________      ________
+      1         0.310         0.786      1473.304
+
+
+           BETA
+              EFFECT        RISK          TRUST         NORM          FUTURE
+              ________      ________      ________      ________      ________
+ EFFECT         0.000         0.000         0.000         0.000         0.000
+ RISK           0.000         0.000         0.000         0.000         0.000
+ TRUST          0.000         0.000         0.000         0.000         0.000
+ NORM           0.000         0.000         0.000         0.000         0.000
+ FUTURE         0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              EXP2          EXP3          NEAR03F
+              ________      ________      ________
+ EFFECT         0.000         0.000         0.000
+ RISK           0.000         0.000         0.000
+ TRUST          0.000         0.000         0.000
+ NORM           0.000         0.000         0.000
+ FUTURE         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000
+
+
+           PSI
+              EFFECT        RISK          TRUST         NORM          FUTURE
+              ________      ________      ________      ________      ________
+ EFFECT         0.050
+ RISK           0.000         0.050
+ TRUST          0.000         0.000         0.050
+ NORM           0.000         0.000         0.000         0.050
+ FUTURE         0.000         0.000         0.000         0.000         0.050
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              EXP2          EXP3          NEAR03F
+              ________      ________      ________
+ EXP2           0.214
+ EXP3           0.040         0.168
+ NEAR03F     -260.403      -324.422   ***********
+
+
+     Beginning Time:  12:19:49
+        Ending Time:  12:20:06
+       Elapsed Time:  00:00:17
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2011 Muthen & Muthen

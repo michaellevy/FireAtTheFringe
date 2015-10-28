@@ -1,4 +1,4 @@
-TITLE:	Structural Equation Model - Behavioral intention with all variables;	
+TITLE:	Structural Equation Model - Behavioral intention;	
 
 DATA:	FILE = mplusdata.csv;
 	!LISTWISE = ON;
@@ -10,20 +10,20 @@ VARIABLE:
 		trust1-trust3 trustFS1-trustFS4 exp1-exp3 
 		neighb1-neighb7 nearcnf near03f;
 	!CATEGORICAL ARE 
-		!dsnow1-dsnow7 
+		!dsnow1-dsnow7;
 		!exp1-exp3;
 	MISSING ARE ALL (99);
 	USEVARIABLES ARE 
 		!biocen1-biocen4 
 		!anthro1-anthro5 
-		!respons1 respons2 respons4 respons5 
+		!respons1-respons5 
 		!freedom1-freedom4 
 		effect1-effect7
 		!dsnow1-dsnow7 
 		dsfut1-dsfut7 
 		risk1-risk3 
-		!trust1-trust3 
-		!trustFS1-trustFS4 
+		trust1-trust3 
+		trustFS1-trustFS4 
 		!exp1 !only 2% yes to exp1 (injured)
 		!exp2 
 		!exp3
@@ -36,18 +36,25 @@ ANALYSIS:
 	!ESTIMATOR IS WLSMV;
 	!ITERATIONS = 10000;
 	
-MODEL:	!biocen BY biocen1-biocen4;
+MODEL:	
+
+! Measurement Models
+
+	!biocen BY biocen1-biocen4;
 	!anthro BY anthro1-anthro5;
-	!respons BY respons1 respons2 respons4 respons5;
+	!respons BY respons1-respons5;
+	!respons BY respons1 respons2 respons4 respons5;	! drop respons3 (not sig)
 	!freedom BY freedom1-freedom4;
-	!experien BY exp1 exp2 exp3;
+	!experien BY exp2 exp3;		! drop exp1 (injured) because only 2% yes
 	effect BY effect1-effect7;
 	risk BY risk1-risk3;
-	!trust BY trust1-trust3 trustFS1-trustFS4;
+	trust BY trust1-trust3;
+	trust BY trustFS1-trustFS4;
 	!norm BY neighb1-neighb7;
 	!current BY dsnow1-dsnow7;
 	future BY dsfut1-dsfut7;
 	
+! Structural Models
 			
 	!effect ON respons freedom exp2 exp3;
 	!risk ON respons freedom exp2 exp3;
@@ -57,16 +64,20 @@ MODEL:	!biocen BY biocen1-biocen4;
 	!effect ON exp2 exp3;
 	!risk ON exp2 exp3;
 	!trust ON exp2 exp3;
+	
 	!future ON exp2;
 	!future ON exp3;
 	!future ON near03f;
 	future ON effect;
 	future ON risk;
-	!future ON trust;
-	!future ON norm;
+	future ON trust;
+	!future ON norm;	! Non identification error message;
+			! problem in beta matrix (regression coefficients)
+			! between norm and future
 
 OUTPUT:
+	!SAMPSTAT;	! Descriptive stats for variables
 	!RESIDUAL;	! Requests standardized and normalized residuals
 	STDYX;		! Requests fully standardized solution
-	!MODINDICES (4);	! Method to improve model (at p<.05)
-	!TECH1;		! Identifies paramaters for error messages
+	!MODINDICES (ALL);	! Method to improve model (at p<.05)
+	TECH1;		! Identifies paramaters for error messages

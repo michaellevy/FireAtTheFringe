@@ -1,0 +1,422 @@
+Mplus VERSION 6.12 (Mac)
+MUTHEN & MUTHEN
+10/27/2015   3:18 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE:        Confirmatory Factor Analysis for Norm;
+
+  DATA:        FILE = mplusdata.csv;
+
+  VARIABLE:
+          NAMES ARE ! Every variable in data set
+                  id biocen1-biocen4 anthro1-anthro5
+                  respons1-respons5 freedom1-freedom4 effect1-effect7
+                  dsnow1-dsnow7 dsfut1-dsfut7 risk1-risk3
+                  trust1-trust3 trustFS1-trustFS4 exp1-exp3
+                  neighb1-neighb7 nearcnf near03f;
+
+          MISSING ARE ALL (99);
+
+          USEVARIABLES ARE
+                  neighb1-neighb7;
+
+  ANALYSIS:
+          ESTIMATOR IS MLR; ! For continuous items whose residuals may not be normal
+
+  MODEL:
+
+          norm BY neighb1-neighb7;
+
+  OUTPUT:
+          SAMPSTAT;        ! Descriptive stats for variables
+          !RESIDUAL;        ! Requests standardized and normalized residuals
+          !STDYX;                ! Requests fully standardized solution
+          !MODINDICES (4);        ! Method to improve model (at p<.05)
+          TECH1;                ! Identifies paramaters for error messages
+
+
+
+*** WARNING
+  Data set contains cases with missing on all variables.
+  These cases were not included in the analysis.
+  Number of cases with missing on all variables:  87
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+Confirmatory Factor Analysis for Norm;
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         551
+
+Number of dependent variables                                    7
+Number of independent variables                                  0
+Number of continuous latent variables                            1
+
+Observed dependent variables
+
+  Continuous
+   NEIGHB1     NEIGHB2     NEIGHB3     NEIGHB4     NEIGHB5     NEIGHB6
+   NEIGHB7
+
+Continuous latent variables
+   NORM
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  mplusdata.csv
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             1
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              NEIGHB1       NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5
+              ________      ________      ________      ________      ________
+ NEIGHB1        1.000
+ NEIGHB2        1.000         1.000
+ NEIGHB3        1.000         1.000         1.000
+ NEIGHB4        1.000         1.000         1.000         1.000
+ NEIGHB5        1.000         1.000         1.000         1.000         1.000
+ NEIGHB6        1.000         1.000         1.000         1.000         1.000
+ NEIGHB7        1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              NEIGHB6       NEIGHB7
+              ________      ________
+ NEIGHB6        1.000
+ NEIGHB7        1.000         1.000
+
+
+SAMPLE STATISTICS
+
+
+     ESTIMATED SAMPLE STATISTICS
+
+
+           Means
+              NEIGHB1       NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5
+              ________      ________      ________      ________      ________
+      1         0.943         0.782         0.837         0.705         0.532
+
+
+           Means
+              NEIGHB6       NEIGHB7
+              ________      ________
+      1         0.468         0.636
+
+
+           Covariances
+              NEIGHB1       NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5
+              ________      ________      ________      ________      ________
+ NEIGHB1        0.009
+ NEIGHB2        0.002         0.034
+ NEIGHB3        0.001         0.004         0.046
+ NEIGHB4        0.000         0.006         0.012         0.057
+ NEIGHB5        0.002         0.012         0.004         0.013         0.056
+ NEIGHB6        0.004         0.006         0.007         0.002         0.019
+ NEIGHB7        0.002         0.011         0.013         0.012         0.022
+
+
+           Covariances
+              NEIGHB6       NEIGHB7
+              ________      ________
+ NEIGHB6        0.062
+ NEIGHB7        0.018         0.048
+
+
+           Correlations
+              NEIGHB1       NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5
+              ________      ________      ________      ________      ________
+ NEIGHB1        1.000
+ NEIGHB2        0.119         1.000
+ NEIGHB3        0.053         0.091         1.000
+ NEIGHB4        0.007         0.128         0.228         1.000
+ NEIGHB5        0.108         0.269         0.086         0.230         1.000
+ NEIGHB6        0.177         0.141         0.129         0.036         0.319
+ NEIGHB7        0.104         0.269         0.277         0.225         0.432
+
+
+           Correlations
+              NEIGHB6       NEIGHB7
+              ________      ________
+ NEIGHB6        1.000
+ NEIGHB7        0.336         1.000
+
+
+     MAXIMUM LOG-LIKELIHOOD VALUE FOR THE UNRESTRICTED (H1) MODEL IS     982.019
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       21
+
+Loglikelihood
+
+          H0 Value                         955.587
+          H0 Scaling Correction Factor       2.706
+            for MLR
+          H1 Value                         982.019
+          H1 Scaling Correction Factor       2.590
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                   -1869.175
+          Bayesian (BIC)                 -1778.628
+          Sample-Size Adjusted BIC       -1845.291
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                             21.867*
+          Degrees of Freedom                    14
+          P-Value                           0.0814
+          Scaling Correction Factor          2.418
+            for MLR
+
+*   The chi-square value for MLM, MLMV, MLR, ULSMV, WLSM and WLSMV cannot be used
+    for chi-square difference testing in the regular way.  MLM, MLR and WLSM
+    chi-square difference testing is described on the Mplus website.  MLMV, WLSMV,
+    and ULSMV difference testing is done using the DIFFTEST option.
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.032
+          90 Percent C.I.                    0.000  0.057
+          Probability RMSEA <= .05           0.876
+
+CFI/TLI
+
+          CFI                                0.939
+          TLI                                0.909
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                            150.731
+          Degrees of Freedom                    21
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.042
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ NORM     BY
+    NEIGHB1            1.000      0.000    999.000    999.000
+    NEIGHB2            3.913      1.733      2.258      0.024
+    NEIGHB3            3.701      1.843      2.008      0.045
+    NEIGHB4            4.203      2.108      1.994      0.046
+    NEIGHB5            7.971      3.521      2.264      0.024
+    NEIGHB6            6.338      2.645      2.396      0.017
+    NEIGHB7            8.797      3.941      2.232      0.026
+
+ Intercepts
+    NEIGHB1            0.943      0.004    229.780      0.000
+    NEIGHB2            0.782      0.008     99.885      0.000
+    NEIGHB3            0.837      0.009     91.483      0.000
+    NEIGHB4            0.705      0.010     69.357      0.000
+    NEIGHB5            0.532      0.010     52.907      0.000
+    NEIGHB6            0.468      0.011     44.093      0.000
+    NEIGHB7            0.636      0.009     67.813      0.000
+
+ Variances
+    NORM               0.000      0.000      1.169      0.243
+
+ Residual Variances
+    NEIGHB1            0.009      0.003      3.532      0.000
+    NEIGHB2            0.029      0.003      9.208      0.000
+    NEIGHB3            0.042      0.005      8.423      0.000
+    NEIGHB4            0.051      0.005     10.538      0.000
+    NEIGHB5            0.035      0.006      5.843      0.000
+    NEIGHB6            0.049      0.005      9.724      0.000
+    NEIGHB7            0.023      0.005      5.137      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.435E-09
+       (ratio of smallest to largest eigenvalue)
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION
+
+
+           NU
+              NEIGHB1       NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5
+              ________      ________      ________      ________      ________
+      1           1             2             3             4             5
+
+
+           NU
+              NEIGHB6       NEIGHB7
+              ________      ________
+      1           6             7
+
+
+           LAMBDA
+              NORM
+              ________
+ NEIGHB1            0
+ NEIGHB2            8
+ NEIGHB3            9
+ NEIGHB4           10
+ NEIGHB5           11
+ NEIGHB6           12
+ NEIGHB7           13
+
+
+           THETA
+              NEIGHB1       NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5
+              ________      ________      ________      ________      ________
+ NEIGHB1           14
+ NEIGHB2            0            15
+ NEIGHB3            0             0            16
+ NEIGHB4            0             0             0            17
+ NEIGHB5            0             0             0             0            18
+ NEIGHB6            0             0             0             0             0
+ NEIGHB7            0             0             0             0             0
+
+
+           THETA
+              NEIGHB6       NEIGHB7
+              ________      ________
+ NEIGHB6           19
+ NEIGHB7            0            20
+
+
+           ALPHA
+              NORM
+              ________
+      1           0
+
+
+           BETA
+              NORM
+              ________
+ NORM               0
+
+
+           PSI
+              NORM
+              ________
+ NORM              21
+
+
+     STARTING VALUES
+
+
+           NU
+              NEIGHB1       NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5
+              ________      ________      ________      ________      ________
+      1         0.943         0.782         0.837         0.705         0.532
+
+
+           NU
+              NEIGHB6       NEIGHB7
+              ________      ________
+      1         0.468         0.636
+
+
+           LAMBDA
+              NORM
+              ________
+ NEIGHB1        1.000
+ NEIGHB2        2.232
+ NEIGHB3        1.643
+ NEIGHB4        1.803
+ NEIGHB5        4.823
+ NEIGHB6        5.677
+ NEIGHB7        5.013
+
+
+           THETA
+              NEIGHB1       NEIGHB2       NEIGHB3       NEIGHB4       NEIGHB5
+              ________      ________      ________      ________      ________
+ NEIGHB1        0.005
+ NEIGHB2        0.000         0.017
+ NEIGHB3        0.000         0.000         0.023
+ NEIGHB4        0.000         0.000         0.000         0.028
+ NEIGHB5        0.000         0.000         0.000         0.000         0.028
+ NEIGHB6        0.000         0.000         0.000         0.000         0.000
+ NEIGHB7        0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              NEIGHB6       NEIGHB7
+              ________      ________
+ NEIGHB6        0.031
+ NEIGHB7        0.000         0.024
+
+
+           ALPHA
+              NORM
+              ________
+      1         0.000
+
+
+           BETA
+              NORM
+              ________
+ NORM           0.000
+
+
+           PSI
+              NORM
+              ________
+ NORM           0.050
+
+
+     Beginning Time:  15:18:53
+        Ending Time:  15:18:54
+       Elapsed Time:  00:00:01
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2011 Muthen & Muthen

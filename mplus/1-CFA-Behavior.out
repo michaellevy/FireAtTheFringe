@@ -1,0 +1,308 @@
+Mplus VERSION 6.12 (Mac)
+MUTHEN & MUTHEN
+10/27/2015   2:22 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE:        Confirmatory Factor Analysis for Behavior;
+
+  DATA:        FILE = mplusdata.csv;
+
+  VARIABLE:
+          NAMES ARE ! Every variable in data set
+                  id biocen1-biocen4 anthro1-anthro5
+                  respons1-respons5 freedom1-freedom4 effect1-effect7
+                  dsnow1-dsnow7 dsfut1-dsfut7 risk1-risk3
+                  trust1-trust3 trustFS1-trustFS4 exp1-exp3
+                  neighb1-neighb7 nearcnf near03f;
+
+          !CATEGORICAL ARE
+          !        dsnow1-dsnow7;
+
+          MISSING ARE ALL (99);
+
+          USEVARIABLES ARE
+          !        dsnow1-dsnow7
+                  dsfut2-dsfut7;
+
+  ANALYSIS:
+          ESTIMATOR IS MLR; ! For continuous items whose residuals may not be normal
+
+  MODEL:
+          !current BY dsnow1-dsnow7;
+          future BY dsfut2-dsfut7;
+
+  OUTPUT:
+          !SAMPSTAT;        ! Descriptive stats for variables
+          !RESIDUAL;        ! Requests standardized and normalized residuals
+          STDYX;                ! Requests fully standardized solution
+          MODINDICES (ALL);        ! Method to improve model (at p<.05)
+
+
+
+
+*** WARNING
+  Data set contains cases with missing on all variables.
+  These cases were not included in the analysis.
+  Number of cases with missing on all variables:  64
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+Confirmatory Factor Analysis for Behavior;
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         574
+
+Number of dependent variables                                    6
+Number of independent variables                                  0
+Number of continuous latent variables                            1
+
+Observed dependent variables
+
+  Continuous
+   DSFUT2      DSFUT3      DSFUT4      DSFUT5      DSFUT6      DSFUT7
+
+Continuous latent variables
+   FUTURE
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  mplusdata.csv
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns            41
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              DSFUT2        DSFUT3        DSFUT4        DSFUT5        DSFUT6
+              ________      ________      ________      ________      ________
+ DSFUT2         0.901
+ DSFUT3         0.873         0.916
+ DSFUT4         0.878         0.890         0.943
+ DSFUT5         0.847         0.864         0.875         0.909
+ DSFUT6         0.878         0.894         0.911         0.890         0.953
+ DSFUT7         0.878         0.895         0.906         0.889         0.923
+
+
+           Covariance Coverage
+              DSFUT7
+              ________
+ DSFUT7         0.941
+
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       18
+
+Loglikelihood
+
+          H0 Value                       -4847.091
+          H0 Scaling Correction Factor       1.212
+            for MLR
+          H1 Value                       -4797.902
+          H1 Scaling Correction Factor       1.268
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                    9730.182
+          Bayesian (BIC)                  9808.529
+          Sample-Size Adjusted BIC        9751.387
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                             71.345*
+          Degrees of Freedom                     9
+          P-Value                           0.0000
+          Scaling Correction Factor          1.379
+            for MLR
+
+*   The chi-square value for MLM, MLMV, MLR, ULSMV, WLSM and WLSMV cannot be used
+    for chi-square difference testing in the regular way.  MLM, MLR and WLSM
+    chi-square difference testing is described on the Mplus website.  MLMV, WLSMV,
+    and ULSMV difference testing is done using the DIFFTEST option.
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.110
+          90 Percent C.I.                    0.087  0.134
+          Probability RMSEA <= .05           0.000
+
+CFI/TLI
+
+          CFI                                0.895
+          TLI                                0.825
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                            607.412
+          Degrees of Freedom                    15
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.054
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ FUTURE   BY
+    DSFUT2             1.000      0.000    999.000    999.000
+    DSFUT3             0.964      0.131      7.360      0.000
+    DSFUT4             1.401      0.175      8.017      0.000
+    DSFUT5             1.826      0.213      8.574      0.000
+    DSFUT6             1.808      0.226      7.994      0.000
+    DSFUT7             1.934      0.241      8.024      0.000
+
+ Intercepts
+    DSFUT2             4.030      0.051     78.343      0.000
+    DSFUT3             4.119      0.048     86.273      0.000
+    DSFUT4             3.675      0.052     70.570      0.000
+    DSFUT5             3.352      0.056     60.375      0.000
+    DSFUT6             3.160      0.060     52.986      0.000
+    DSFUT7             3.309      0.061     54.693      0.000
+
+ Variances
+    FUTURE             0.292      0.063      4.602      0.000
+
+ Residual Variances
+    DSFUT2             1.060      0.096     11.102      0.000
+    DSFUT3             0.877      0.075     11.646      0.000
+    DSFUT4             0.892      0.093      9.633      0.000
+    DSFUT5             0.698      0.083      8.397      0.000
+    DSFUT6             1.015      0.110      9.250      0.000
+    DSFUT7             0.921      0.110      8.396      0.000
+
+
+STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ FUTURE   BY
+    DSFUT2             0.465      0.045     10.220      0.000
+    DSFUT3             0.486      0.049      9.936      0.000
+    DSFUT4             0.625      0.046     13.504      0.000
+    DSFUT5             0.763      0.033     23.423      0.000
+    DSFUT6             0.696      0.040     17.287      0.000
+    DSFUT7             0.737      0.036     20.325      0.000
+
+ Intercepts
+    DSFUT2             3.465      0.171     20.266      0.000
+    DSFUT3             3.844      0.196     19.631      0.000
+    DSFUT4             3.036      0.122     24.932      0.000
+    DSFUT5             2.593      0.089     29.240      0.000
+    DSFUT6             2.252      0.068     32.885      0.000
+    DSFUT7             2.333      0.075     30.898      0.000
+
+ Variances
+    FUTURE             1.000      0.000    999.000    999.000
+
+ Residual Variances
+    DSFUT2             0.784      0.042     18.560      0.000
+    DSFUT3             0.764      0.048     16.067      0.000
+    DSFUT4             0.609      0.058     10.519      0.000
+    DSFUT5             0.417      0.050      8.389      0.000
+    DSFUT6             0.515      0.056      9.195      0.000
+    DSFUT7             0.457      0.053      8.570      0.000
+
+
+R-SQUARE
+
+    Observed                                        Two-Tailed
+    Variable        Estimate       S.E.  Est./S.E.    P-Value
+
+    DSFUT2             0.216      0.042      5.110      0.000
+    DSFUT3             0.236      0.048      4.968      0.000
+    DSFUT4             0.391      0.058      6.752      0.000
+    DSFUT5             0.583      0.050     11.712      0.000
+    DSFUT6             0.485      0.056      8.644      0.000
+    DSFUT7             0.543      0.053     10.162      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.292E-02
+       (ratio of smallest to largest eigenvalue)
+
+
+MODEL MODIFICATION INDICES
+
+Minimum M.I. value for printing the modification index    10.000
+
+                            M.I.     E.P.C.  Std E.P.C.  StdYX E.P.C.
+
+ON Statements
+
+DSFUT2   ON DSFUT3         15.269     0.243      0.243        0.224
+DSFUT3   ON DSFUT2         15.274     0.201      0.201        0.218
+DSFUT3   ON DSFUT4         14.310     0.222      0.222        0.251
+DSFUT4   ON DSFUT3         14.313     0.226      0.226        0.200
+DSFUT4   ON DSFUT5         16.283     0.349      0.349        0.373
+DSFUT4   ON DSFUT6         17.124    -0.262     -0.262       -0.304
+DSFUT5   ON DSFUT4         16.273     0.273      0.273        0.256
+DSFUT6   ON DSFUT4         17.128    -0.298     -0.298       -0.257
+DSFUT6   ON DSFUT7         41.537     0.542      0.542        0.548
+DSFUT7   ON DSFUT6         41.527     0.491      0.491        0.486
+
+WITH Statements
+
+DSFUT3   WITH DSFUT2       15.273     0.213      0.213        0.221
+DSFUT4   WITH DSFUT3       14.309     0.198      0.198        0.224
+DSFUT5   WITH DSFUT4       16.275     0.244      0.244        0.309
+DSFUT6   WITH DSFUT4       17.130    -0.266     -0.266       -0.279
+DSFUT7   WITH DSFUT6       41.534     0.499      0.499        0.516
+
+
+     Beginning Time:  14:22:02
+        Ending Time:  14:22:03
+       Elapsed Time:  00:00:01
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2011 Muthen & Muthen

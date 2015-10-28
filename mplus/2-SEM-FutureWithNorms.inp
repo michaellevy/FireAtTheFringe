@@ -1,44 +1,42 @@
-TITLE:	Confirmatory Factor Analysis;
-	
+TITLE:	Structural Equation Model - Behavioral intention;	
 
 DATA:	FILE = mplusdata.csv;
+	!LISTWISE = ON;
 
 VARIABLE:
-	NAMES ARE ! Every variable in data set
-		id biocen1-biocen4 anthro1-anthro5 
+	NAMES ARE id biocen1-biocen4 anthro1-anthro5 
 		respons1-respons5 freedom1-freedom4 effect1-effect7 
 		dsnow1-dsnow7 dsfut1-dsfut7 risk1-risk3 
 		trust1-trust3 trustFS1-trustFS4 exp1-exp3 
 		neighb1-neighb7 nearcnf near03f;
-
 	!CATEGORICAL ARE 
 		!dsnow1-dsnow7;
 		!exp1-exp3;
-		
 	MISSING ARE ALL (99);
-
 	USEVARIABLES ARE 
 		!biocen1-biocen4 
 		!anthro1-anthro5 
-		!respons1 respons2 respons3 respons4 respons5 
+		!respons1-respons5 
 		!freedom1-freedom4 
 		effect1-effect7
-		!dsnow1-dsnow7
-		dsfut1-dsfut7
-		risk1-risk3
-		trust1-trust3
-		trustFS1-trustFS4
-		!exp1	! injured - only 2% yes
-		!exp2	! property destroyed/damaged
-		!exp3	! evacuated
-		neighb1-neighb7
-		!near03f	! single item excluded in cfa
+		!dsnow1-dsnow7 
+		dsfut1-dsfut7 
+		risk1-risk3 
+		trust1-trust3 
+		trustFS1-trustFS4 
+		!exp1 !only 2% yes to exp1 (injured)
+		exp2 
+		exp3
+		neighb1-neighb7 
+		near03f
 		;
 
 ANALYSIS:
 	ESTIMATOR IS MLR; ! For continuous items whose residuals may not be normal
-
-MODEL:
+	!ESTIMATOR IS WLSMV;
+	!ITERATIONS = 10000;
+	
+MODEL:	
 
 ! Measurement Models
 
@@ -56,9 +54,28 @@ MODEL:
 	!current BY dsnow1-dsnow7;
 	future BY dsfut1-dsfut7;
 	
-OUTPUT: 	
+! Structural Models
+			
+	!effect ON respons freedom exp2 exp3;
+	!risk ON respons freedom exp2 exp3;
+	!trust ON respons freedom exp2 exp3;
+	!norm ON effect risk trust;
+
+	!effect ON exp2 exp3;
+	!risk ON exp2 exp3;
+	!trust ON exp2 exp3;
+
+	future ON exp2;
+	future ON exp3;
+	future ON near03f;
+	future ON effect;
+	future ON risk;
+	future ON trust;
+	future ON norm;
+
+OUTPUT:
 	!SAMPSTAT;	! Descriptive stats for variables
-	!RESIDUAL;	! Requests standardized and normalized residuals
+	RESIDUAL;	! Requests standardized and normalized residuals
 	STDYX;		! Requests fully standardized solution
-	MODINDICES (ALL);	! Method to improve model (at p<.05)
-	
+	!MODINDICES (ALL);	! Method to improve model (at p<.05)
+	TECH1;		! Identifies paramaters for error messages

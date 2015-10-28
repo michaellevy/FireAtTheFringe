@@ -1,0 +1,34 @@
+TITLE:	Confirmatory Factor Analysis for Behavior;
+
+DATA:	FILE = mplusdata.csv;
+
+VARIABLE:
+	NAMES ARE ! Every variable in data set
+		id biocen1-biocen4 anthro1-anthro5 
+		respons1-respons5 freedom1-freedom4 effect1-effect7 
+		dsnow1-dsnow7 dsfut1-dsfut7 risk1-risk3 
+		trust1-trust3 trustFS1-trustFS4 exp1-exp3 
+		neighb1-neighb7 nearcnf near03f;
+
+	!CATEGORICAL ARE 
+	!	dsnow1-dsnow7;
+
+	MISSING ARE ALL (99);
+
+	USEVARIABLES ARE 
+	!	dsnow1-dsnow7
+		dsfut2-dsfut7;
+
+ANALYSIS:
+	ESTIMATOR IS MLR; ! For continuous items whose residuals may not be normal
+
+MODEL:	
+	!current BY dsnow1-dsnow7;
+	future BY dsfut2-dsfut7;
+	
+OUTPUT: 	
+	!SAMPSTAT;	! Descriptive stats for variables
+	!RESIDUAL;	! Requests standardized and normalized residuals
+	STDYX;		! Requests fully standardized solution
+	MODINDICES (ALL);	! Method to improve model (at p<.05)
+	
