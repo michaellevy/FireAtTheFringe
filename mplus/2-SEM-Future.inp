@@ -9,75 +9,100 @@ VARIABLE:
 		dsnow1-dsnow7 dsfut1-dsfut7 risk1-risk3 
 		trust1-trust3 trustFS1-trustFS4 exp1-exp3 
 		neighb1-neighb7 nearcnf near03f;
+
 	!CATEGORICAL ARE 
 		!dsnow1-dsnow7;
-		!exp1-exp3;
+		!exp2;
+		!exp3;
+
 	MISSING ARE ALL (99);
+
 	USEVARIABLES ARE 
-		!biocen1-biocen4 
-		!anthro1-anthro5 
+		biocen1-biocen4 
+		anthro1-anthro5 
 		!respons1-respons5 
 		!freedom1-freedom4 
 		effect1-effect7
-		!dsnow1-dsnow7 
-		dsfut1-dsfut7 
+		!dsnow1-dsnow7
+		dsfut1-dsfut7
 		risk1-risk3 
-		trust1-trust3 
+		!trust1-trust3
 		trustFS1-trustFS4 
-		!exp1 !only 2% yes to exp1 (injured)
-		!exp2 
-		!exp3
-		!neighb1-neighb7 
-		!near03f
+		!exp1 		! only 2% yes to exp1 (injured)
+		exp2
+		exp3
+		!neighb1-neighb7
+		!near03f		! Have problems with model when this is included
 		;
 
 ANALYSIS:
-	ESTIMATOR IS MLR; ! For continuous items whose residuals may not be normal
-	!ESTIMATOR IS WLSMV;
+	!ESTIMATOR IS MLR; 	! For continuous items whose residuals may not be normal
 	!ITERATIONS = 10000;
 	
 MODEL:	
 
 ! Measurement Models
 
-	!biocen BY biocen1-biocen4;
-	!anthro BY anthro1-anthro5;
-	!respons BY respons1-respons5;
-	!respons BY respons1 respons2 respons4 respons5;	! drop respons3 (not sig)
+	biocen BY biocen1-biocen4;
+	anthro BY anthro1-anthro5;
+	!respons BY respons1;
+	!respons BY respons2;
+	!respons BY respons3;	! drop respons3 (not sig)
+	!respons BY respons4;
+	!respons BY respons5;	
 	!freedom BY freedom1-freedom4;
-	!experien BY exp2 exp3;		! drop exp1 (injured) because only 2% yes
+	!experien BY exp2 exp3;	! drop exp1 (injured) because only 2% yes
 	effect BY effect1-effect7;
 	risk BY risk1-risk3;
-	trust BY trust1-trust3;
+	!trust BY trust1-trust3;
 	trust BY trustFS1-trustFS4;
 	!norm BY neighb1-neighb7;
 	!current BY dsnow1-dsnow7;
 	future BY dsfut1-dsfut7;
-	
+		
 ! Structural Models
-			
-	!effect ON respons freedom exp2 exp3;
-	!risk ON respons freedom exp2 exp3;
-	!trust ON respons freedom exp2 exp3;
-	!norm ON effect risk trust;
 
-	!effect ON exp2 exp3;
-	!risk ON exp2 exp3;
-	!trust ON exp2 exp3;
+	effect ON biocen;
+	effect ON anthro;
+	!effect ON respons;
+	!effect ON freedom;
+	effect ON exp2;
+	effect ON exp3;
+	!effect ON near03f;
+
+	risk ON biocen;
+	risk ON anthro;
+	!risk ON respons;
+	!risk ON freedom;
+	risk ON exp2;
+	risk ON exp3;
+	!risk ON near03f;
+
+	trust ON biocen;
+	trust ON anthro;
+	!trust ON respons;
+	!trust ON freedom;
+	trust ON exp2;
+	trust ON exp3;
+	!trust ON near03f;
 	
-	!future ON exp2;
-	!future ON exp3;
+	!norm ON effect risk trust;
+	
+	future ON biocen;
+	future ON anthro;
+        	future ON exp2;
+	future ON exp3;
 	!future ON near03f;
 	future ON effect;
 	future ON risk;
 	future ON trust;
-	!future ON norm;	! Non identification error message;
-			! problem in beta matrix (regression coefficients)
-			! between norm and future
+	!future ON norm;		! Non identification error message;
+				! problem in beta matrix (regression coefficients)
+				! between norm and future
 
 OUTPUT:
-	!SAMPSTAT;	! Descriptive stats for variables
-	!RESIDUAL;	! Requests standardized and normalized residuals
-	STDYX;		! Requests fully standardized solution
+	!SAMPSTAT;		! Descriptive stats for variables
+	!RESIDUAL;		! Requests standardized and normalized residuals
+	STDYX;			! Requests fully standardized solution
 	!MODINDICES (ALL);	! Method to improve model (at p<.05)
-	TECH1;		! Identifies paramaters for error messages
+	!TECH1;			! Identifies paramaters for error messages

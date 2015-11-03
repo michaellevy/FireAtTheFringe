@@ -17,14 +17,14 @@ VARIABLE:
 
 	USEVARIABLES ARE 
 	!	dsnow1-dsnow7
-		dsfut2-dsfut7;
+		dsfut1-dsfut7;
 
 ANALYSIS:
 	ESTIMATOR IS MLR; ! For continuous items whose residuals may not be normal
 
 MODEL:	
 	!current BY dsnow1-dsnow7;
-	future BY dsfut2-dsfut7;
+	future BY dsfut1-dsfut7;
 	
 OUTPUT: 	
 	!SAMPSTAT;	! Descriptive stats for variables

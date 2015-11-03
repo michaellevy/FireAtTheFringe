@@ -1,6 +1,6 @@
 Mplus VERSION 6.12 (Mac)
 MUTHEN & MUTHEN
-10/27/2015   2:22 PM
+11/03/2015   1:01 PM
 
 INPUT INSTRUCTIONS
 
@@ -23,14 +23,14 @@ INPUT INSTRUCTIONS
 
           USEVARIABLES ARE
           !        dsnow1-dsnow7
-                  dsfut2-dsfut7;
+                  dsfut1-dsfut7;
 
   ANALYSIS:
           ESTIMATOR IS MLR; ! For continuous items whose residuals may not be normal
 
   MODEL:
           !current BY dsnow1-dsnow7;
-          future BY dsfut2-dsfut7;
+          future BY dsfut1-dsfut7;
 
   OUTPUT:
           !SAMPSTAT;        ! Descriptive stats for variables
@@ -44,7 +44,7 @@ INPUT INSTRUCTIONS
 *** WARNING
   Data set contains cases with missing on all variables.
   These cases were not included in the analysis.
-  Number of cases with missing on all variables:  64
+  Number of cases with missing on all variables:  62
    1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
 
 
@@ -54,16 +54,17 @@ Confirmatory Factor Analysis for Behavior;
 SUMMARY OF ANALYSIS
 
 Number of groups                                                 1
-Number of observations                                         574
+Number of observations                                         576
 
-Number of dependent variables                                    6
+Number of dependent variables                                    7
 Number of independent variables                                  0
 Number of continuous latent variables                            1
 
 Observed dependent variables
 
   Continuous
-   DSFUT2      DSFUT3      DSFUT4      DSFUT5      DSFUT6      DSFUT7
+   DSFUT1      DSFUT2      DSFUT3      DSFUT4      DSFUT5      DSFUT6
+   DSFUT7
 
 Continuous latent variables
    FUTURE
@@ -85,7 +86,7 @@ Input data format  FREE
 
 SUMMARY OF DATA
 
-     Number of missing data patterns            41
+     Number of missing data patterns            49
 
 
 COVARIANCE COVERAGE OF DATA
@@ -97,20 +98,22 @@ Minimum covariance coverage value   0.100
 
 
            Covariance Coverage
-              DSFUT2        DSFUT3        DSFUT4        DSFUT5        DSFUT6
+              DSFUT1        DSFUT2        DSFUT3        DSFUT4        DSFUT5
               ________      ________      ________      ________      ________
- DSFUT2         0.901
- DSFUT3         0.873         0.916
- DSFUT4         0.878         0.890         0.943
- DSFUT5         0.847         0.864         0.875         0.909
- DSFUT6         0.878         0.894         0.911         0.890         0.953
- DSFUT7         0.878         0.895         0.906         0.889         0.923
+ DSFUT1         0.929
+ DSFUT2         0.884         0.898
+ DSFUT3         0.899         0.870         0.913
+ DSFUT4         0.901         0.875         0.887         0.939
+ DSFUT5         0.872         0.844         0.861         0.872         0.906
+ DSFUT6         0.903         0.875         0.891         0.908         0.887
+ DSFUT7         0.905         0.875         0.892         0.903         0.885
 
 
            Covariance Coverage
-              DSFUT7
-              ________
- DSFUT7         0.941
+              DSFUT6        DSFUT7
+              ________      ________
+ DSFUT6         0.950
+ DSFUT7         0.920         0.938
 
 
 
@@ -120,30 +123,30 @@ THE MODEL ESTIMATION TERMINATED NORMALLY
 
 MODEL FIT INFORMATION
 
-Number of Free Parameters                       18
+Number of Free Parameters                       21
 
 Loglikelihood
 
-          H0 Value                       -4847.091
-          H0 Scaling Correction Factor       1.212
+          H0 Value                       -5472.794
+          H0 Scaling Correction Factor       1.296
             for MLR
-          H1 Value                       -4797.902
-          H1 Scaling Correction Factor       1.268
+          H1 Value                       -5385.878
+          H1 Scaling Correction Factor       1.379
             for MLR
 
 Information Criteria
 
-          Akaike (AIC)                    9730.182
-          Bayesian (BIC)                  9808.529
-          Sample-Size Adjusted BIC        9751.387
+          Akaike (AIC)                   10987.588
+          Bayesian (BIC)                 11079.066
+          Sample-Size Adjusted BIC       11012.400
             (n* = (n + 2) / 24)
 
 Chi-Square Test of Model Fit
 
-          Value                             71.345*
-          Degrees of Freedom                     9
+          Value                            115.590*
+          Degrees of Freedom                    14
           P-Value                           0.0000
-          Scaling Correction Factor          1.379
+          Scaling Correction Factor          1.504
             for MLR
 
 *   The chi-square value for MLM, MLMV, MLR, ULSMV, WLSM and WLSMV cannot be used
@@ -153,24 +156,24 @@ Chi-Square Test of Model Fit
 
 RMSEA (Root Mean Square Error Of Approximation)
 
-          Estimate                           0.110
-          90 Percent C.I.                    0.087  0.134
+          Estimate                           0.112
+          90 Percent C.I.                    0.094  0.132
           Probability RMSEA <= .05           0.000
 
 CFI/TLI
 
-          CFI                                0.895
-          TLI                                0.825
+          CFI                                0.849
+          TLI                                0.773
 
 Chi-Square Test of Model Fit for the Baseline Model
 
-          Value                            607.412
-          Degrees of Freedom                    15
+          Value                            691.818
+          Degrees of Freedom                    21
           P-Value                           0.0000
 
 SRMR (Standardized Root Mean Square Residual)
 
-          Value                              0.054
+          Value                              0.067
 
 
 
@@ -180,31 +183,34 @@ MODEL RESULTS
                     Estimate       S.E.  Est./S.E.    P-Value
 
  FUTURE   BY
-    DSFUT2             1.000      0.000    999.000    999.000
-    DSFUT3             0.964      0.131      7.360      0.000
-    DSFUT4             1.401      0.175      8.017      0.000
-    DSFUT5             1.826      0.213      8.574      0.000
-    DSFUT6             1.808      0.226      7.994      0.000
-    DSFUT7             1.934      0.241      8.024      0.000
+    DSFUT1             1.000      0.000    999.000    999.000
+    DSFUT2             1.552      0.177      8.762      0.000
+    DSFUT3             1.451      0.200      7.251      0.000
+    DSFUT4             2.021      0.285      7.081      0.000
+    DSFUT5             2.551      0.372      6.863      0.000
+    DSFUT6             2.553      0.371      6.889      0.000
+    DSFUT7             2.668      0.410      6.513      0.000
 
  Intercepts
-    DSFUT2             4.030      0.051     78.343      0.000
-    DSFUT3             4.119      0.048     86.273      0.000
-    DSFUT4             3.675      0.052     70.570      0.000
-    DSFUT5             3.352      0.056     60.375      0.000
-    DSFUT6             3.160      0.060     52.986      0.000
-    DSFUT7             3.309      0.061     54.693      0.000
+    DSFUT1             4.266      0.037    114.089      0.000
+    DSFUT2             4.026      0.051     78.212      0.000
+    DSFUT3             4.117      0.048     86.086      0.000
+    DSFUT4             3.673      0.052     70.644      0.000
+    DSFUT5             3.350      0.055     60.452      0.000
+    DSFUT6             3.160      0.060     53.016      0.000
+    DSFUT7             3.310      0.060     54.711      0.000
 
  Variances
-    FUTURE             0.292      0.063      4.602      0.000
+    FUTURE             0.144      0.038      3.781      0.000
 
  Residual Variances
-    DSFUT2             1.060      0.096     11.102      0.000
-    DSFUT3             0.877      0.075     11.646      0.000
-    DSFUT4             0.892      0.093      9.633      0.000
-    DSFUT5             0.698      0.083      8.397      0.000
-    DSFUT6             1.015      0.110      9.250      0.000
-    DSFUT7             0.921      0.110      8.396      0.000
+    DSFUT1             0.577      0.065      8.893      0.000
+    DSFUT2             1.008      0.098     10.323      0.000
+    DSFUT3             0.847      0.075     11.250      0.000
+    DSFUT4             0.877      0.091      9.625      0.000
+    DSFUT5             0.732      0.078      9.395      0.000
+    DSFUT6             1.031      0.103      9.988      0.000
+    DSFUT7             0.988      0.108      9.104      0.000
 
 
 STANDARDIZED MODEL RESULTS
@@ -216,31 +222,34 @@ STDYX Standardization
                     Estimate       S.E.  Est./S.E.    P-Value
 
  FUTURE   BY
-    DSFUT2             0.465      0.045     10.220      0.000
-    DSFUT3             0.486      0.049      9.936      0.000
-    DSFUT4             0.625      0.046     13.504      0.000
-    DSFUT5             0.763      0.033     23.423      0.000
-    DSFUT6             0.696      0.040     17.287      0.000
-    DSFUT7             0.737      0.036     20.325      0.000
+    DSFUT1             0.447      0.051      8.695      0.000
+    DSFUT2             0.505      0.047     10.700      0.000
+    DSFUT3             0.513      0.050     10.348      0.000
+    DSFUT4             0.633      0.044     14.326      0.000
+    DSFUT5             0.749      0.031     24.095      0.000
+    DSFUT6             0.690      0.038     18.133      0.000
+    DSFUT7             0.713      0.037     19.333      0.000
 
  Intercepts
-    DSFUT2             3.465      0.171     20.266      0.000
-    DSFUT3             3.844      0.196     19.631      0.000
-    DSFUT4             3.036      0.122     24.932      0.000
-    DSFUT5             2.593      0.089     29.240      0.000
-    DSFUT6             2.252      0.068     32.885      0.000
-    DSFUT7             2.333      0.075     30.898      0.000
+    DSFUT1             5.026      0.295     17.040      0.000
+    DSFUT2             3.459      0.171     20.273      0.000
+    DSFUT3             3.840      0.196     19.625      0.000
+    DSFUT4             3.035      0.122     24.949      0.000
+    DSFUT5             2.594      0.089     29.218      0.000
+    DSFUT6             2.253      0.068     32.902      0.000
+    DSFUT7             2.334      0.076     30.880      0.000
 
  Variances
     FUTURE             1.000      0.000    999.000    999.000
 
  Residual Variances
-    DSFUT2             0.784      0.042     18.560      0.000
-    DSFUT3             0.764      0.048     16.067      0.000
-    DSFUT4             0.609      0.058     10.519      0.000
-    DSFUT5             0.417      0.050      8.389      0.000
-    DSFUT6             0.515      0.056      9.195      0.000
-    DSFUT7             0.457      0.053      8.570      0.000
+    DSFUT1             0.801      0.046     17.449      0.000
+    DSFUT2             0.745      0.048     15.592      0.000
+    DSFUT3             0.737      0.051     14.481      0.000
+    DSFUT4             0.599      0.056     10.709      0.000
+    DSFUT5             0.439      0.047      9.436      0.000
+    DSFUT6             0.524      0.053      9.977      0.000
+    DSFUT7             0.491      0.053      9.333      0.000
 
 
 R-SQUARE
@@ -248,17 +257,18 @@ R-SQUARE
     Observed                                        Two-Tailed
     Variable        Estimate       S.E.  Est./S.E.    P-Value
 
-    DSFUT2             0.216      0.042      5.110      0.000
-    DSFUT3             0.236      0.048      4.968      0.000
-    DSFUT4             0.391      0.058      6.752      0.000
-    DSFUT5             0.583      0.050     11.712      0.000
-    DSFUT6             0.485      0.056      8.644      0.000
-    DSFUT7             0.543      0.053     10.162      0.000
+    DSFUT1             0.199      0.046      4.347      0.000
+    DSFUT2             0.255      0.048      5.350      0.000
+    DSFUT3             0.263      0.051      5.174      0.000
+    DSFUT4             0.401      0.056      7.163      0.000
+    DSFUT5             0.561      0.047     12.047      0.000
+    DSFUT6             0.476      0.053      9.066      0.000
+    DSFUT7             0.509      0.053      9.666      0.000
 
 
 QUALITY OF NUMERICAL RESULTS
 
-     Condition Number for the Information Matrix              0.292E-02
+     Condition Number for the Information Matrix              0.493E-03
        (ratio of smallest to largest eigenvalue)
 
 
@@ -270,29 +280,32 @@ Minimum M.I. value for printing the modification index    10.000
 
 ON Statements
 
-DSFUT2   ON DSFUT3         15.269     0.243      0.243        0.224
-DSFUT3   ON DSFUT2         15.274     0.201      0.201        0.218
-DSFUT3   ON DSFUT4         14.310     0.222      0.222        0.251
-DSFUT4   ON DSFUT3         14.313     0.226      0.226        0.200
-DSFUT4   ON DSFUT5         16.283     0.349      0.349        0.373
-DSFUT4   ON DSFUT6         17.124    -0.262     -0.262       -0.304
-DSFUT5   ON DSFUT4         16.273     0.273      0.273        0.256
-DSFUT6   ON DSFUT4         17.128    -0.298     -0.298       -0.257
-DSFUT6   ON DSFUT7         41.537     0.542      0.542        0.548
-DSFUT7   ON DSFUT6         41.527     0.491      0.491        0.486
+DSFUT1   ON DSFUT2         36.207     0.266      0.266        0.365
+DSFUT1   ON DSFUT3         11.943     0.166      0.166        0.209
+DSFUT1   ON DSFUT7         11.102    -0.164     -0.164       -0.274
+DSFUT2   ON DSFUT1         36.205     0.465      0.465        0.339
+DSFUT3   ON DSFUT1         11.943     0.243      0.243        0.193
+DSFUT4   ON DSFUT5         14.960     0.324      0.324        0.346
+DSFUT4   ON DSFUT6         15.973    -0.256     -0.256       -0.297
+DSFUT5   ON DSFUT4         14.963     0.271      0.271        0.254
+DSFUT6   ON DSFUT4         15.971    -0.301     -0.301       -0.260
+DSFUT6   ON DSFUT7         42.384     0.509      0.509        0.515
+DSFUT7   ON DSFUT1         11.102    -0.280     -0.280       -0.168
+DSFUT7   ON DSFUT6         42.383     0.488      0.488        0.483
 
 WITH Statements
 
-DSFUT3   WITH DSFUT2       15.273     0.213      0.213        0.221
-DSFUT4   WITH DSFUT3       14.309     0.198      0.198        0.224
-DSFUT5   WITH DSFUT4       16.275     0.244      0.244        0.309
-DSFUT6   WITH DSFUT4       17.130    -0.266     -0.266       -0.279
-DSFUT7   WITH DSFUT6       41.534     0.499      0.499        0.516
+DSFUT2   WITH DSFUT1       36.206     0.268      0.268        0.352
+DSFUT3   WITH DSFUT1       11.943     0.140      0.140        0.201
+DSFUT5   WITH DSFUT4       14.962     0.238      0.238        0.296
+DSFUT6   WITH DSFUT4       15.972    -0.264     -0.264       -0.278
+DSFUT7   WITH DSFUT1       11.102    -0.162     -0.162       -0.214
+DSFUT7   WITH DSFUT6       42.383     0.503      0.503        0.498
 
 
-     Beginning Time:  14:22:02
-        Ending Time:  14:22:03
-       Elapsed Time:  00:00:01
+     Beginning Time:  13:01:52
+        Ending Time:  13:01:52
+       Elapsed Time:  00:00:00
 
 
 
