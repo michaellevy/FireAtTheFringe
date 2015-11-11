@@ -6,6 +6,9 @@ date:
 Introduction
 ========================================================
 problem statement and/or research objective
+- Wildfire and the WUI
+- Social science & defensible space
+- social behavior is contagious
 
 
 Why ABM? (Michael)
@@ -59,6 +62,31 @@ Study Purpose
 - describe an empirical parameterization of agent behavior for a coupled model based on survey data of residents
 
 
+Hypotheses
+========================================================
+- H1
+- H2
+
+
+Methods
+========================================================
+- Empirical survey
+
+
+San Diego WUI
+========================================================
+- San Diego County
+  + 3.1 million residents (5th largest in US)
+- San Diego (metropolitan area)
+  + 1.4 million residents (8th largest in US)
+  + Projected 40% population growth / 88% increase in residential acreage by 2050
+- Mild Mediterranean-Semiarid climate
+
+Measurement and analysis
+========================================================
+Structural equation modeling
+
+
 Structural equation modeling (SEM)
 ========================================================
 - standard statistical method in the social sciences
@@ -78,24 +106,6 @@ SEM provides a modeling anchor for:
 3. relative relevance of criteria
 
 *Lorsheid et al., 2014*
-
-Methods
-========================================================
-- Empirical survey
-
-
-San Diego WUI
-========================================================
-- San Diego County
-  + 3.1 million residents (5th largest in US)
-- San Diego (metropolitan area)
-  + 1.4 million residents (8th largest in US)
-  + Projected 40% population growth / 88% increase in residential acreage by 2050
-- Mild Mediterranean-Semiarid climate
-
-Measurement and analysis
-========================================================
-Structural equation modeling
 
 
 Structural equation model
@@ -121,7 +131,9 @@ Agents
 
 Decision process (Michael, Katie, Patrick)
 ========================================================
-- Decision criteria
+Decision criteria
+- Simulate a fire
+- Do they do defensible space? (yes/no)  
 
 
 Calibration
@@ -146,6 +158,13 @@ Discussion
 - What our model did (i.e., tell them what we told them we would do)
 - What it did well? not well?
 - Usefulness? Practicality?
+
+
+Limitations
+========================================================
+- 
+- 
+
 
 
 Future Research
