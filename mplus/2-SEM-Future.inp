@@ -28,9 +28,9 @@ VARIABLE:
 		risk1-risk3 
 		!trust1-trust3
 		trustFS1-trustFS4 
-		!exp1 		! only 2% yes to exp1 (injured)
-		exp2
-		exp3
+		!exp1		! injured - only 2% yes
+		exp2		! property destroyed/damaged
+		exp3		! evacuated
 		!neighb1-neighb7
 		!near03f		! Have problems with model when this is included
 		;
@@ -88,8 +88,8 @@ MODEL:
 	
 	!norm ON effect risk trust;
 	
-	future ON biocen;
-	future ON anthro;
+	!future ON biocen;
+	!future ON anthro;
         	future ON exp2;
 	future ON exp3;
 	!future ON near03f;
@@ -101,8 +101,13 @@ MODEL:
 				! between norm and future
 
 OUTPUT:
-	!SAMPSTAT;		! Descriptive stats for variables
-	!RESIDUAL;		! Requests standardized and normalized residuals
+	!SAMPSTAT;			! Descriptive stats for variables
+	!RESIDUAL;			! Requests standardized and normalized residuals
 	STDYX;			! Requests fully standardized solution
-	!MODINDICES (ALL);	! Method to improve model (at p<.05)
-	!TECH1;			! Identifies paramaters for error messages
+	!MODINDICES (ALL);		! Method to improve model (at p<.05)
+	TECH1;			! Identifies paramaters for error messages
+	TECH3;			! Requests estimated covariance and correlation 
+				! matrices for the parameter estimates
+				
+SAVEDATA:
+	TECH3 IS parametermatrix.csv;
