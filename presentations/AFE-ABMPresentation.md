@@ -1,7 +1,22 @@
-Fire on the fringe: Empirically parameterizing defensible space behavior in an agent based model
+<style>
+.reveal title, .reveal h1, .reveal h2, .reveal h3 {
+  word-wrap: normal;
+  -moz-hyphens: none;
+}
+</style>
+
+Fire on the Fringe: Empirically parameterizing defensible space behavior in an agent based model
 ========================================================
-author: Katie M. Lyon, Michael Levy, Kenny Wallen, Patrick Bitterman, Ellen Esch, Michael Saha, James D. Absher, Gerard Kyle
-date: 
+author: 
+**Katie M. Lyon**, Colorado State University  
+**Michael Levy**, University of California - Davis  
+**Kenny Wallen**, Texas A&M University  
+**Patrick Bitterman**, University of Iowa  
+**Ellen Esch**, University of California - San Diego  
+**Michael Saha**, University of Virginia  
+**James D. Absher**, USFS Pacific Southwest Research Station  
+**Gerard Kyle**, Texas A&M University  
+
 
 Introduction
 ========================================================
@@ -11,12 +26,17 @@ problem statement and/or research objective
 - social behavior is contagious
 
 
-Why ABM? (Michael)
+Social-Ecological Systems
 ========================================================
 - Humans are major driver of natural system dynamics, therefore models of natural systems need realistic representation of human behavior
 - Traditional economic models impose strong assumptions about rationality and economically optimal behavior
 - Evidence those assumptions are wrong and can bias model results
-- ABM has advantage of flexible behavior. An agents behavior can be any function of
+
+
+Agent Based Models (ABM)
+========================================================
+- ABM has advantage of flexible behavior. 
+- An agents behavior can be any function of
   - Environmental conditions
   - Social and economic conditions
   - Historical events
@@ -26,6 +46,7 @@ Why ABM? (Michael)
 - So, need principled way to code behavior.
 - Lots of thought on how to do it empirically (Smajgl book)
 - Despite that, there is a well-developed, empirically grounded methodology for estimating behavior as a function of the kind of environmental variables that we find in a CHANS/SES model that is used in multiple disciplines: SEM.
+
 
 Approaches to empirically inform ABMs
 ========================================================
@@ -75,12 +96,18 @@ Methods
 
 San Diego WUI
 ========================================================
+<br>
 - San Diego County
   + 3.1 million residents (5th largest in US)
 - San Diego (metropolitan area)
   + 1.4 million residents (8th largest in US)
   + Projected 40% population growth / 88% increase in residential acreage by 2050
-- Mild Mediterranean-Semiarid climate
+
+***
+<br>
+- Mild Mediterranean / Semiarid climate
+![landscape](images/CIMG5519.jpeg)
+
 
 Measurement and analysis
 ========================================================
@@ -167,12 +194,15 @@ Limitations
 
 
 
+
+========================================================
+![fire sim model](images/fire-sim.png)
+
+
 Future Research
 ========================================================
 Coupled model
-- Figure of our conceptual model?
-
-
+- Figure of our coupled model?
 
 
 
