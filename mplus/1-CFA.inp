@@ -5,33 +5,31 @@ DATA:	FILE = mplusdata.csv;
 
 VARIABLE:
 	NAMES ARE ! Every variable in data set
-		id biocen1-biocen4 anthro1-anthro5 
-		respons1-respons5 freedom1-freedom4 effect1-effect7 
-		dsnow1-dsnow7 dsfut1-dsfut7 risk1-risk3 
-		trust1-trust3 trustFS1-trustFS4 exp1-exp3 
-		neighb1-neighb7 nearcnf near03f;
+		id 
+		belief1-belief4 
+		risk1-risk3 
+		effect1-effect7 
+		dsnow1-dsnow7 
+		dsfut1-dsfut7 
+		exp1-exp3 
+		near03f;
 
 	!CATEGORICAL ARE 
 		!dsnow1-dsnow7;
-		!exp1-exp3;
-		
+		!exp2;
+		!exp3;
+
 	MISSING ARE ALL (99);
 
 	USEVARIABLES ARE 
-		biocen1-biocen4 
-		anthro1-anthro5 
-		!respons1 respons2 respons3 respons4 respons5 
-		!freedom1-freedom4 
-		effect1-effect7
+		belief1-belief4 
+		risk1-risk3 
+		effect4-effect7
 		!dsnow1-dsnow7
-		dsfut1-dsfut7
-		risk1-risk3
-		!trust1-trust3
-		trustFS1-trustFS4
+		dsfut4-dsfut7
 		!exp1	! injured - only 2% yes
 		!exp2	! property destroyed/damaged
 		!exp3	! evacuated
-		neighb1-neighb7
 		!near03f	! single item excluded in cfa
 		;
 
@@ -42,19 +40,12 @@ MODEL:
 
 ! Measurement Models
 
-	biocen BY biocen1-biocen4;
-	anthro BY anthro1-anthro5;
-	!respons BY respons1-respons5;
-	!respons BY respons1 respons2 respons4 respons5;	! drop respons3 (not sig)
-	!freedom BY freedom1-freedom4;
-	!experien BY exp2 exp3;		! drop exp1 (injured) because only 2% yes
-	effect BY effect1-effect7;
+	belief BY belief1-belief4;
+	!experien BY exp2 exp3;	! drop exp1 (injured) because only 2% yes
+	effect BY effect4-effect7;
 	risk BY risk1-risk3;
-	!trust BY trust1-trust3;
-	trust BY trustFS1-trustFS4;
-	norm BY neighb1-neighb7;
 	!current BY dsnow1-dsnow7;
-	future BY dsfut1-dsfut7;
+	future BY dsfut4-dsfut7;
 	
 OUTPUT: 	
 	!SAMPSTAT;	! Descriptive stats for variables
