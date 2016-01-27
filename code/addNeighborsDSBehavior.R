@@ -1,3 +1,6 @@
+# This script is set-up to be sourced from prediction.R
+# If running it manually, use the first few lines in prediction.R to set things up.
+
 neartab = read.csv("data/nearTableCleaned.csv")
 
 # attach nearest neighbors to each row

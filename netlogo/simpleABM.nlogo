@@ -20,7 +20,7 @@ to setup
   ;;  set global variable values
   set VB .02    ;;  define constant parameters for values->beliefs and beliefs->norms
   set BN .035   ;;  these will come from SEM estimation, and we'll probably need to apply some kind of squashing function.
-  set num-neighbors 10  ;; number of neighbors on which each homeowner determines local norms
+;  set num-neighbors 10  ;; number of neighbors on which each homeowner determines local norms
 
   ;; setup the forest
   ask patches [
@@ -248,7 +248,7 @@ housing-density
 housing-density
 0
 10
-3
+2.2
 .1
 1
 %
@@ -311,7 +311,7 @@ big-radius
 big-radius
 0
 20
-7
+5
 1
 1
 NIL
@@ -391,7 +391,7 @@ norm-multiplier
 norm-multiplier
 0
 .1
-0.01
+0.071
 .001
 1
 NIL
@@ -406,7 +406,7 @@ num-neighbors
 num-neighbors
 0
 100
-10
+3
 1
 1
 NIL
