@@ -1,57 +1,105 @@
 Mplus VERSION 6.12 (Mac)
 MUTHEN & MUTHEN
-01/25/2016   1:58 AM
+01/28/2016  11:14 AM
 
 INPUT INSTRUCTIONS
 
-  TITLE:        Structural Equation Model - Current behavior with all variables;
+  TITLE:        Structural Equation Model - Current Behavior;
 
   DATA:        FILE = mplusdata.csv;
+          !LISTWISE = ON;
 
-  VARIABLE:NAMES ARE id biocen1-biocen4 anthro1-anthro5
-                  respons1-respons5 freedom1-freedom4 effect1-effect7
-                  dsnow1-dsnow7 dsfut1-dsfut7 risk1-risk3
-                  trust1-trust3 trustFS1-trustFS4 exp1-exp3
-                  neighb1-neighb7 nearcnf near03f;
-          CATEGORICAL ARE
-                  dsnow1-dsnow7
-                  exp1-exp3;
-          MISSING ARE ALL (99);
-          USEVARIABLES ARE
-                  !biocen1-biocen4
-                  !anthro1-anthro5
-                  !respons1-respons5
-                  !freedom1-freedom4
+  VARIABLE:
+          NAMES ARE ! Every variable in data set
+                  id
+                  belief1-belief4
+                  risk1-risk3
                   effect1-effect7
                   dsnow1-dsnow7
                   !dsfut1-dsfut7
-                  risk1-risk3
-                  trust1-trust3
-                  trustFS1-trustFS4
                   exp1-exp3
-                  neighb1-neighb7;
+                  near03f
+                  cityRate
+                  numBehav;
 
-  MODEL:        !biocen BY biocen1-biocen4;
-          !anthro BY anthro1-anthro5;
-          !respons BY respons1-respons5;
-          !freedom BY freedom1-freedom4;
-          effect BY effect1-effect7;
+          !CATEGORICAL ARE
+                  !dsnow1-dsnow7;
+                  !exp2;
+                  !exp3;
+
+          MISSING ARE ALL (99);
+
+          USEVARIABLES ARE
+                  belief1-belief4
+                  risk1-risk3
+                  effect4-effect7
+                  !dsnow1-dsnow7
+                  !dsfut4-dsfut7
+                  !exp1                ! injured - only 2% yes
+                  exp2                ! property destroyed/damaged
+                  exp3                ! evacuated
+                  near03f                ! Have problems with model when this is included
+                  cityRate
+                  numBehav;
+
+  ANALYSIS:
+          !ESTIMATOR IS MLR;         ! For continuous items whose residuals may not be norma
+          !ITERATIONS = 10000;
+
+  MODEL:
+
+  ! Measurement Models
+
+          belief BY belief1-belief4;
+          effect BY effect4-effect7;
           risk BY risk1-risk3;
-          trust BY trust1-trust3 trustFS1-trustFS4;
-          experien BY exp1-exp3;
-          norm BY neighb1-neighb7;
-          current BY dsnow1-dsnow7;
-          !future BY dsfut1-dsfut7;
+          !current BY dsnow1-dsnow7;
+          !future BY dsfut4-dsfut7;
+          !experien BY exp2 exp3;        ! drop exp1 (injured) because only 2% yes
 
+  ! Structural Models
 
-          !effect ON respons freedom;
-          !risk ON respons freedom;
-          !trust ON respons freedom;
-          current ON effect risk trust experien norm;
-          !future ON effect risk trust experien norm;
+          effect ON belief;
+          !effect ON exp2;
+          !effect ON exp3;
+          !effect ON near03f;
 
-  OUTPUT:         MODINDICES (ALL);
-          STDYX;
+          risk ON belief;
+          risk ON exp2;
+          risk ON exp3;
+          risk ON near03f;
+
+                  !current ON exp2;
+          !current ON exp3;
+          !current ON near03f;
+          !current ON belief;
+          !current ON effect;
+          !current ON risk;
+
+          numBehav ON belief;
+          numBehav ON effect;
+          numBehav ON risk;
+          numBehav ON cityRate;
+
+  ! Correlated Errors
+
+          belief1 WITH belief2;
+          !belief3 WITH belief4;
+          effect4 WITH effect5;
+
+  OUTPUT:
+          SAMPSTAT;                        ! Descriptive stats for variables
+          !RESIDUAL;                        ! Requests standardized and normalized residuals
+          STDYX;                        ! Requests fully standardized solution
+          MODINDICES (ALL);                ! Method to improve model (at p<.05)
+          TECH1;                        ! Identifies paramaters for error messages
+          TECH3;                        ! Requests estimated covariance and correlation
+                                  ! matrices for the parameter estimates
+
+  SAVEDATA:
+          RESULTS ARE results.txt;
+          ESTIMATES ARE estimates.txt;
+          TECH3 IS tech3.txt;        ! Save parameter matrix
 
 
 
@@ -59,40 +107,37 @@ INPUT READING TERMINATED NORMALLY
 
 
 
-Structural Equation Model - Current behavior with all variables;
+Structural Equation Model - Current Behavior;
 
 SUMMARY OF ANALYSIS
 
 Number of groups                                                 1
-Number of observations                                         638
+Number of observations                                         637
 
-Number of dependent variables                                   34
-Number of independent variables                                  0
-Number of continuous latent variables                            6
+Number of dependent variables                                   12
+Number of independent variables                                  4
+Number of continuous latent variables                            3
 
 Observed dependent variables
 
   Continuous
-   EFFECT1     EFFECT2     EFFECT3     EFFECT4     EFFECT5     EFFECT6
-   EFFECT7     RISK1       RISK2       RISK3       TRUST1      TRUST2
-   TRUST3      TRUSTFS1    TRUSTFS2    TRUSTFS3    TRUSTFS4    NEIGHB1
-   NEIGHB2     NEIGHB3     NEIGHB4     NEIGHB5     NEIGHB6     NEIGHB7
+   BELIEF1     BELIEF2     BELIEF3     BELIEF4     RISK1       RISK2
+   RISK3       EFFECT4     EFFECT5     EFFECT6     EFFECT7     NUMBEHAV
 
-  Binary and ordered categorical (ordinal)
-   DSNOW1      DSNOW2      DSNOW3      DSNOW4      DSNOW5      DSNOW6
-   DSNOW7      EXP1        EXP2        EXP3
+Observed independent variables
+   EXP2        EXP3        NEAR03F     CITYRATE
 
 Continuous latent variables
-   EFFECT      RISK        TRUST       EXPERIEN    NORM        CURRENT
+   BELIEF      EFFECT      RISK
 
 
-Estimator                                                    WLSMV
+Estimator                                                       ML
+Information matrix                                        OBSERVED
 Maximum number of iterations                                  1000
 Convergence criterion                                    0.500D-04
 Maximum number of steepest descent iterations                   20
 Maximum number of iterations for H1                           2000
 Convergence criterion for H1                             0.100D-03
-Parameterization                                             DELTA
 
 Input data file(s)
   mplusdata.csv
@@ -102,7 +147,7 @@ Input data format  FREE
 
 SUMMARY OF DATA
 
-     Number of missing data patterns            36
+     Number of missing data patterns             1
 
 
 COVARIANCE COVERAGE OF DATA
@@ -114,206 +159,198 @@ Minimum covariance coverage value   0.100
 
 
            Covariance Coverage
-              EFFECT1       EFFECT2       EFFECT3       EFFECT4       EFFECT5
+              BELIEF1       BELIEF2       BELIEF3       BELIEF4       RISK1
               ________      ________      ________      ________      ________
- EFFECT1        0.991
- EFFECT2        0.986         0.987
- EFFECT3        0.987         0.984         0.989
- EFFECT4        0.989         0.986         0.989         0.991
- EFFECT5        0.978         0.976         0.978         0.978         0.980
- EFFECT6        0.984         0.983         0.983         0.984         0.975
- EFFECT7        0.989         0.986         0.987         0.989         0.978
- DSNOW1         0.991         0.987         0.989         0.991         0.980
- DSNOW2         0.989         0.986         0.987         0.989         0.978
- DSNOW3         0.991         0.987         0.989         0.991         0.980
- DSNOW4         0.991         0.987         0.989         0.991         0.980
- DSNOW5         0.991         0.987         0.989         0.991         0.980
- DSNOW6         0.991         0.987         0.989         0.991         0.980
- DSNOW7         0.991         0.987         0.989         0.991         0.980
- RISK1          0.925         0.922         0.923         0.925         0.914
- RISK2          0.923         0.920         0.922         0.923         0.912
- RISK3          0.925         0.922         0.923         0.925         0.914
- TRUST1         0.981         0.978         0.980         0.981         0.970
- TRUST2         0.986         0.983         0.984         0.986         0.975
- TRUST3         0.980         0.976         0.978         0.980         0.969
- TRUSTFS1       0.922         0.920         0.922         0.922         0.914
- TRUSTFS2       0.926         0.923         0.925         0.926         0.915
- TRUSTFS3       0.925         0.922         0.923         0.925         0.914
- TRUSTFS4       0.926         0.923         0.925         0.926         0.915
- EXP1           0.987         0.984         0.986         0.987         0.976
- EXP2           0.989         0.986         0.987         0.989         0.978
- EXP3           0.989         0.986         0.987         0.989         0.978
- NEIGHB1        0.854         0.853         0.853         0.854         0.848
- NEIGHB2        0.854         0.853         0.853         0.854         0.848
- NEIGHB3        0.854         0.853         0.853         0.854         0.848
- NEIGHB4        0.854         0.853         0.853         0.854         0.848
- NEIGHB5        0.854         0.853         0.853         0.854         0.848
- NEIGHB6        0.854         0.853         0.853         0.854         0.848
- NEIGHB7        0.854         0.853         0.853         0.854         0.848
+ BELIEF1        1.000
+ BELIEF2        1.000         1.000
+ BELIEF3        1.000         1.000         1.000
+ BELIEF4        1.000         1.000         1.000         1.000
+ RISK1          1.000         1.000         1.000         1.000         1.000
+ RISK2          1.000         1.000         1.000         1.000         1.000
+ RISK3          1.000         1.000         1.000         1.000         1.000
+ EFFECT4        1.000         1.000         1.000         1.000         1.000
+ EFFECT5        1.000         1.000         1.000         1.000         1.000
+ EFFECT6        1.000         1.000         1.000         1.000         1.000
+ EFFECT7        1.000         1.000         1.000         1.000         1.000
+ NUMBEHAV       1.000         1.000         1.000         1.000         1.000
+ EXP2           1.000         1.000         1.000         1.000         1.000
+ EXP3           1.000         1.000         1.000         1.000         1.000
+ NEAR03F        1.000         1.000         1.000         1.000         1.000
+ CITYRATE       1.000         1.000         1.000         1.000         1.000
 
 
            Covariance Coverage
-              EFFECT6       EFFECT7       DSNOW1        DSNOW2        DSNOW3
+              RISK2         RISK3         EFFECT4       EFFECT5       EFFECT6
               ________      ________      ________      ________      ________
- EFFECT6        0.986
- EFFECT7        0.984         0.991
- DSNOW1         0.986         0.991         1.000
- DSNOW2         0.984         0.989         0.998         0.998
- DSNOW3         0.986         0.991         1.000         0.998         1.000
- DSNOW4         0.986         0.991         1.000         0.998         1.000
- DSNOW5         0.986         0.991         1.000         0.998         1.000
- DSNOW6         0.986         0.991         1.000         0.998         1.000
- DSNOW7         0.986         0.991         1.000         0.998         1.000
- RISK1          0.920         0.925         0.929         0.928         0.929
- RISK2          0.918         0.923         0.928         0.926         0.928
- RISK3          0.920         0.925         0.929         0.928         0.929
- TRUST1         0.976         0.981         0.986         0.984         0.986
- TRUST2         0.981         0.986         0.991         0.989         0.991
- TRUST3         0.975         0.980         0.984         0.983         0.984
- TRUSTFS1       0.920         0.922         0.926         0.925         0.926
- TRUSTFS2       0.923         0.926         0.931         0.929         0.931
- TRUSTFS3       0.922         0.925         0.929         0.928         0.929
- TRUSTFS4       0.923         0.926         0.931         0.929         0.931
- EXP1           0.983         0.987         0.994         0.992         0.994
- EXP2           0.984         0.989         0.995         0.994         0.995
- EXP3           0.984         0.989         0.995         0.994         0.995
- NEIGHB1        0.850         0.854         0.864         0.864         0.864
- NEIGHB2        0.850         0.854         0.864         0.864         0.864
- NEIGHB3        0.850         0.854         0.864         0.864         0.864
- NEIGHB4        0.850         0.854         0.864         0.864         0.864
- NEIGHB5        0.850         0.854         0.864         0.864         0.864
- NEIGHB6        0.850         0.854         0.864         0.864         0.864
- NEIGHB7        0.850         0.854         0.864         0.864         0.864
+ RISK2          1.000
+ RISK3          1.000         1.000
+ EFFECT4        1.000         1.000         1.000
+ EFFECT5        1.000         1.000         1.000         1.000
+ EFFECT6        1.000         1.000         1.000         1.000         1.000
+ EFFECT7        1.000         1.000         1.000         1.000         1.000
+ NUMBEHAV       1.000         1.000         1.000         1.000         1.000
+ EXP2           1.000         1.000         1.000         1.000         1.000
+ EXP3           1.000         1.000         1.000         1.000         1.000
+ NEAR03F        1.000         1.000         1.000         1.000         1.000
+ CITYRATE       1.000         1.000         1.000         1.000         1.000
 
 
            Covariance Coverage
-              DSNOW4        DSNOW5        DSNOW6        DSNOW7        RISK1
+              EFFECT7       NUMBEHAV      EXP2          EXP3          NEAR03F
               ________      ________      ________      ________      ________
- DSNOW4         1.000
- DSNOW5         1.000         1.000
- DSNOW6         1.000         1.000         1.000
- DSNOW7         1.000         1.000         1.000         1.000
- RISK1          0.929         0.929         0.929         0.929         0.929
- RISK2          0.928         0.928         0.928         0.928         0.925
- RISK3          0.929         0.929         0.929         0.929         0.926
- TRUST1         0.986         0.986         0.986         0.986         0.920
- TRUST2         0.991         0.991         0.991         0.991         0.925
- TRUST3         0.984         0.984         0.984         0.984         0.918
- TRUSTFS1       0.926         0.926         0.926         0.926         0.920
- TRUSTFS2       0.931         0.931         0.931         0.931         0.925
- TRUSTFS3       0.929         0.929         0.929         0.929         0.923
- TRUSTFS4       0.931         0.931         0.931         0.931         0.925
- EXP1           0.994         0.994         0.994         0.994         0.928
- EXP2           0.995         0.995         0.995         0.995         0.928
- EXP3           0.995         0.995         0.995         0.995         0.928
- NEIGHB1        0.864         0.864         0.864         0.864         0.804
- NEIGHB2        0.864         0.864         0.864         0.864         0.804
- NEIGHB3        0.864         0.864         0.864         0.864         0.804
- NEIGHB4        0.864         0.864         0.864         0.864         0.804
- NEIGHB5        0.864         0.864         0.864         0.864         0.804
- NEIGHB6        0.864         0.864         0.864         0.864         0.804
- NEIGHB7        0.864         0.864         0.864         0.864         0.804
+ EFFECT7        1.000
+ NUMBEHAV       1.000         1.000
+ EXP2           1.000         1.000         1.000
+ EXP3           1.000         1.000         1.000         1.000
+ NEAR03F        1.000         1.000         1.000         1.000         1.000
+ CITYRATE       1.000         1.000         1.000         1.000         1.000
 
 
            Covariance Coverage
-              RISK2         RISK3         TRUST1        TRUST2        TRUST3
+              CITYRATE
+              ________
+ CITYRATE       1.000
+
+
+SAMPLE STATISTICS
+
+
+     ESTIMATED SAMPLE STATISTICS
+
+
+           Means
+              BELIEF1       BELIEF2       BELIEF3       BELIEF4       RISK1
               ________      ________      ________      ________      ________
- RISK2          0.928
- RISK3          0.925         0.929
- TRUST1         0.918         0.920         0.986
- TRUST2         0.923         0.925         0.986         0.991
- TRUST3         0.917         0.918         0.980         0.983         0.984
- TRUSTFS1       0.918         0.920         0.918         0.923         0.917
- TRUSTFS2       0.923         0.925         0.923         0.928         0.922
- TRUSTFS3       0.923         0.923         0.922         0.926         0.920
- TRUSTFS4       0.923         0.925         0.923         0.928         0.922
- EXP1           0.926         0.928         0.983         0.987         0.981
- EXP2           0.926         0.928         0.984         0.989         0.983
- EXP3           0.926         0.928         0.984         0.989         0.983
- NEIGHB1        0.799         0.801         0.853         0.856         0.851
- NEIGHB2        0.799         0.801         0.853         0.856         0.851
- NEIGHB3        0.799         0.801         0.853         0.856         0.851
- NEIGHB4        0.799         0.801         0.853         0.856         0.851
- NEIGHB5        0.799         0.801         0.853         0.856         0.851
- NEIGHB6        0.799         0.801         0.853         0.856         0.851
- NEIGHB7        0.799         0.801         0.853         0.856         0.851
+      1         2.660         3.458         4.067         2.357         3.975
 
 
-           Covariance Coverage
-              TRUSTFS1      TRUSTFS2      TRUSTFS3      TRUSTFS4      EXP1
+           Means
+              RISK2         RISK3         EFFECT4       EFFECT5       EFFECT6
               ________      ________      ________      ________      ________
- TRUSTFS1       0.926
- TRUSTFS2       0.926         0.931
- TRUSTFS3       0.923         0.928         0.929
- TRUSTFS4       0.925         0.929         0.929         0.931
- EXP1           0.925         0.929         0.928         0.929         0.994
- EXP2           0.925         0.929         0.928         0.929         0.994
- EXP3           0.925         0.929         0.928         0.929         0.994
- NEIGHB1        0.796         0.801         0.799         0.801         0.857
- NEIGHB2        0.796         0.801         0.799         0.801         0.857
- NEIGHB3        0.796         0.801         0.799         0.801         0.857
- NEIGHB4        0.796         0.801         0.799         0.801         0.857
- NEIGHB5        0.796         0.801         0.799         0.801         0.857
- NEIGHB6        0.796         0.801         0.799         0.801         0.857
- NEIGHB7        0.796         0.801         0.799         0.801         0.857
+      1         3.101         3.531         4.059         3.684         3.611
 
 
-           Covariance Coverage
-              EXP2          EXP3          NEIGHB1       NEIGHB2       NEIGHB3
+           Means
+              EFFECT7       NUMBEHAV      EXP2          EXP3          NEAR03F
               ________      ________      ________      ________      ________
- EXP2           0.995
- EXP3           0.995         0.995
- NEIGHB1        0.859         0.859         0.864
- NEIGHB2        0.859         0.859         0.864         0.864
- NEIGHB3        0.859         0.859         0.864         0.864         0.864
- NEIGHB4        0.859         0.859         0.864         0.864         0.864
- NEIGHB5        0.859         0.859         0.864         0.864         0.864
- NEIGHB6        0.859         0.859         0.864         0.864         0.864
- NEIGHB7        0.859         0.859         0.864         0.864         0.864
+      1         3.859         2.366         0.310         0.787      1472.187
 
 
-           Covariance Coverage
-              NEIGHB4       NEIGHB5       NEIGHB6       NEIGHB7
-              ________      ________      ________      ________
- NEIGHB4        0.864
- NEIGHB5        0.864         0.864
- NEIGHB6        0.864         0.864         0.864
- NEIGHB7        0.864         0.864         0.864         0.864
+           Means
+              CITYRATE
+              ________
+      1         2.366
 
 
-UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+           Covariances
+              BELIEF1       BELIEF2       BELIEF3       BELIEF4       RISK1
+              ________      ________      ________      ________      ________
+ BELIEF1        1.539
+ BELIEF2       -0.851         1.304
+ BELIEF3       -0.257         0.329         0.795
+ BELIEF4        0.484        -0.365        -0.653         1.249
+ RISK1         -0.079        -0.001         0.019        -0.084         0.842
+ RISK2         -0.044         0.007        -0.048        -0.006         0.551
+ RISK3         -0.036        -0.018         0.048        -0.080         0.489
+ EFFECT4       -0.092         0.171         0.156        -0.131         0.052
+ EFFECT5       -0.082         0.169         0.122        -0.074         0.065
+ EFFECT6       -0.087         0.149         0.082        -0.063         0.062
+ EFFECT7       -0.158         0.214         0.098        -0.119         0.059
+ NUMBEHAV      -0.144         0.160         0.134        -0.084        -0.040
+ EXP2          -0.006        -0.032        -0.020         0.003         0.070
+ EXP3          -0.017         0.005        -0.025         0.000         0.047
+ NEAR03F      162.715      -160.851      -246.989       362.825      -188.936
+ CITYRATE      -0.013         0.008         0.004        -0.015         0.014
 
-    DSNOW1
-      Category 1    0.064       41.000
-      Category 2    0.936      597.000
-    DSNOW2
-      Category 1    0.217      138.000
-      Category 2    0.783      499.000
-    DSNOW3
-      Category 1    0.174      111.000
-      Category 2    0.826      527.000
-    DSNOW4
-      Category 1    0.304      194.000
-      Category 2    0.696      444.000
-    DSNOW5
-      Category 1    0.453      289.000
-      Category 2    0.547      349.000
-    DSNOW6
-      Category 1    0.520      332.000
-      Category 2    0.480      306.000
-    DSNOW7
-      Category 1    0.361      230.000
-      Category 2    0.639      408.000
-    EXP1
-      Category 1    0.976      619.000
-      Category 2    0.024       15.000
-    EXP2
-      Category 1    0.690      438.000
-      Category 2    0.310      197.000
-    EXP3
-      Category 1    0.214      136.000
-      Category 2    0.786      499.000
 
+           Covariances
+              RISK2         RISK3         EFFECT4       EFFECT5       EFFECT6
+              ________      ________      ________      ________      ________
+ RISK2          1.151
+ RISK3          0.479         1.072
+ EFFECT4        0.055         0.114         0.633
+ EFFECT5        0.116         0.133         0.443         0.794
+ EFFECT6        0.158         0.140         0.368         0.527         1.012
+ EFFECT7        0.093         0.110         0.292         0.417         0.615
+ NUMBEHAV       0.030         0.080         0.175         0.333         0.466
+ EXP2           0.108         0.032        -0.006        -0.003         0.017
+ EXP3           0.062         0.020        -0.005        -0.021        -0.009
+ NEAR03F      -27.157       382.763        90.649       142.315       157.681
+ CITYRATE       0.012        -0.001         0.010         0.011         0.008
+
+
+           Covariances
+              EFFECT7       NUMBEHAV      EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________      ________
+ EFFECT7        0.844
+ NUMBEHAV       0.439         1.792
+ EXP2           0.021         0.002         0.213
+ EXP3          -0.019        -0.009         0.040         0.167
+ NEAR03F       55.438      -221.660      -258.464      -325.369   ***********
+ CITYRATE       0.014         0.042         0.001         0.008      -311.537
+
+
+           Covariances
+              CITYRATE
+              ________
+ CITYRATE       0.042
+
+
+           Correlations
+              BELIEF1       BELIEF2       BELIEF3       BELIEF4       RISK1
+              ________      ________      ________      ________      ________
+ BELIEF1        1.000
+ BELIEF2       -0.601         1.000
+ BELIEF3       -0.232         0.324         1.000
+ BELIEF4        0.349        -0.286        -0.655         1.000
+ RISK1         -0.070        -0.001         0.023        -0.082         1.000
+ RISK2         -0.033         0.005        -0.050        -0.005         0.560
+ RISK3         -0.028        -0.015         0.052        -0.069         0.514
+ EFFECT4       -0.093         0.188         0.221        -0.147         0.071
+ EFFECT5       -0.074         0.166         0.153        -0.074         0.080
+ EFFECT6       -0.070         0.130         0.091        -0.056         0.067
+ EFFECT7       -0.139         0.204         0.120        -0.116         0.070
+ NUMBEHAV      -0.087         0.105         0.113        -0.056        -0.033
+ EXP2          -0.010        -0.061        -0.048         0.005         0.165
+ EXP3          -0.033         0.011        -0.069        -0.001         0.125
+ NEAR03F        0.039        -0.042        -0.082         0.097        -0.061
+ CITYRATE      -0.053         0.033         0.021        -0.066         0.072
+
+
+           Correlations
+              RISK2         RISK3         EFFECT4       EFFECT5       EFFECT6
+              ________      ________      ________      ________      ________
+ RISK2          1.000
+ RISK3          0.431         1.000
+ EFFECT4        0.065         0.138         1.000
+ EFFECT5        0.121         0.144         0.625         1.000
+ EFFECT6        0.147         0.135         0.459         0.587         1.000
+ EFFECT7        0.094         0.115         0.399         0.509         0.665
+ NUMBEHAV       0.021         0.057         0.164         0.279         0.346
+ EXP2           0.219         0.068        -0.017        -0.007         0.037
+ EXP3           0.140         0.048        -0.015        -0.059        -0.023
+ NEAR03F       -0.008         0.110         0.034         0.048         0.047
+ CITYRATE       0.056        -0.004         0.059         0.059         0.039
+
+
+           Correlations
+              EFFECT7       NUMBEHAV      EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________      ________
+ EFFECT7        1.000
+ NUMBEHAV       0.357         1.000
+ EXP2           0.050         0.004         1.000
+ EXP3          -0.051        -0.016         0.215         1.000
+ NEAR03F        0.018        -0.049        -0.167        -0.237         1.000
+ CITYRATE       0.075         0.153         0.013         0.096        -0.452
+
+
+           Correlations
+              CITYRATE
+              ________
+ CITYRATE       1.000
+
+
+     MAXIMUM LOG-LIKELIHOOD VALUE FOR THE UNRESTRICTED (H1) MODEL IS  -16313.049
 
 
 THE MODEL ESTIMATION TERMINATED NORMALLY
@@ -322,39 +359,46 @@ THE MODEL ESTIMATION TERMINATED NORMALLY
 
 MODEL FIT INFORMATION
 
-Number of Free Parameters                      107
+Number of Free Parameters                       46
+
+Loglikelihood
+
+          H0 Value                       -9816.882
+          H1 Value                       -9710.332
+
+Information Criteria
+
+          Akaike (AIC)                   19725.765
+          Bayesian (BIC)                 19930.776
+          Sample-Size Adjusted BIC       19784.730
+            (n* = (n + 2) / 24)
 
 Chi-Square Test of Model Fit
 
-          Value                            901.589*
-          Degrees of Freedom                   512
+          Value                            213.100
+          Degrees of Freedom                    92
           P-Value                           0.0000
-
-*   The chi-square value for MLM, MLMV, MLR, ULSMV, WLSM and WLSMV cannot be used
-    for chi-square difference testing in the regular way.  MLM, MLR and WLSM
-    chi-square difference testing is described on the Mplus website.  MLMV, WLSMV,
-    and ULSMV difference testing is done using the DIFFTEST option.
 
 RMSEA (Root Mean Square Error Of Approximation)
 
-          Estimate                           0.035
-          90 Percent C.I.                    0.031  0.038
-          Probability RMSEA <= .05           1.000
+          Estimate                           0.045
+          90 Percent C.I.                    0.037  0.053
+          Probability RMSEA <= .05           0.819
 
 CFI/TLI
 
-          CFI                                0.888
-          TLI                                0.877
+          CFI                                0.951
+          TLI                                0.939
 
 Chi-Square Test of Model Fit for the Baseline Model
 
-          Value                           4036.122
-          Degrees of Freedom                   561
+          Value                           2568.879
+          Degrees of Freedom                   114
           P-Value                           0.0000
 
-WRMR (Weighted Root Mean Square Residual)
+SRMR (Standardized Root Mean Square Residual)
 
-          Value                              1.241
+          Value                              0.052
 
 
 
@@ -363,148 +407,80 @@ MODEL RESULTS
                                                     Two-Tailed
                     Estimate       S.E.  Est./S.E.    P-Value
 
+ BELIEF   BY
+    BELIEF1            1.000      0.000    999.000    999.000
+    BELIEF2           -0.926      0.112     -8.239      0.000
+    BELIEF3           -1.499      0.206     -7.292      0.000
+    BELIEF4            2.029      0.238      8.518      0.000
+
  EFFECT   BY
-    EFFECT1            1.000      0.000    999.000    999.000
-    EFFECT2            0.988      0.057     17.269      0.000
-    EFFECT3            0.657      0.055     11.944      0.000
-    EFFECT4            1.078      0.076     14.250      0.000
-    EFFECT5            1.406      0.097     14.494      0.000
-    EFFECT6            1.425      0.112     12.766      0.000
-    EFFECT7            1.238      0.094     13.175      0.000
+    EFFECT4            1.000      0.000    999.000    999.000
+    EFFECT5            1.440      0.096     15.064      0.000
+    EFFECT6            2.066      0.165     12.532      0.000
+    EFFECT7            1.704      0.139     12.229      0.000
 
  RISK     BY
     RISK1              1.000      0.000    999.000    999.000
-    RISK2              1.073      0.116      9.230      0.000
-    RISK3              0.991      0.120      8.285      0.000
+    RISK2              1.004      0.080     12.592      0.000
+    RISK3              0.869      0.069     12.545      0.000
 
- TRUST    BY
-    TRUST1             1.000      0.000    999.000    999.000
-    TRUST2             0.775      0.059     13.132      0.000
-    TRUST3             1.250      0.101     12.364      0.000
-    TRUSTFS1           1.660      0.161     10.289      0.000
-    TRUSTFS2           1.681      0.166     10.154      0.000
-    TRUSTFS3           1.612      0.157     10.266      0.000
-    TRUSTFS4           1.976      0.199      9.936      0.000
+ EFFECT   ON
+    BELIEF            -0.150      0.050     -3.002      0.003
 
- EXPERIEN BY
-    EXP1               1.000      0.000    999.000    999.000
-    EXP2               1.915      1.046      1.830      0.067
-    EXP3               2.405      1.326      1.813      0.070
+ RISK     ON
+    BELIEF            -0.137      0.081     -1.690      0.091
 
- NORM     BY
-    NEIGHB1            1.000      0.000    999.000    999.000
-    NEIGHB2            2.582      0.526      4.911      0.000
-    NEIGHB3            2.127      0.453      4.699      0.000
-    NEIGHB4            2.539      0.546      4.649      0.000
-    NEIGHB5            5.227      1.060      4.930      0.000
-    NEIGHB6            4.181      0.920      4.542      0.000
-    NEIGHB7            6.024      1.172      5.141      0.000
+ RISK     ON
+    EXP2               0.324      0.073      4.426      0.000
+    EXP3               0.229      0.084      2.738      0.006
+    NEAR03F            0.000      0.000      1.273      0.203
 
- CURRENT  BY
-    DSNOW1             1.000      0.000    999.000    999.000
-    DSNOW2             1.159      0.293      3.960      0.000
-    DSNOW3             0.853      0.264      3.236      0.001
-    DSNOW4             1.328      0.310      4.283      0.000
-    DSNOW5             1.783      0.412      4.327      0.000
-    DSNOW6             1.889      0.426      4.432      0.000
-    DSNOW7             2.070      0.465      4.453      0.000
+ NUMBEHAV ON
+    BELIEF            -0.099      0.122     -0.813      0.416
+    EFFECT             1.323      0.161      8.202      0.000
+    RISK              -0.122      0.075     -1.636      0.102
 
- CURRENT  ON
-    EFFECT             0.367      0.087      4.231      0.000
-    RISK              -0.044      0.037     -1.185      0.236
-    TRUST             -0.103      0.054     -1.915      0.055
-    EXPERIEN           0.024      0.118      0.200      0.842
-    NORM               1.358      0.918      1.478      0.139
+ NUMBEHAV ON
+    CITYRATE           0.854      0.237      3.603      0.000
 
- RISK     WITH
-    EFFECT             0.069      0.019      3.576      0.000
+ BELIEF1  WITH
+    BELIEF2           -0.653      0.058    -11.338      0.000
 
- TRUST    WITH
-    EFFECT             0.062      0.013      4.873      0.000
-    RISK              -0.012      0.016     -0.775      0.438
-
- EXPERIEN WITH
-    EFFECT            -0.005      0.011     -0.493      0.622
-    RISK               0.073      0.041      1.762      0.078
-    TRUST             -0.024      0.016     -1.474      0.140
-
- NORM     WITH
-    EFFECT             0.001      0.001      0.646      0.518
-    RISK               0.000      0.001     -0.285      0.776
-    TRUST              0.001      0.001      1.119      0.263
-    EXPERIEN           0.000      0.001      0.026      0.980
+ EFFECT4  WITH
+    EFFECT5            0.191      0.023      8.500      0.000
 
  Intercepts
-    EFFECT1            4.093      0.044     93.656      0.000
-    EFFECT2            4.070      0.041     98.856      0.000
-    EFFECT3            4.437      0.031    142.079      0.000
-    EFFECT4            4.054      0.038    106.713      0.000
-    EFFECT5            3.678      0.038     96.188      0.000
-    EFFECT6            3.606      0.044     82.216      0.000
-    EFFECT7            3.854      0.044     88.375      0.000
-    RISK1              3.990      0.045     88.109      0.000
-    RISK2              3.108      0.046     67.789      0.000
-    RISK3              3.533      0.047     75.807      0.000
-    TRUST1             3.353      0.046     72.466      0.000
-    TRUST2             3.622      0.040     90.155      0.000
-    TRUST3             3.392      0.049     68.844      0.000
-    TRUSTFS1           3.782      0.042     89.518      0.000
-    TRUSTFS2           3.687      0.042     86.899      0.000
-    TRUSTFS3           3.841      0.042     91.357      0.000
-    TRUSTFS4           3.586      0.048     74.831      0.000
-    NEIGHB1            0.943      0.006    151.149      0.000
-    NEIGHB2            0.782      0.009     91.501      0.000
-    NEIGHB3            0.837      0.015     54.584      0.000
-    NEIGHB4            0.705      0.012     59.011      0.000
-    NEIGHB5            0.532      0.010     51.614      0.000
-    NEIGHB6            0.468      0.011     42.471      0.000
-    NEIGHB7            0.636      0.010     66.042      0.000
-
- Thresholds
-    DSNOW1$1          -1.520      0.077    -19.676      0.000
-    DSNOW2$1          -0.784      0.056    -14.089      0.000
-    DSNOW3$1          -0.939      0.058    -16.060      0.000
-    DSNOW4$1          -0.513      0.052     -9.848      0.000
-    DSNOW5$1          -0.118      0.050     -2.375      0.018
-    DSNOW6$1           0.051      0.050      1.029      0.303
-    DSNOW7$1          -0.357      0.051     -7.032      0.000
-    EXP1$1             1.983      0.108     18.336      0.000
-    EXP2$1             0.495      0.052      9.520      0.000
-    EXP3$1            -0.792      0.056    -14.183      0.000
+    BELIEF1            2.660      0.049     54.114      0.000
+    BELIEF2            3.458      0.045     76.426      0.000
+    BELIEF3            4.067      0.035    115.156      0.000
+    BELIEF4            2.357      0.044     53.243      0.000
+    RISK1              3.675      0.079     46.264      0.000
+    RISK2              2.800      0.085     32.857      0.000
+    RISK3              3.270      0.076     43.184      0.000
+    EFFECT4            4.059      0.032    128.745      0.000
+    EFFECT5            3.684      0.035    104.379      0.000
+    EFFECT6            3.611      0.040     90.568      0.000
+    EFFECT7            3.859      0.036    106.002      0.000
+    NUMBEHAV           0.382      0.563      0.678      0.498
 
  Variances
-    EFFECT             0.260      0.033      7.801      0.000
-    RISK               0.511      0.075      6.816      0.000
-    TRUST              0.206      0.037      5.514      0.000
-    EXPERIEN           0.091      0.093      0.974      0.330
-    NORM               0.001      0.000      2.644      0.008
+    BELIEF             0.214      0.050      4.280      0.000
 
  Residual Variances
-    EFFECT1            0.464      0.026     18.004      0.000
-    EFFECT2            0.430      0.024     18.308      0.000
-    EFFECT3            0.305      0.015     20.480      0.000
-    EFFECT4            0.347      0.019     18.251      0.000
-    EFFECT5            0.300      0.023     12.845      0.000
-    EFFECT6            0.500      0.035     14.124      0.000
-    EFFECT7            0.461      0.028     16.525      0.000
-    RISK1              0.372      0.051      7.235      0.000
-    RISK2              0.622      0.063      9.861      0.000
-    RISK3              0.631      0.062     10.180      0.000
-    TRUST1             0.757      0.048     15.772      0.000
-    TRUST2             0.595      0.032     18.405      0.000
-    TRUST3             0.779      0.049     15.844      0.000
-    TRUSTFS1           0.296      0.021     13.856      0.000
-    TRUSTFS2           0.335      0.024     14.267      0.000
-    TRUSTFS3           0.312      0.022     14.503      0.000
-    TRUSTFS4           0.370      0.030     12.240      0.000
-    NEIGHB1            0.009      0.000     25.887      0.000
-    NEIGHB2            0.029      0.001     22.518      0.000
-    NEIGHB3            0.043      0.002     17.936      0.000
-    NEIGHB4            0.052      0.003     17.236      0.000
-    NEIGHB5            0.035      0.002     16.100      0.000
-    NEIGHB6            0.049      0.003     17.573      0.000
-    NEIGHB7            0.021      0.002     11.413      0.000
-    CURRENT            0.123      0.054      2.274      0.023
+    BELIEF1            1.325      0.078     16.983      0.000
+    BELIEF2            1.120      0.067     16.788      0.000
+    BELIEF3            0.314      0.050      6.301      0.000
+    BELIEF4            0.368      0.089      4.153      0.000
+    RISK1              0.289      0.041      7.126      0.000
+    RISK2              0.593      0.051     11.668      0.000
+    RISK3              0.654      0.046     14.218      0.000
+    EFFECT4            0.459      0.028     16.395      0.000
+    EFFECT5            0.432      0.029     14.841      0.000
+    EFFECT6            0.267      0.034      7.755      0.000
+    EFFECT7            0.337      0.029     11.726      0.000
+    NUMBEHAV           1.439      0.084     17.064      0.000
+    EFFECT             0.170      0.026      6.519      0.000
+    RISK               0.516      0.055      9.329      0.000
 
 
 STANDARDIZED MODEL RESULTS
@@ -515,199 +491,110 @@ STDYX Standardization
                                                     Two-Tailed
                     Estimate       S.E.  Est./S.E.    P-Value
 
+ BELIEF   BY
+    BELIEF1            0.373      0.040      9.322      0.000
+    BELIEF2           -0.375      0.041     -9.110      0.000
+    BELIEF3           -0.778      0.041    -19.048      0.000
+    BELIEF4            0.840      0.043     19.680      0.000
+
  EFFECT   BY
-    EFFECT1            0.599      0.027     22.082      0.000
-    EFFECT2            0.609      0.027     22.796      0.000
-    EFFECT3            0.519      0.029     17.745      0.000
-    EFFECT4            0.682      0.022     30.803      0.000
-    EFFECT5            0.795      0.020     39.310      0.000
-    EFFECT6            0.717      0.025     29.228      0.000
-    EFFECT7            0.681      0.024     28.699      0.000
+    EFFECT4            0.525      0.033     15.837      0.000
+    EFFECT5            0.675      0.026     25.685      0.000
+    EFFECT6            0.858      0.021     41.458      0.000
+    EFFECT7            0.775      0.023     33.846      0.000
 
  RISK     BY
-    RISK1              0.761      0.041     18.562      0.000
-    RISK2              0.697      0.038     18.318      0.000
-    RISK3              0.666      0.043     15.655      0.000
+    RISK1              0.811      0.030     26.666      0.000
+    RISK2              0.697      0.032     22.111      0.000
+    RISK3              0.625      0.032     19.612      0.000
 
- TRUST    BY
-    TRUST1             0.463      0.034     13.805      0.000
-    TRUST2             0.415      0.034     12.190      0.000
-    TRUST3             0.541      0.029     18.877      0.000
-    TRUSTFS1           0.811      0.017     47.927      0.000
-    TRUSTFS2           0.797      0.018     43.984      0.000
-    TRUSTFS3           0.795      0.017     45.648      0.000
-    TRUSTFS4           0.828      0.019     44.183      0.000
+ EFFECT   ON
+    BELIEF            -0.166      0.049     -3.382      0.001
 
- EXPERIEN BY
-    EXP1               0.301      0.154      1.949      0.051
-    EXP2               0.576      0.101      5.679      0.000
-    EXP3               0.724      0.126      5.724      0.000
+ RISK     ON
+    BELIEF            -0.085      0.049     -1.726      0.084
 
- NORM     BY
-    NEIGHB1            0.284      0.053      5.307      0.000
-    NEIGHB2            0.384      0.026     14.500      0.000
-    NEIGHB3            0.271      0.024     11.233      0.000
-    NEIGHB4            0.291      0.029     10.157      0.000
-    NEIGHB5            0.605      0.034     17.787      0.000
-    NEIGHB6            0.459      0.032     14.183      0.000
-    NEIGHB7            0.748      0.030     24.767      0.000
+ RISK     ON
+    EXP2               0.201      0.045      4.497      0.000
+    EXP3               0.126      0.046      2.758      0.006
+    NEAR03F            0.059      0.046      1.267      0.205
 
- CURRENT  BY
-    DSNOW1             0.394      0.085      4.614      0.000
-    DSNOW2             0.457      0.060      7.660      0.000
-    DSNOW3             0.336      0.068      4.915      0.000
-    DSNOW4             0.524      0.054      9.626      0.000
-    DSNOW5             0.703      0.045     15.694      0.000
-    DSNOW6             0.745      0.047     15.798      0.000
-    DSNOW7             0.816      0.043     18.814      0.000
+ NUMBEHAV ON
+    BELIEF            -0.034      0.042     -0.819      0.413
+    EFFECT             0.413      0.037     11.023      0.000
+    RISK              -0.068      0.041     -1.642      0.101
 
- CURRENT  ON
-    EFFECT             0.474      0.053      8.984      0.000
-    RISK              -0.080      0.065     -1.228      0.220
-    TRUST             -0.118      0.053     -2.225      0.026
-    EXPERIEN           0.018      0.089      0.201      0.841
-    NORM               0.094      0.057      1.661      0.097
+ NUMBEHAV ON
+    CITYRATE           0.131      0.036      3.620      0.000
 
- RISK     WITH
-    EFFECT             0.188      0.048      3.909      0.000
+ BELIEF1  WITH
+    BELIEF2           -0.536      0.029    -18.460      0.000
 
- TRUST    WITH
-    EFFECT             0.268      0.041      6.579      0.000
-    RISK              -0.038      0.049     -0.783      0.434
-
- EXPERIEN WITH
-    EFFECT            -0.035      0.068     -0.512      0.609
-    RISK               0.339      0.075      4.500      0.000
-    TRUST             -0.176      0.068     -2.577      0.010
-
- NORM     WITH
-    EFFECT             0.037      0.056      0.653      0.514
-    RISK              -0.018      0.063     -0.285      0.776
-    TRUST              0.063      0.056      1.142      0.254
-    EXPERIEN           0.002      0.084      0.026      0.980
+ EFFECT4  WITH
+    EFFECT5            0.430      0.036     12.018      0.000
 
  Intercepts
-    EFFECT1            4.811      0.113     42.732      0.000
-    EFFECT2            4.921      0.110     44.623      0.000
-    EFFECT3            6.870      0.134     51.256      0.000
-    EFFECT4            5.032      0.107     47.105      0.000
-    EFFECT5            4.079      0.117     34.793      0.000
-    EFFECT6            3.557      0.105     34.024      0.000
-    EFFECT7            4.160      0.105     39.504      0.000
-    RISK1              4.245      0.125     34.007      0.000
-    RISK2              2.824      0.120     23.461      0.000
-    RISK3              3.320      0.115     28.973      0.000
-    TRUST1             3.417      0.098     34.973      0.000
-    TRUST2             4.270      0.100     42.777      0.000
-    TRUST3             3.232      0.098     33.029      0.000
-    TRUSTFS1           4.068      0.096     42.451      0.000
-    TRUSTFS2           3.846      0.102     37.628      0.000
-    TRUSTFS3           4.171      0.094     44.313      0.000
-    TRUSTFS4           3.308      0.095     34.937      0.000
-    NEIGHB1            9.789      0.070    139.981      0.000
-    NEIGHB2            4.255      0.097     44.007      0.000
-    NEIGHB3            3.897      0.070     55.295      0.000
-    NEIGHB4            2.955      0.078     37.727      0.000
-    NEIGHB5            2.254      0.087     25.984      0.000
-    NEIGHB6            1.878      0.081     23.213      0.000
-    NEIGHB7            2.889      0.077     37.592      0.000
-
- Thresholds
-    DSNOW1$1          -1.520      0.077    -19.676      0.000
-    DSNOW2$1          -0.784      0.056    -14.089      0.000
-    DSNOW3$1          -0.939      0.058    -16.060      0.000
-    DSNOW4$1          -0.513      0.052     -9.848      0.000
-    DSNOW5$1          -0.118      0.050     -2.375      0.018
-    DSNOW6$1           0.051      0.050      1.029      0.303
-    DSNOW7$1          -0.357      0.051     -7.032      0.000
-    EXP1$1             1.983      0.108     18.336      0.000
-    EXP2$1             0.495      0.052      9.520      0.000
-    EXP3$1            -0.792      0.056    -14.183      0.000
+    BELIEF1            2.144      0.072     29.795      0.000
+    BELIEF2            3.028      0.094     32.340      0.000
+    BELIEF3            4.563      0.134     34.093      0.000
+    BELIEF4            2.110      0.071     29.648      0.000
+    RISK1              4.001      0.155     25.763      0.000
+    RISK2              2.609      0.118     22.099      0.000
+    RISK3              3.157      0.125     25.228      0.000
+    EFFECT4            5.101      0.148     34.396      0.000
+    EFFECT5            4.136      0.122     33.773      0.000
+    EFFECT6            3.588      0.108     33.207      0.000
+    EFFECT7            4.200      0.124     33.827      0.000
+    NUMBEHAV           0.285      0.422      0.676      0.499
 
  Variances
-    EFFECT             1.000      0.000    999.000    999.000
-    RISK               1.000      0.000    999.000    999.000
-    TRUST              1.000      0.000    999.000    999.000
-    EXPERIEN           1.000      0.000    999.000    999.000
-    NORM               1.000      0.000    999.000    999.000
+    BELIEF             1.000      0.000    999.000    999.000
 
  Residual Variances
-    EFFECT1            0.641      0.032     19.729      0.000
-    EFFECT2            0.629      0.033     19.336      0.000
-    EFFECT3            0.731      0.030     24.121      0.000
-    EFFECT4            0.535      0.030     17.707      0.000
-    EFFECT5            0.368      0.032     11.459      0.000
-    EFFECT6            0.486      0.035     13.835      0.000
-    EFFECT7            0.536      0.032     16.608      0.000
-    RISK1              0.421      0.062      6.751      0.000
-    RISK2              0.514      0.053      9.678      0.000
-    RISK3              0.557      0.057      9.832      0.000
-    TRUST1             0.786      0.031     25.306      0.000
-    TRUST2             0.828      0.028     29.275      0.000
-    TRUST3             0.707      0.031     22.789      0.000
-    TRUSTFS1           0.342      0.027     12.465      0.000
-    TRUSTFS2           0.365      0.029     12.645      0.000
-    TRUSTFS3           0.368      0.028     13.299      0.000
-    TRUSTFS4           0.315      0.031     10.140      0.000
-    NEIGHB1            0.919      0.030     30.290      0.000
-    NEIGHB2            0.853      0.020     41.907      0.000
-    NEIGHB3            0.927      0.013     70.964      0.000
-    NEIGHB4            0.915      0.017     54.889      0.000
-    NEIGHB5            0.634      0.041     15.383      0.000
-    NEIGHB6            0.789      0.030     26.581      0.000
-    NEIGHB7            0.441      0.045      9.750      0.000
-    CURRENT            0.789      0.044     17.782      0.000
+    BELIEF1            0.861      0.030     28.864      0.000
+    BELIEF2            0.859      0.031     27.820      0.000
+    BELIEF3            0.395      0.064      6.220      0.000
+    BELIEF4            0.295      0.072      4.108      0.000
+    RISK1              0.343      0.049      6.951      0.000
+    RISK2              0.515      0.044     11.730      0.000
+    RISK3              0.609      0.040     15.295      0.000
+    EFFECT4            0.724      0.035     20.795      0.000
+    EFFECT5            0.544      0.036     15.312      0.000
+    EFFECT6            0.264      0.036      7.431      0.000
+    EFFECT7            0.399      0.035     11.247      0.000
+    NUMBEHAV           0.803      0.032     25.407      0.000
+    EFFECT             0.973      0.016     59.901      0.000
+    RISK               0.930      0.023     40.046      0.000
 
 
 R-SQUARE
 
-    Observed                                        Two-Tailed   Residual
-    Variable        Estimate       S.E.  Est./S.E.    P-Value    Variance
+    Observed                                        Two-Tailed
+    Variable        Estimate       S.E.  Est./S.E.    P-Value
 
-    EFFECT1            0.359      0.032     11.041      0.000
-    EFFECT2            0.371      0.033     11.398      0.000
-    EFFECT3            0.269      0.030      8.872      0.000
-    EFFECT4            0.465      0.030     15.401      0.000
-    EFFECT5            0.632      0.032     19.655      0.000
-    EFFECT6            0.514      0.035     14.614      0.000
-    EFFECT7            0.464      0.032     14.349      0.000
-    DSNOW1             0.156      0.067      2.307      0.021      0.844
-    DSNOW2             0.209      0.055      3.830      0.000      0.791
-    DSNOW3             0.113      0.046      2.457      0.014      0.887
-    DSNOW4             0.274      0.057      4.813      0.000      0.726
-    DSNOW5             0.494      0.063      7.847      0.000      0.506
-    DSNOW6             0.555      0.070      7.899      0.000      0.445
-    DSNOW7             0.666      0.071      9.407      0.000      0.334
-    RISK1              0.579      0.062      9.281      0.000
-    RISK2              0.486      0.053      9.159      0.000
-    RISK3              0.443      0.057      7.828      0.000
-    TRUST1             0.214      0.031      6.902      0.000
-    TRUST2             0.172      0.028      6.095      0.000
-    TRUST3             0.293      0.031      9.438      0.000
-    TRUSTFS1           0.658      0.027     23.963      0.000
-    TRUSTFS2           0.635      0.029     21.992      0.000
-    TRUSTFS3           0.632      0.028     22.824      0.000
-    TRUSTFS4           0.685      0.031     22.092      0.000
-    EXP1               0.091      0.093      0.974      0.330      0.909
-    EXP2               0.332      0.117      2.839      0.005      0.668
-    EXP3               0.524      0.183      2.862      0.004      0.476
-    NEIGHB1            0.081      0.030      2.654      0.008
-    NEIGHB2            0.147      0.020      7.250      0.000
-    NEIGHB3            0.073      0.013      5.617      0.000
-    NEIGHB4            0.085      0.017      5.079      0.000
-    NEIGHB5            0.366      0.041      8.893      0.000
-    NEIGHB6            0.211      0.030      7.092      0.000
-    NEIGHB7            0.559      0.045     12.384      0.000
+    BELIEF1            0.139      0.030      4.661      0.000
+    BELIEF2            0.141      0.031      4.555      0.000
+    BELIEF3            0.605      0.064      9.524      0.000
+    BELIEF4            0.705      0.072      9.840      0.000
+    RISK1              0.657      0.049     13.333      0.000
+    RISK2              0.485      0.044     11.055      0.000
+    RISK3              0.391      0.040      9.806      0.000
+    EFFECT4            0.276      0.035      7.919      0.000
+    EFFECT5            0.456      0.036     12.842      0.000
+    EFFECT6            0.736      0.036     20.729      0.000
+    EFFECT7            0.601      0.035     16.923      0.000
+    NUMBEHAV           0.197      0.032      6.234      0.000
 
      Latent                                         Two-Tailed
     Variable        Estimate       S.E.  Est./S.E.    P-Value
 
-    CURRENT            0.211      0.044      4.751      0.000
+    EFFECT             0.027      0.016      1.691      0.091
+    RISK               0.070      0.023      3.021      0.003
 
 
 QUALITY OF NUMERICAL RESULTS
 
-     Condition Number for the Information Matrix              0.442E-09
+     Condition Number for the Information Matrix              0.211E-09
        (ratio of smallest to largest eigenvalue)
 
 
@@ -719,76 +606,1384 @@ Minimum M.I. value for printing the modification index    10.000
 
 ON/BY Statements
 
-EFFECT3  ON CURRENT  /
-CURRENT  BY EFFECT3        11.736    -0.284     -0.112       -0.174
-EFFECT6  ON CURRENT  /
-CURRENT  BY EFFECT6        10.735     0.443      0.175        0.172
-EFFECT7  ON CURRENT  /
-CURRENT  BY EFFECT7        19.375     0.529      0.209        0.225
-DSNOW3   ON TRUST    /
-TRUST    BY DSNOW3         10.465    -0.276     -0.126       -0.126
-EXP2     ON RISK     /
-RISK     BY EXP2           10.678     0.436      0.312        0.312
-EXP2     ON TRUST    /
-TRUST    BY EXP2           14.700     0.463      0.210        0.210
-EXP3     ON TRUST    /
-TRUST    BY EXP3           11.142    -0.504     -0.229       -0.229
+BELIEF2  ON EFFECT   /
+EFFECT   BY BELIEF2        11.366     0.319      0.133        0.117
+EFFECT4  ON BELIEF   /
+BELIEF   BY EFFECT4        13.957    -0.224     -0.103       -0.130
+EFFECT   ON RISK     /
+RISK     BY EFFECT         10.565     0.089      0.159        0.159
+RISK     ON EFFECT   /
+EFFECT   BY RISK           10.206     0.277      0.155        0.155
 
 ON Statements
 
-TRUST    ON TRUST2         10.449    -0.189     -0.417       -0.353
-TRUST    ON EXP2           10.408     0.080      0.177        0.177
-CURRENT  ON EFFECT3        13.024    -0.131     -0.331       -0.214
-CURRENT  ON EFFECT6        11.987     0.125      0.318        0.322
-CURRENT  ON EFFECT7        18.246     0.148      0.376        0.349
-EFFECT1  ON EFFECT2        24.622     0.489      0.489        0.475
-EFFECT2  ON EFFECT1        24.622     0.453      0.453        0.466
-EFFECT3  ON DSNOW5         14.227    -0.096     -0.096       -0.149
-EFFECT3  ON DSNOW6         10.624    -0.080     -0.080       -0.124
-EFFECT6  ON EFFECT7        10.575     0.466      0.466        0.426
-EFFECT6  ON DSNOW6         21.965     0.180      0.180        0.178
-EFFECT7  ON EFFECT6        10.575     0.430      0.430        0.470
-EFFECT7  ON DSNOW6         14.796     0.131      0.131        0.142
-EFFECT7  ON DSNOW7         22.097     0.154      0.154        0.166
-DSNOW3   ON TRUST3         11.497    -0.174     -0.174       -0.182
-TRUST1   ON TRUST2         54.430     0.682      0.682        0.589
-TRUST1   ON TRUST3         25.557     0.445      0.445        0.476
-TRUST2   ON TRUST1         54.430     0.537      0.537        0.621
-TRUST2   ON TRUST3         29.026     0.385      0.385        0.476
-TRUST3   ON TRUST1         25.557     0.458      0.458        0.429
-TRUST3   ON TRUST2         29.026     0.503      0.503        0.407
-EXP2     ON RISK2          12.946     0.287      0.287        0.316
-EXP2     ON TRUSTFS1       15.372     0.250      0.250        0.232
-EXP2     ON TRUSTFS2       14.481     0.235      0.235        0.225
-EXP2     ON TRUSTFS3       14.403     0.243      0.243        0.224
-EXP2     ON TRUSTFS4       12.814     0.192      0.192        0.209
-EXP3     ON TRUSTFS4       10.843    -0.222     -0.222       -0.241
-NEIGHB3  ON NEIGHB4        14.583     0.162      0.162        0.180
-NEIGHB4  ON NEIGHB3        14.583     0.198      0.198        0.178
-NEIGHB4  ON NEIGHB6        10.007    -0.162     -0.162       -0.169
-NEIGHB6  ON NEIGHB4        10.007    -0.152     -0.152       -0.146
+BELIEF   ON EFFECT4        15.339    -0.125     -0.271       -0.215
+EFFECT   ON BELIEF2        13.549     0.063      0.152        0.173
+EFFECT   ON RISK2          13.509     0.061      0.147        0.158
+EFFECT   ON RISK3          13.650     0.064      0.153        0.158
+EFFECT   ON EFFECT4        15.339    -0.664     -1.588       -1.264
+RISK     ON EFFECT5        10.065     0.117      0.157        0.140
+BELIEF1  ON BELIEF3        29.888     0.535      0.535        0.384
+BELIEF1  ON BELIEF4        29.270     0.610      0.610        0.549
+BELIEF2  ON BELIEF3        21.351     0.418      0.418        0.326
+BELIEF2  ON BELIEF4        25.994     0.531      0.531        0.520
+BELIEF2  ON EFFECT4        11.286     0.151      0.151        0.105
+BELIEF2  ON EFFECT5        11.184     0.135      0.135        0.105
+BELIEF2  ON EFFECT7        11.277     0.132      0.132        0.106
+BELIEF3  ON BELIEF1        29.582     0.228      0.228        0.318
+BELIEF3  ON BELIEF4        10.385    -2.815     -2.815       -3.529
+BELIEF3  ON EFFECT4        10.683     0.113      0.113        0.100
+BELIEF4  ON BELIEF1        24.054     0.279      0.279        0.310
+BELIEF4  ON BELIEF2        16.040     0.252      0.252        0.257
+BELIEF4  ON BELIEF3        10.385    -3.298     -3.298       -2.631
+RISK1    ON NEAR03F        10.878     0.000      0.000       -0.114
+RISK3    ON NEAR03F        17.634     0.000      0.000        0.144
+EFFECT4  ON BELIEF3        15.182     0.108      0.108        0.121
 
 WITH Statements
 
-EFFECT2  WITH EFFECT1      24.622     0.210      0.210        0.471
-EFFECT3  WITH CURRENT      13.024    -0.040     -0.114       -0.206
-EFFECT6  WITH CURRENT      11.987     0.063      0.179        0.253
-EFFECT7  WITH CURRENT      18.246     0.068      0.195        0.288
-EFFECT7  WITH EFFECT6      10.575     0.215      0.215        0.447
-DSNOW6   WITH EFFECT6      21.297     0.280      0.280        0.594
-DSNOW7   WITH EFFECT7      13.992     0.207      0.207        0.528
-TRUST2   WITH TRUST        10.449    -0.113     -0.248       -0.321
-TRUST2   WITH TRUST1       54.430     0.406      0.406        0.605
-TRUST3   WITH TRUST1       25.557     0.347      0.347        0.452
-TRUST3   WITH TRUST2       29.026     0.300      0.300        0.440
-EXP2     WITH TRUST        10.408     0.080      0.177        0.217
-NEIGHB4  WITH NEIGHB3      14.583     0.008      0.008        0.179
-NEIGHB6  WITH NEIGHB4      10.007    -0.008     -0.008       -0.157
+RISK     WITH EFFECT       10.206     0.047      0.159        0.159
+BELIEF2  WITH EFFECT       11.366     0.054      0.131        0.124
+BELIEF3  WITH BELIEF1      29.888     0.168      0.168        0.260
+BELIEF3  WITH BELIEF2      21.351     0.131      0.131        0.221
+BELIEF4  WITH BELIEF1      29.270     0.224      0.224        0.321
+BELIEF4  WITH BELIEF2      25.994     0.195      0.195        0.304
+BELIEF4  WITH BELIEF3      10.385    -1.035     -1.035       -3.047
+EFFECT4  WITH BELIEF       13.957    -0.048     -0.103       -0.153
+EFFECT4  WITH EFFECT       13.957    -0.254     -0.615       -0.909
 
 
-     Beginning Time:  01:58:00
-        Ending Time:  02:00:17
-       Elapsed Time:  00:02:17
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION
+
+
+           NU
+              BELIEF1       BELIEF2       BELIEF3       BELIEF4       RISK1
+              ________      ________      ________      ________      ________
+      1           0             0             0             0             0
+
+
+           NU
+              RISK2         RISK3         EFFECT4       EFFECT5       EFFECT6
+              ________      ________      ________      ________      ________
+      1           0             0             0             0             0
+
+
+           NU
+              EFFECT7       NUMBEHAV      EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________      ________
+      1           0             0             0             0             0
+
+
+           NU
+              CITYRATE
+              ________
+      1           0
+
+
+           LAMBDA
+              BELIEF        EFFECT        RISK          BELIEF1       BELIEF2
+              ________      ________      ________      ________      ________
+ BELIEF1            0             0             0             0             0
+ BELIEF2            0             0             0             0             0
+ BELIEF3            0             0             0             0             0
+ BELIEF4            0             0             0             0             0
+ RISK1              0             0             0             0             0
+ RISK2              0             0             0             0             0
+ RISK3              0             0             0             0             0
+ EFFECT4            0             0             0             0             0
+ EFFECT5            0             0             0             0             0
+ EFFECT6            0             0             0             0             0
+ EFFECT7            0             0             0             0             0
+ NUMBEHAV           0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+ CITYRATE           0             0             0             0             0
+
+
+           LAMBDA
+              BELIEF3       BELIEF4       RISK1         RISK2         RISK3
+              ________      ________      ________      ________      ________
+ BELIEF1            0             0             0             0             0
+ BELIEF2            0             0             0             0             0
+ BELIEF3            0             0             0             0             0
+ BELIEF4            0             0             0             0             0
+ RISK1              0             0             0             0             0
+ RISK2              0             0             0             0             0
+ RISK3              0             0             0             0             0
+ EFFECT4            0             0             0             0             0
+ EFFECT5            0             0             0             0             0
+ EFFECT6            0             0             0             0             0
+ EFFECT7            0             0             0             0             0
+ NUMBEHAV           0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+ CITYRATE           0             0             0             0             0
+
+
+           LAMBDA
+              EFFECT4       EFFECT5       EFFECT6       EFFECT7       NUMBEHAV
+              ________      ________      ________      ________      ________
+ BELIEF1            0             0             0             0             0
+ BELIEF2            0             0             0             0             0
+ BELIEF3            0             0             0             0             0
+ BELIEF4            0             0             0             0             0
+ RISK1              0             0             0             0             0
+ RISK2              0             0             0             0             0
+ RISK3              0             0             0             0             0
+ EFFECT4            0             0             0             0             0
+ EFFECT5            0             0             0             0             0
+ EFFECT6            0             0             0             0             0
+ EFFECT7            0             0             0             0             0
+ NUMBEHAV           0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+ CITYRATE           0             0             0             0             0
+
+
+           LAMBDA
+              EXP2          EXP3          NEAR03F       CITYRATE
+              ________      ________      ________      ________
+ BELIEF1            0             0             0             0
+ BELIEF2            0             0             0             0
+ BELIEF3            0             0             0             0
+ BELIEF4            0             0             0             0
+ RISK1              0             0             0             0
+ RISK2              0             0             0             0
+ RISK3              0             0             0             0
+ EFFECT4            0             0             0             0
+ EFFECT5            0             0             0             0
+ EFFECT6            0             0             0             0
+ EFFECT7            0             0             0             0
+ NUMBEHAV           0             0             0             0
+ EXP2               0             0             0             0
+ EXP3               0             0             0             0
+ NEAR03F            0             0             0             0
+ CITYRATE           0             0             0             0
+
+
+           THETA
+              BELIEF1       BELIEF2       BELIEF3       BELIEF4       RISK1
+              ________      ________      ________      ________      ________
+ BELIEF1            0
+ BELIEF2            0             0
+ BELIEF3            0             0             0
+ BELIEF4            0             0             0             0
+ RISK1              0             0             0             0             0
+ RISK2              0             0             0             0             0
+ RISK3              0             0             0             0             0
+ EFFECT4            0             0             0             0             0
+ EFFECT5            0             0             0             0             0
+ EFFECT6            0             0             0             0             0
+ EFFECT7            0             0             0             0             0
+ NUMBEHAV           0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+ CITYRATE           0             0             0             0             0
+
+
+           THETA
+              RISK2         RISK3         EFFECT4       EFFECT5       EFFECT6
+              ________      ________      ________      ________      ________
+ RISK2              0
+ RISK3              0             0
+ EFFECT4            0             0             0
+ EFFECT5            0             0             0             0
+ EFFECT6            0             0             0             0             0
+ EFFECT7            0             0             0             0             0
+ NUMBEHAV           0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+ CITYRATE           0             0             0             0             0
+
+
+           THETA
+              EFFECT7       NUMBEHAV      EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________      ________
+ EFFECT7            0
+ NUMBEHAV           0             0
+ EXP2               0             0             0
+ EXP3               0             0             0             0
+ NEAR03F            0             0             0             0             0
+ CITYRATE           0             0             0             0             0
+
+
+           THETA
+              CITYRATE
+              ________
+ CITYRATE           0
+
+
+           ALPHA
+              BELIEF        EFFECT        RISK          BELIEF1       BELIEF2
+              ________      ________      ________      ________      ________
+      1           0             0             0             1             2
+
+
+           ALPHA
+              BELIEF3       BELIEF4       RISK1         RISK2         RISK3
+              ________      ________      ________      ________      ________
+      1           3             4             5             6             7
+
+
+           ALPHA
+              EFFECT4       EFFECT5       EFFECT6       EFFECT7       NUMBEHAV
+              ________      ________      ________      ________      ________
+      1           8             9            10            11            12
+
+
+           ALPHA
+              EXP2          EXP3          NEAR03F       CITYRATE
+              ________      ________      ________      ________
+      1           0             0             0             0
+
+
+           BETA
+              BELIEF        EFFECT        RISK          BELIEF1       BELIEF2
+              ________      ________      ________      ________      ________
+ BELIEF             0             0             0             0             0
+ EFFECT            13             0             0             0             0
+ RISK              14             0             0             0             0
+ BELIEF1            0             0             0             0             0
+ BELIEF2           18             0             0             0             0
+ BELIEF3           19             0             0             0             0
+ BELIEF4           20             0             0             0             0
+ RISK1              0             0             0             0             0
+ RISK2              0             0            21             0             0
+ RISK3              0             0            22             0             0
+ EFFECT4            0             0             0             0             0
+ EFFECT5            0            23             0             0             0
+ EFFECT6            0            24             0             0             0
+ EFFECT7            0            25             0             0             0
+ NUMBEHAV          26            27            28             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+ CITYRATE           0             0             0             0             0
+
+
+           BETA
+              BELIEF3       BELIEF4       RISK1         RISK2         RISK3
+              ________      ________      ________      ________      ________
+ BELIEF             0             0             0             0             0
+ EFFECT             0             0             0             0             0
+ RISK               0             0             0             0             0
+ BELIEF1            0             0             0             0             0
+ BELIEF2            0             0             0             0             0
+ BELIEF3            0             0             0             0             0
+ BELIEF4            0             0             0             0             0
+ RISK1              0             0             0             0             0
+ RISK2              0             0             0             0             0
+ RISK3              0             0             0             0             0
+ EFFECT4            0             0             0             0             0
+ EFFECT5            0             0             0             0             0
+ EFFECT6            0             0             0             0             0
+ EFFECT7            0             0             0             0             0
+ NUMBEHAV           0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+ CITYRATE           0             0             0             0             0
+
+
+           BETA
+              EFFECT4       EFFECT5       EFFECT6       EFFECT7       NUMBEHAV
+              ________      ________      ________      ________      ________
+ BELIEF             0             0             0             0             0
+ EFFECT             0             0             0             0             0
+ RISK               0             0             0             0             0
+ BELIEF1            0             0             0             0             0
+ BELIEF2            0             0             0             0             0
+ BELIEF3            0             0             0             0             0
+ BELIEF4            0             0             0             0             0
+ RISK1              0             0             0             0             0
+ RISK2              0             0             0             0             0
+ RISK3              0             0             0             0             0
+ EFFECT4            0             0             0             0             0
+ EFFECT5            0             0             0             0             0
+ EFFECT6            0             0             0             0             0
+ EFFECT7            0             0             0             0             0
+ NUMBEHAV           0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+ CITYRATE           0             0             0             0             0
+
+
+           BETA
+              EXP2          EXP3          NEAR03F       CITYRATE
+              ________      ________      ________      ________
+ BELIEF             0             0             0             0
+ EFFECT             0             0             0             0
+ RISK              15            16            17             0
+ BELIEF1            0             0             0             0
+ BELIEF2            0             0             0             0
+ BELIEF3            0             0             0             0
+ BELIEF4            0             0             0             0
+ RISK1              0             0             0             0
+ RISK2              0             0             0             0
+ RISK3              0             0             0             0
+ EFFECT4            0             0             0             0
+ EFFECT5            0             0             0             0
+ EFFECT6            0             0             0             0
+ EFFECT7            0             0             0             0
+ NUMBEHAV           0             0             0            29
+ EXP2               0             0             0             0
+ EXP3               0             0             0             0
+ NEAR03F            0             0             0             0
+ CITYRATE           0             0             0             0
+
+
+           PSI
+              BELIEF        EFFECT        RISK          BELIEF1       BELIEF2
+              ________      ________      ________      ________      ________
+ BELIEF            30
+ EFFECT             0            31
+ RISK               0             0            32
+ BELIEF1            0             0             0            33
+ BELIEF2            0             0             0            34            35
+ BELIEF3            0             0             0             0             0
+ BELIEF4            0             0             0             0             0
+ RISK1              0             0             0             0             0
+ RISK2              0             0             0             0             0
+ RISK3              0             0             0             0             0
+ EFFECT4            0             0             0             0             0
+ EFFECT5            0             0             0             0             0
+ EFFECT6            0             0             0             0             0
+ EFFECT7            0             0             0             0             0
+ NUMBEHAV           0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+ CITYRATE           0             0             0             0             0
+
+
+           PSI
+              BELIEF3       BELIEF4       RISK1         RISK2         RISK3
+              ________      ________      ________      ________      ________
+ BELIEF3           36
+ BELIEF4            0            37
+ RISK1              0             0            38
+ RISK2              0             0             0            39
+ RISK3              0             0             0             0            40
+ EFFECT4            0             0             0             0             0
+ EFFECT5            0             0             0             0             0
+ EFFECT6            0             0             0             0             0
+ EFFECT7            0             0             0             0             0
+ NUMBEHAV           0             0             0             0             0
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+ CITYRATE           0             0             0             0             0
+
+
+           PSI
+              EFFECT4       EFFECT5       EFFECT6       EFFECT7       NUMBEHAV
+              ________      ________      ________      ________      ________
+ EFFECT4           41
+ EFFECT5           42            43
+ EFFECT6            0             0            44
+ EFFECT7            0             0             0            45
+ NUMBEHAV           0             0             0             0            46
+ EXP2               0             0             0             0             0
+ EXP3               0             0             0             0             0
+ NEAR03F            0             0             0             0             0
+ CITYRATE           0             0             0             0             0
+
+
+           PSI
+              EXP2          EXP3          NEAR03F       CITYRATE
+              ________      ________      ________      ________
+ EXP2               0
+ EXP3               0             0
+ NEAR03F            0             0             0
+ CITYRATE           0             0             0             0
+
+
+     STARTING VALUES
+
+
+           NU
+              BELIEF1       BELIEF2       BELIEF3       BELIEF4       RISK1
+              ________      ________      ________      ________      ________
+      1         0.000         0.000         0.000         0.000         0.000
+
+
+           NU
+              RISK2         RISK3         EFFECT4       EFFECT5       EFFECT6
+              ________      ________      ________      ________      ________
+      1         0.000         0.000         0.000         0.000         0.000
+
+
+           NU
+              EFFECT7       NUMBEHAV      EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________      ________
+      1         0.000         0.000         0.000         0.000         0.000
+
+
+           NU
+              CITYRATE
+              ________
+      1         0.000
+
+
+           LAMBDA
+              BELIEF        EFFECT        RISK          BELIEF1       BELIEF2
+              ________      ________      ________      ________      ________
+ BELIEF1        0.000         0.000         0.000         1.000         0.000
+ BELIEF2        0.000         0.000         0.000         0.000         1.000
+ BELIEF3        0.000         0.000         0.000         0.000         0.000
+ BELIEF4        0.000         0.000         0.000         0.000         0.000
+ RISK1          0.000         0.000         0.000         0.000         0.000
+ RISK2          0.000         0.000         0.000         0.000         0.000
+ RISK3          0.000         0.000         0.000         0.000         0.000
+ EFFECT4        0.000         0.000         0.000         0.000         0.000
+ EFFECT5        0.000         0.000         0.000         0.000         0.000
+ EFFECT6        0.000         0.000         0.000         0.000         0.000
+ EFFECT7        0.000         0.000         0.000         0.000         0.000
+ NUMBEHAV       0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+ CITYRATE       0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              BELIEF3       BELIEF4       RISK1         RISK2         RISK3
+              ________      ________      ________      ________      ________
+ BELIEF1        0.000         0.000         0.000         0.000         0.000
+ BELIEF2        0.000         0.000         0.000         0.000         0.000
+ BELIEF3        1.000         0.000         0.000         0.000         0.000
+ BELIEF4        0.000         1.000         0.000         0.000         0.000
+ RISK1          0.000         0.000         1.000         0.000         0.000
+ RISK2          0.000         0.000         0.000         1.000         0.000
+ RISK3          0.000         0.000         0.000         0.000         1.000
+ EFFECT4        0.000         0.000         0.000         0.000         0.000
+ EFFECT5        0.000         0.000         0.000         0.000         0.000
+ EFFECT6        0.000         0.000         0.000         0.000         0.000
+ EFFECT7        0.000         0.000         0.000         0.000         0.000
+ NUMBEHAV       0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+ CITYRATE       0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              EFFECT4       EFFECT5       EFFECT6       EFFECT7       NUMBEHAV
+              ________      ________      ________      ________      ________
+ BELIEF1        0.000         0.000         0.000         0.000         0.000
+ BELIEF2        0.000         0.000         0.000         0.000         0.000
+ BELIEF3        0.000         0.000         0.000         0.000         0.000
+ BELIEF4        0.000         0.000         0.000         0.000         0.000
+ RISK1          0.000         0.000         0.000         0.000         0.000
+ RISK2          0.000         0.000         0.000         0.000         0.000
+ RISK3          0.000         0.000         0.000         0.000         0.000
+ EFFECT4        1.000         0.000         0.000         0.000         0.000
+ EFFECT5        0.000         1.000         0.000         0.000         0.000
+ EFFECT6        0.000         0.000         1.000         0.000         0.000
+ EFFECT7        0.000         0.000         0.000         1.000         0.000
+ NUMBEHAV       0.000         0.000         0.000         0.000         1.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+ CITYRATE       0.000         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              EXP2          EXP3          NEAR03F       CITYRATE
+              ________      ________      ________      ________
+ BELIEF1        0.000         0.000         0.000         0.000
+ BELIEF2        0.000         0.000         0.000         0.000
+ BELIEF3        0.000         0.000         0.000         0.000
+ BELIEF4        0.000         0.000         0.000         0.000
+ RISK1          0.000         0.000         0.000         0.000
+ RISK2          0.000         0.000         0.000         0.000
+ RISK3          0.000         0.000         0.000         0.000
+ EFFECT4        0.000         0.000         0.000         0.000
+ EFFECT5        0.000         0.000         0.000         0.000
+ EFFECT6        0.000         0.000         0.000         0.000
+ EFFECT7        0.000         0.000         0.000         0.000
+ NUMBEHAV       0.000         0.000         0.000         0.000
+ EXP2           1.000         0.000         0.000         0.000
+ EXP3           0.000         1.000         0.000         0.000
+ NEAR03F        0.000         0.000         1.000         0.000
+ CITYRATE       0.000         0.000         0.000         1.000
+
+
+           THETA
+              BELIEF1       BELIEF2       BELIEF3       BELIEF4       RISK1
+              ________      ________      ________      ________      ________
+ BELIEF1        0.000
+ BELIEF2        0.000         0.000
+ BELIEF3        0.000         0.000         0.000
+ BELIEF4        0.000         0.000         0.000         0.000
+ RISK1          0.000         0.000         0.000         0.000         0.000
+ RISK2          0.000         0.000         0.000         0.000         0.000
+ RISK3          0.000         0.000         0.000         0.000         0.000
+ EFFECT4        0.000         0.000         0.000         0.000         0.000
+ EFFECT5        0.000         0.000         0.000         0.000         0.000
+ EFFECT6        0.000         0.000         0.000         0.000         0.000
+ EFFECT7        0.000         0.000         0.000         0.000         0.000
+ NUMBEHAV       0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+ CITYRATE       0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              RISK2         RISK3         EFFECT4       EFFECT5       EFFECT6
+              ________      ________      ________      ________      ________
+ RISK2          0.000
+ RISK3          0.000         0.000
+ EFFECT4        0.000         0.000         0.000
+ EFFECT5        0.000         0.000         0.000         0.000
+ EFFECT6        0.000         0.000         0.000         0.000         0.000
+ EFFECT7        0.000         0.000         0.000         0.000         0.000
+ NUMBEHAV       0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+ CITYRATE       0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              EFFECT7       NUMBEHAV      EXP2          EXP3          NEAR03F
+              ________      ________      ________      ________      ________
+ EFFECT7        0.000
+ NUMBEHAV       0.000         0.000
+ EXP2           0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+ CITYRATE       0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              CITYRATE
+              ________
+ CITYRATE       0.000
+
+
+           ALPHA
+              BELIEF        EFFECT        RISK          BELIEF1       BELIEF2
+              ________      ________      ________      ________      ________
+      1         0.000         0.000         0.000         2.660         3.458
+
+
+           ALPHA
+              BELIEF3       BELIEF4       RISK1         RISK2         RISK3
+              ________      ________      ________      ________      ________
+      1         4.067         2.357         3.975         3.101         3.531
+
+
+           ALPHA
+              EFFECT4       EFFECT5       EFFECT6       EFFECT7       NUMBEHAV
+              ________      ________      ________      ________      ________
+      1         4.059         3.684         3.611         3.859         2.366
+
+
+           ALPHA
+              EXP2          EXP3          NEAR03F       CITYRATE
+              ________      ________      ________      ________
+      1         0.310         0.787      1472.187         2.366
+
+
+           BETA
+              BELIEF        EFFECT        RISK          BELIEF1       BELIEF2
+              ________      ________      ________      ________      ________
+ BELIEF         0.000         0.000         0.000         0.000         0.000
+ EFFECT         0.000         0.000         0.000         0.000         0.000
+ RISK           0.000         0.000         0.000         0.000         0.000
+ BELIEF1        1.000         0.000         0.000         0.000         0.000
+ BELIEF2       -0.769         0.000         0.000         0.000         0.000
+ BELIEF3       -0.552         0.000         0.000         0.000         0.000
+ BELIEF4        0.484         0.000         0.000         0.000         0.000
+ RISK1          0.000         0.000         1.000         0.000         0.000
+ RISK2          0.000         0.000         0.967         0.000         0.000
+ RISK3          0.000         0.000         0.856         0.000         0.000
+ EFFECT4        0.000         1.000         0.000         0.000         0.000
+ EFFECT5        0.000         1.425         0.000         0.000         0.000
+ EFFECT6        0.000         1.276         0.000         0.000         0.000
+ EFFECT7        0.000         1.041         0.000         0.000         0.000
+ NUMBEHAV       0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+ CITYRATE       0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              BELIEF3       BELIEF4       RISK1         RISK2         RISK3
+              ________      ________      ________      ________      ________
+ BELIEF         0.000         0.000         0.000         0.000         0.000
+ EFFECT         0.000         0.000         0.000         0.000         0.000
+ RISK           0.000         0.000         0.000         0.000         0.000
+ BELIEF1        0.000         0.000         0.000         0.000         0.000
+ BELIEF2        0.000         0.000         0.000         0.000         0.000
+ BELIEF3        0.000         0.000         0.000         0.000         0.000
+ BELIEF4        0.000         0.000         0.000         0.000         0.000
+ RISK1          0.000         0.000         0.000         0.000         0.000
+ RISK2          0.000         0.000         0.000         0.000         0.000
+ RISK3          0.000         0.000         0.000         0.000         0.000
+ EFFECT4        0.000         0.000         0.000         0.000         0.000
+ EFFECT5        0.000         0.000         0.000         0.000         0.000
+ EFFECT6        0.000         0.000         0.000         0.000         0.000
+ EFFECT7        0.000         0.000         0.000         0.000         0.000
+ NUMBEHAV       0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+ CITYRATE       0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              EFFECT4       EFFECT5       EFFECT6       EFFECT7       NUMBEHAV
+              ________      ________      ________      ________      ________
+ BELIEF         0.000         0.000         0.000         0.000         0.000
+ EFFECT         0.000         0.000         0.000         0.000         0.000
+ RISK           0.000         0.000         0.000         0.000         0.000
+ BELIEF1        0.000         0.000         0.000         0.000         0.000
+ BELIEF2        0.000         0.000         0.000         0.000         0.000
+ BELIEF3        0.000         0.000         0.000         0.000         0.000
+ BELIEF4        0.000         0.000         0.000         0.000         0.000
+ RISK1          0.000         0.000         0.000         0.000         0.000
+ RISK2          0.000         0.000         0.000         0.000         0.000
+ RISK3          0.000         0.000         0.000         0.000         0.000
+ EFFECT4        0.000         0.000         0.000         0.000         0.000
+ EFFECT5        0.000         0.000         0.000         0.000         0.000
+ EFFECT6        0.000         0.000         0.000         0.000         0.000
+ EFFECT7        0.000         0.000         0.000         0.000         0.000
+ NUMBEHAV       0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+ CITYRATE       0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              EXP2          EXP3          NEAR03F       CITYRATE
+              ________      ________      ________      ________
+ BELIEF         0.000         0.000         0.000         0.000
+ EFFECT         0.000         0.000         0.000         0.000
+ RISK           0.000         0.000         0.000         0.000
+ BELIEF1        0.000         0.000         0.000         0.000
+ BELIEF2        0.000         0.000         0.000         0.000
+ BELIEF3        0.000         0.000         0.000         0.000
+ BELIEF4        0.000         0.000         0.000         0.000
+ RISK1          0.000         0.000         0.000         0.000
+ RISK2          0.000         0.000         0.000         0.000
+ RISK3          0.000         0.000         0.000         0.000
+ EFFECT4        0.000         0.000         0.000         0.000
+ EFFECT5        0.000         0.000         0.000         0.000
+ EFFECT6        0.000         0.000         0.000         0.000
+ EFFECT7        0.000         0.000         0.000         0.000
+ NUMBEHAV       0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000
+ CITYRATE       0.000         0.000         0.000         0.000
+
+
+           PSI
+              BELIEF        EFFECT        RISK          BELIEF1       BELIEF2
+              ________      ________      ________      ________      ________
+ BELIEF         0.050
+ EFFECT         0.000         0.050
+ RISK           0.000         0.000         0.050
+ BELIEF1        0.000         0.000         0.000         0.771
+ BELIEF2        0.000         0.000         0.000         0.000         0.653
+ BELIEF3        0.000         0.000         0.000         0.000         0.000
+ BELIEF4        0.000         0.000         0.000         0.000         0.000
+ RISK1          0.000         0.000         0.000         0.000         0.000
+ RISK2          0.000         0.000         0.000         0.000         0.000
+ RISK3          0.000         0.000         0.000         0.000         0.000
+ EFFECT4        0.000         0.000         0.000         0.000         0.000
+ EFFECT5        0.000         0.000         0.000         0.000         0.000
+ EFFECT6        0.000         0.000         0.000         0.000         0.000
+ EFFECT7        0.000         0.000         0.000         0.000         0.000
+ NUMBEHAV       0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+ CITYRATE       0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              BELIEF3       BELIEF4       RISK1         RISK2         RISK3
+              ________      ________      ________      ________      ________
+ BELIEF3        0.398
+ BELIEF4        0.000         0.625
+ RISK1          0.000         0.000         0.422
+ RISK2          0.000         0.000         0.000         0.576
+ RISK3          0.000         0.000         0.000         0.000         0.537
+ EFFECT4        0.000         0.000         0.000         0.000         0.000
+ EFFECT5        0.000         0.000         0.000         0.000         0.000
+ EFFECT6        0.000         0.000         0.000         0.000         0.000
+ EFFECT7        0.000         0.000         0.000         0.000         0.000
+ NUMBEHAV       0.000         0.000         0.000         0.000         0.000
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+ CITYRATE       0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              EFFECT4       EFFECT5       EFFECT6       EFFECT7       NUMBEHAV
+              ________      ________      ________      ________      ________
+ EFFECT4        0.317
+ EFFECT5        0.000         0.397
+ EFFECT6        0.000         0.000         0.507
+ EFFECT7        0.000         0.000         0.000         0.423
+ NUMBEHAV       0.000         0.000         0.000         0.000         0.898
+ EXP2           0.000         0.000         0.000         0.000         0.000
+ EXP3           0.000         0.000         0.000         0.000         0.000
+ NEAR03F        0.000         0.000         0.000         0.000         0.000
+ CITYRATE       0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              EXP2          EXP3          NEAR03F       CITYRATE
+              ________      ________      ________      ________
+ EXP2           0.213
+ EXP3           0.040         0.167
+ NEAR03F     -258.464      -325.369   ***********
+ CITYRATE       0.001         0.008      -311.537         0.042
+
+
+TECHNICAL 3 OUTPUT
+
+
+           ESTIMATED COVARIANCE MATRIX FOR PARAMETER ESTIMATES
+                  1             2             3             4             5
+              ________      ________      ________      ________      ________
+      1         0.002
+      2        -0.001         0.002
+      3        -0.001         0.000         0.001
+      4         0.001        -0.001        -0.001         0.002
+      5         0.000         0.000         0.000         0.000         0.006
+      6         0.000         0.000         0.000         0.000         0.006
+      7         0.000         0.000         0.000         0.000         0.005
+      8         0.000         0.000         0.000         0.000         0.000
+      9         0.000         0.000         0.000         0.000         0.000
+     10         0.000         0.000         0.000         0.000         0.000
+     11         0.000         0.000         0.000         0.000         0.000
+     12         0.000         0.000         0.000         0.000        -0.001
+     13         0.000         0.000         0.000         0.000         0.000
+     14         0.000         0.000         0.000         0.000         0.000
+     15         0.000         0.000         0.000         0.000        -0.001
+     16         0.000         0.000         0.000         0.000        -0.005
+     17         0.000         0.000         0.000         0.000         0.000
+     18         0.000         0.000         0.000         0.000         0.000
+     19         0.000         0.000         0.000         0.000         0.000
+     20         0.000         0.000         0.000         0.000         0.000
+     21         0.000         0.000         0.000         0.000         0.000
+     22         0.000         0.000         0.000         0.000         0.000
+     23         0.000         0.000         0.000         0.000         0.000
+     24         0.000         0.000         0.000         0.000         0.000
+     25         0.000         0.000         0.000         0.000         0.000
+     26         0.000         0.000         0.000         0.000         0.000
+     27         0.000         0.000         0.000         0.000         0.000
+     28         0.000         0.000         0.000         0.000         0.000
+     29         0.000         0.000         0.000         0.000         0.000
+     30         0.000         0.000         0.000         0.000         0.000
+     31         0.000         0.000         0.000         0.000         0.000
+     32         0.000         0.000         0.000         0.000         0.000
+     33         0.000         0.000         0.000         0.000         0.000
+     34         0.000         0.000         0.000         0.000         0.000
+     35         0.000         0.000         0.000         0.000         0.000
+     36         0.000         0.000         0.000         0.000         0.000
+     37         0.000         0.000         0.000         0.000         0.000
+     38         0.000         0.000         0.000         0.000         0.000
+     39         0.000         0.000         0.000         0.000         0.000
+     40         0.000         0.000         0.000         0.000         0.000
+     41         0.000         0.000         0.000         0.000         0.000
+     42         0.000         0.000         0.000         0.000         0.000
+     43         0.000         0.000         0.000         0.000         0.000
+     44         0.000         0.000         0.000         0.000         0.000
+     45         0.000         0.000         0.000         0.000         0.000
+     46         0.000         0.000         0.000         0.000         0.000
+
+
+           ESTIMATED COVARIANCE MATRIX FOR PARAMETER ESTIMATES
+                  6             7             8             9            10
+              ________      ________      ________      ________      ________
+      6         0.007
+      7         0.005         0.006
+      8         0.000         0.000         0.001
+      9         0.000         0.000         0.001         0.001
+     10         0.000         0.000         0.001         0.001         0.002
+     11         0.000         0.000         0.000         0.001         0.001
+     12        -0.001        -0.001         0.000         0.001         0.001
+     13         0.000         0.000         0.000         0.000         0.000
+     14         0.000         0.000         0.000         0.000         0.000
+     15        -0.001        -0.001         0.000         0.000         0.000
+     16        -0.005        -0.005         0.000         0.000         0.000
+     17         0.000         0.000         0.000         0.000         0.000
+     18         0.000         0.000         0.000         0.000         0.000
+     19         0.000         0.000         0.000         0.000         0.000
+     20         0.000         0.000         0.000         0.000         0.000
+     21        -0.002        -0.001         0.000         0.000         0.000
+     22        -0.001        -0.001         0.000         0.000         0.000
+     23         0.000         0.000         0.000         0.000         0.000
+     24         0.000         0.000         0.000         0.000         0.000
+     25         0.000         0.000         0.000         0.000         0.000
+     26         0.000         0.000         0.000         0.000         0.000
+     27         0.000         0.000         0.000         0.000         0.000
+     28         0.000         0.000         0.000         0.000         0.000
+     29         0.000         0.000         0.000         0.000         0.000
+     30         0.000         0.000         0.000         0.000         0.000
+     31         0.000         0.000         0.000         0.000         0.000
+     32         0.001         0.001         0.000         0.000         0.000
+     33         0.000         0.000         0.000         0.000         0.000
+     34         0.000         0.000         0.000         0.000         0.000
+     35         0.000         0.000         0.000         0.000         0.000
+     36         0.000         0.000         0.000         0.000         0.000
+     37         0.000         0.000         0.000         0.000         0.000
+     38        -0.001         0.000         0.000         0.000         0.000
+     39         0.001         0.000         0.000         0.000         0.000
+     40         0.000         0.000         0.000         0.000         0.000
+     41         0.000         0.000         0.000         0.000         0.000
+     42         0.000         0.000         0.000         0.000         0.000
+     43         0.000         0.000         0.000         0.000         0.000
+     44         0.000         0.000         0.000         0.000         0.000
+     45         0.000         0.000         0.000         0.000         0.000
+     46         0.000         0.000         0.000         0.000         0.000
+
+
+           ESTIMATED COVARIANCE MATRIX FOR PARAMETER ESTIMATES
+                 11            12            13            14            15
+              ________      ________      ________      ________      ________
+     11         0.001
+     12         0.001         0.317
+     13         0.000         0.000         0.002
+     14         0.000         0.000         0.000         0.007
+     15         0.000         0.000         0.000         0.000         0.005
+     16         0.000         0.001         0.000         0.000        -0.001
+     17         0.000         0.000         0.000         0.000         0.000
+     18         0.000         0.000         0.002         0.000         0.000
+     19         0.000         0.000         0.004         0.002         0.000
+     20         0.000         0.000        -0.003        -0.003         0.000
+     21         0.000         0.000         0.000         0.001         0.000
+     22         0.000         0.000         0.000         0.000         0.000
+     23         0.000         0.000         0.001         0.000         0.000
+     24         0.000        -0.001         0.002         0.000         0.000
+     25         0.000         0.000         0.001         0.000         0.000
+     26         0.000        -0.003         0.000         0.000         0.000
+     27         0.000         0.004         0.001         0.000         0.000
+     28         0.000         0.000         0.000         0.000         0.000
+     29         0.000        -0.133         0.000         0.000         0.000
+     30         0.000         0.000         0.001         0.001         0.000
+     31         0.000         0.000         0.000         0.000         0.000
+     32         0.000         0.000         0.000         0.000         0.000
+     33         0.000         0.000         0.000         0.000         0.000
+     34         0.000         0.000         0.000         0.000         0.000
+     35         0.000         0.000         0.000         0.000         0.000
+     36         0.000         0.000         0.001         0.000         0.000
+     37         0.000         0.000        -0.001         0.000         0.000
+     38         0.000         0.000         0.000         0.000         0.000
+     39         0.000         0.000         0.000         0.000         0.000
+     40         0.000         0.000         0.000         0.000         0.000
+     41         0.000         0.000         0.000         0.000         0.000
+     42         0.000         0.000         0.000         0.000         0.000
+     43         0.000         0.000         0.000         0.000         0.000
+     44         0.000         0.000         0.000         0.000         0.000
+     45         0.000         0.000         0.000         0.000         0.000
+     46         0.000         0.000         0.000         0.000         0.000
+
+
+           ESTIMATED COVARIANCE MATRIX FOR PARAMETER ESTIMATES
+                 16            17            18            19            20
+              ________      ________      ________      ________      ________
+     16         0.007
+     17         0.000         0.000
+     18         0.000         0.000         0.013
+     19         0.000         0.000         0.014         0.042
+     20         0.000         0.000        -0.008        -0.033         0.057
+     21         0.000         0.000         0.000         0.000         0.000
+     22         0.000         0.000         0.000         0.000         0.000
+     23         0.000         0.000         0.000         0.000         0.000
+     24         0.000         0.000         0.000         0.000         0.000
+     25         0.000         0.000         0.000         0.000         0.000
+     26         0.000         0.000         0.002         0.004        -0.001
+     27         0.000         0.000         0.000         0.001         0.000
+     28         0.000         0.000         0.000         0.000         0.000
+     29         0.000         0.000         0.000         0.000         0.000
+     30         0.000         0.000         0.003         0.009        -0.010
+     31         0.000         0.000         0.000         0.000         0.000
+     32         0.000         0.000         0.000         0.000         0.000
+     33         0.000         0.000        -0.001        -0.003         0.002
+     34         0.000         0.000         0.000         0.001        -0.002
+     35         0.000         0.000         0.001         0.001         0.002
+     36         0.000         0.000         0.003         0.005         0.002
+     37         0.000         0.000        -0.005        -0.008        -0.005
+     38         0.000         0.000         0.000         0.000         0.000
+     39         0.000         0.000         0.000         0.000         0.000
+     40         0.000         0.000         0.000         0.000         0.000
+     41         0.000         0.000         0.000         0.000         0.000
+     42         0.000         0.000         0.000         0.000         0.000
+     43         0.000         0.000         0.000         0.000         0.000
+     44         0.000         0.000         0.000         0.000         0.000
+     45         0.000         0.000         0.000         0.000         0.000
+     46         0.000         0.000         0.000         0.000         0.000
+
+
+           ESTIMATED COVARIANCE MATRIX FOR PARAMETER ESTIMATES
+                 21            22            23            24            25
+              ________      ________      ________      ________      ________
+     21         0.006
+     22         0.003         0.005
+     23         0.000         0.000         0.009
+     24         0.000         0.000         0.011         0.027
+     25         0.000         0.000         0.009         0.018         0.019
+     26         0.000         0.000         0.000        -0.001         0.000
+     27         0.000         0.000         0.007         0.014         0.012
+     28         0.000         0.000         0.000         0.000         0.000
+     29         0.000         0.000         0.000         0.000         0.000
+     30         0.000         0.000         0.000         0.000         0.000
+     31         0.000         0.000        -0.002        -0.004        -0.003
+     32        -0.003        -0.002         0.000         0.000         0.000
+     33         0.000         0.000         0.000         0.000         0.000
+     34         0.000         0.000         0.000         0.000         0.000
+     35         0.000         0.000         0.000         0.000         0.000
+     36         0.000         0.000         0.000         0.000         0.000
+     37         0.000         0.000         0.000         0.000         0.000
+     38         0.002         0.001         0.000         0.000         0.000
+     39        -0.002        -0.001         0.000         0.000         0.000
+     40         0.000        -0.001         0.000         0.000         0.000
+     41         0.000         0.000         0.000         0.001         0.001
+     42         0.000         0.000         0.000         0.001         0.001
+     43         0.000         0.000         0.000         0.001         0.000
+     44         0.000         0.000         0.000        -0.002         0.000
+     45         0.000         0.000         0.000         0.000        -0.001
+     46         0.000         0.000         0.000         0.000         0.000
+
+
+           ESTIMATED COVARIANCE MATRIX FOR PARAMETER ESTIMATES
+                 26            27            28            29            30
+              ________      ________      ________      ________      ________
+     26         0.015
+     27         0.003         0.026
+     28         0.001        -0.001         0.006
+     29         0.001        -0.001        -0.001         0.056
+     30         0.001         0.000         0.000         0.000         0.002
+     31         0.000        -0.002         0.000         0.000         0.000
+     32         0.000         0.000         0.000         0.000         0.000
+     33         0.000         0.000         0.000         0.000        -0.001
+     34         0.000         0.000         0.000         0.000         0.000
+     35         0.000         0.000         0.000         0.000         0.000
+     36         0.001         0.000         0.000         0.000         0.001
+     37        -0.002         0.000         0.000         0.000        -0.001
+     38         0.000         0.000         0.000         0.000         0.000
+     39         0.000         0.000         0.000         0.000         0.000
+     40         0.000         0.000         0.000         0.000         0.000
+     41         0.000         0.001         0.000         0.000         0.000
+     42         0.000         0.000         0.000         0.000         0.000
+     43         0.000         0.000         0.000         0.000         0.000
+     44         0.000         0.000         0.000         0.000         0.000
+     45         0.000         0.000         0.000         0.000         0.000
+     46         0.000        -0.001         0.000         0.000         0.000
+
+
+           ESTIMATED COVARIANCE MATRIX FOR PARAMETER ESTIMATES
+                 31            32            33            34            35
+              ________      ________      ________      ________      ________
+     31         0.001
+     32         0.000         0.003
+     33         0.000         0.000         0.006
+     34         0.000         0.000        -0.003         0.003
+     35         0.000         0.000         0.001        -0.003         0.004
+     36         0.000         0.000        -0.001         0.000         0.001
+     37         0.000         0.000         0.001         0.000        -0.001
+     38         0.000        -0.001         0.000         0.000         0.000
+     39         0.000         0.001         0.000         0.000         0.000
+     40         0.000         0.000         0.000         0.000         0.000
+     41         0.000         0.000         0.000         0.000         0.000
+     42         0.000         0.000         0.000         0.000         0.000
+     43         0.000         0.000         0.000         0.000         0.000
+     44         0.000         0.000         0.000         0.000         0.000
+     45         0.000         0.000         0.000         0.000         0.000
+     46         0.000         0.000         0.000         0.000         0.000
+
+
+           ESTIMATED COVARIANCE MATRIX FOR PARAMETER ESTIMATES
+                 36            37            38            39            40
+              ________      ________      ________      ________      ________
+     36         0.002
+     37        -0.004         0.008
+     38         0.000         0.000         0.002
+     39         0.000         0.000        -0.001         0.003
+     40         0.000         0.000         0.000         0.000         0.002
+     41         0.000         0.000         0.000         0.000         0.000
+     42         0.000         0.000         0.000         0.000         0.000
+     43         0.000         0.000         0.000         0.000         0.000
+     44         0.000         0.000         0.000         0.000         0.000
+     45         0.000         0.000         0.000         0.000         0.000
+     46         0.000         0.000         0.000         0.000         0.000
+
+
+           ESTIMATED COVARIANCE MATRIX FOR PARAMETER ESTIMATES
+                 41            42            43            44            45
+              ________      ________      ________      ________      ________
+     41         0.001
+     42         0.000         0.001
+     43         0.000         0.000         0.001
+     44         0.000         0.000         0.000         0.001
+     45         0.000         0.000         0.000         0.000         0.001
+     46         0.000         0.000         0.000         0.000         0.000
+
+
+           ESTIMATED COVARIANCE MATRIX FOR PARAMETER ESTIMATES
+                 46
+              ________
+     46         0.007
+
+
+           ESTIMATED CORRELATION MATRIX FOR PARAMETER ESTIMATES
+                  1             2             3             4             5
+              ________      ________      ________      ________      ________
+      1         1.000
+      2        -0.601         1.000
+      3        -0.290         0.292         1.000
+      4         0.313        -0.315        -0.653         1.000
+      5        -0.012         0.012         0.025        -0.026         1.000
+      6        -0.011         0.011         0.023        -0.025         0.858
+      7        -0.011         0.011         0.022        -0.024         0.832
+      8        -0.032         0.033         0.068        -0.073         0.003
+      9        -0.042         0.042         0.087        -0.094         0.004
+     10        -0.053         0.053         0.111        -0.119         0.004
+     11        -0.048         0.048         0.100        -0.108         0.004
+     12        -0.003         0.003         0.007        -0.008        -0.017
+     13         0.000         0.000         0.000         0.000         0.003
+     14         0.000         0.000         0.000         0.000         0.069
+     15         0.000         0.000         0.000         0.000        -0.163
+     16         0.000         0.000         0.000         0.000        -0.818
+     17         0.000         0.000         0.000         0.000        -0.391
+     18         0.000         0.000         0.000         0.000         0.002
+     19         0.000         0.000         0.000         0.000         0.003
+     20         0.000         0.000         0.000         0.000         0.001
+     21         0.000         0.000         0.000         0.000         0.038
+     22         0.000         0.000         0.000         0.000         0.052
+     23         0.000         0.000         0.000         0.000         0.000
+     24         0.000         0.000         0.000         0.000         0.000
+     25         0.000         0.000         0.000         0.000         0.000
+     26         0.000         0.000         0.000         0.000         0.001
+     27         0.000         0.000         0.000         0.000         0.000
+     28         0.000         0.000         0.000         0.000        -0.004
+     29         0.000         0.000         0.000         0.000         0.002
+     30         0.000         0.000         0.000         0.000         0.001
+     31         0.000         0.000         0.000         0.000         0.000
+     32         0.000         0.000         0.000         0.000        -0.030
+     33         0.000         0.000         0.000         0.000        -0.001
+     34         0.000         0.000         0.000         0.000         0.000
+     35         0.000         0.000         0.000         0.000         0.001
+     36         0.000         0.000         0.000         0.000         0.005
+     37         0.000         0.000         0.000         0.000        -0.005
+     38         0.000         0.000         0.000         0.000         0.006
+     39         0.000         0.000         0.000         0.000         0.007
+     40         0.000         0.000         0.000         0.000        -0.015
+     41         0.000         0.000         0.000         0.000         0.000
+     42         0.000         0.000         0.000         0.000         0.000
+     43         0.000         0.000         0.000         0.000         0.000
+     44         0.000         0.000         0.000         0.000         0.000
+     45         0.000         0.000         0.000         0.000         0.000
+     46         0.000         0.000         0.000         0.000         0.000
+
+
+           ESTIMATED CORRELATION MATRIX FOR PARAMETER ESTIMATES
+                  6             7             8             9            10
+              ________      ________      ________      ________      ________
+      6         1.000
+      7         0.808         1.000
+      8         0.003         0.003         1.000
+      9         0.003         0.003         0.625         1.000
+     10         0.004         0.004         0.451         0.579         1.000
+     11         0.004         0.004         0.407         0.523         0.665
+     12        -0.018        -0.018         0.021         0.027         0.034
+     13         0.004         0.004         0.000         0.000         0.000
+     14         0.035         0.048         0.000         0.000         0.000
+     15        -0.139        -0.124         0.000         0.000         0.000
+     16        -0.752        -0.731         0.000         0.000         0.000
+     17        -0.389        -0.386         0.000         0.000         0.000
+     18         0.004         0.003         0.000         0.000         0.000
+     19         0.004         0.004         0.000         0.000         0.000
+     20         0.001         0.001         0.000         0.000         0.000
+     21        -0.245        -0.103         0.000         0.000         0.000
+     22        -0.092        -0.227         0.000         0.000         0.000
+     23         0.000         0.000         0.000         0.000         0.000
+     24         0.000         0.000         0.000         0.000         0.000
+     25         0.000         0.000         0.000         0.000         0.000
+     26        -0.001         0.000         0.000         0.000         0.000
+     27         0.000         0.001         0.000         0.000         0.000
+     28         0.000        -0.004         0.000         0.000         0.000
+     29         0.003         0.004         0.000         0.000         0.000
+     30         0.002         0.002         0.000         0.000         0.000
+     31         0.000         0.000         0.000         0.000         0.000
+     32         0.156         0.128         0.000         0.000         0.000
+     33        -0.001        -0.001         0.000         0.000         0.000
+     34         0.000         0.000         0.000         0.000         0.000
+     35         0.001         0.001         0.000         0.000         0.000
+     36         0.007         0.006         0.000         0.000         0.000
+     37        -0.007        -0.006         0.000         0.000         0.000
+     38        -0.175        -0.140         0.000         0.000         0.000
+     39         0.157         0.066         0.000         0.000         0.000
+     40         0.016         0.082         0.000         0.000         0.000
+     41         0.000         0.000         0.000         0.000         0.000
+     42         0.000         0.000         0.000         0.000         0.000
+     43         0.000         0.000         0.000         0.000         0.000
+     44         0.000         0.000         0.000         0.000         0.000
+     45         0.000         0.000         0.000         0.000         0.000
+     46        -0.001        -0.002         0.000         0.000         0.000
+
+
+           ESTIMATED CORRELATION MATRIX FOR PARAMETER ESTIMATES
+                 11            12            13            14            15
+              ________      ________      ________      ________      ________
+     11         1.000
+     12         0.031         1.000
+     13         0.000        -0.003         1.000
+     14         0.000        -0.002         0.069         1.000
+     15         0.000         0.004        -0.001        -0.035         1.000
+     16         0.000         0.014        -0.004        -0.048        -0.174
+     17         0.000         0.017         0.000        -0.098         0.115
+     18         0.000        -0.001         0.294         0.041        -0.002
+     19         0.000         0.000         0.400         0.115        -0.001
+     20         0.000        -0.001        -0.239        -0.179        -0.001
+     21         0.000         0.006        -0.003         0.105        -0.049
+     22         0.000         0.007        -0.003         0.053        -0.091
+     23         0.000         0.000         0.189         0.000         0.000
+     24         0.000        -0.008         0.266         0.001         0.000
+     25         0.000         0.004         0.205         0.000         0.000
+     26         0.000        -0.043        -0.006         0.023         0.000
+     27         0.000         0.042         0.147        -0.002         0.000
+     28         0.000         0.007         0.000         0.009         0.006
+     29         0.000        -0.995         0.003         0.000        -0.001
+     30         0.000         0.000         0.358         0.158         0.000
+     31         0.000         0.002        -0.199         0.001         0.000
+     32         0.000        -0.007         0.002        -0.056         0.049
+     33         0.000         0.000        -0.069        -0.011         0.000
+     34         0.000         0.001         0.011         0.023         0.001
+     35         0.000        -0.001         0.052        -0.026        -0.001
+     36         0.000        -0.002         0.252        -0.053        -0.003
+     37         0.000         0.002        -0.273         0.051         0.003
+     38         0.000         0.008        -0.004         0.084        -0.027
+     39         0.000        -0.003         0.002        -0.086        -0.016
+     40         0.000        -0.004         0.002         0.005         0.048
+     41         0.000        -0.002         0.073         0.001         0.000
+     42         0.000        -0.004         0.089         0.001         0.000
+     43         0.000        -0.004         0.052         0.001         0.000
+     44         0.000         0.022        -0.127        -0.002         0.000
+     45         0.000        -0.016         0.052         0.001         0.000
+     46         0.000        -0.008         0.005         0.000         0.000
+
+
+           ESTIMATED CORRELATION MATRIX FOR PARAMETER ESTIMATES
+                 16            17            18            19            20
+              ________      ________      ________      ________      ________
+     16         1.000
+     17         0.204         1.000
+     18        -0.003         0.005         1.000
+     19        -0.004         0.005         0.597         1.000
+     20        -0.001         0.001        -0.296        -0.679         1.000
+     21        -0.048         0.082        -0.006        -0.005        -0.001
+     22        -0.056         0.107        -0.003        -0.003        -0.001
+     23         0.000         0.000         0.004         0.003         0.002
+     24         0.000         0.000         0.011         0.008         0.005
+     25         0.000         0.000         0.006         0.006         0.002
+     26        -0.002         0.003         0.113         0.153        -0.043
+     27        -0.001         0.002         0.018         0.017         0.009
+     28         0.002         0.002        -0.002        -0.002         0.001
+     29         0.000        -0.010         0.001         0.000         0.001
+     30        -0.002         0.002         0.501         0.883        -0.860
+     31         0.000         0.000         0.007         0.005         0.004
+     32         0.039        -0.088        -0.001        -0.001         0.000
+     33         0.001        -0.002        -0.115        -0.177         0.097
+     34         0.000         0.000        -0.019         0.086        -0.131
+     35        -0.001         0.002         0.146         0.039         0.113
+     36        -0.007         0.009         0.452         0.512         0.142
+     37         0.007        -0.009        -0.473        -0.466        -0.225
+     38        -0.029         0.135        -0.006        -0.005        -0.001
+     39         0.010        -0.058         0.005         0.004         0.001
+     40         0.021        -0.085         0.001         0.001         0.000
+     41         0.000         0.000         0.007         0.006         0.003
+     42         0.000         0.000         0.010         0.009         0.004
+     43         0.000         0.000         0.008         0.007         0.003
+     44         0.000         0.000        -0.012        -0.007        -0.007
+     45         0.000         0.000         0.003        -0.001         0.003
+     46         0.000         0.001         0.004         0.004         0.003
+
+
+           ESTIMATED CORRELATION MATRIX FOR PARAMETER ESTIMATES
+                 21            22            23            24            25
+              ________      ________      ________      ________      ________
+     21         1.000
+     22         0.500         1.000
+     23         0.000         0.000         1.000
+     24         0.001         0.000         0.675         1.000
+     25         0.000         0.000         0.659         0.768         1.000
+     26         0.007         0.004        -0.010        -0.033         0.000
+     27         0.001         0.000         0.456         0.527         0.542
+     28        -0.010         0.003        -0.003         0.000         0.000
+     29        -0.006        -0.008         0.000         0.008        -0.004
+     30        -0.002        -0.002         0.001         0.002         0.003
+     31         0.000         0.000        -0.700        -0.849        -0.820
+     32        -0.656        -0.565         0.000         0.000         0.000
+     33         0.002         0.001        -0.001        -0.002        -0.002
+     34         0.000         0.000        -0.001        -0.003         0.000
+     35        -0.002        -0.001         0.002         0.006         0.002
+     36        -0.008        -0.005         0.006         0.016         0.011
+     37         0.008         0.005        -0.007        -0.018        -0.011
+     38         0.645         0.531         0.000         0.000         0.000
+     39        -0.536        -0.219         0.000        -0.001         0.000
+     40        -0.107        -0.348         0.000         0.000         0.000
+     41         0.000         0.000         0.123         0.176         0.158
+     42         0.000         0.000         0.085         0.224         0.193
+     43         0.000         0.000        -0.056         0.149         0.117
+     44        -0.001        -0.001         0.003        -0.302         0.075
+     45         0.001         0.001         0.002         0.103        -0.211
+     46         0.005         0.006        -0.013         0.007        -0.021
+
+
+           ESTIMATED CORRELATION MATRIX FOR PARAMETER ESTIMATES
+                 26            27            28            29            30
+              ________      ________      ________      ________      ________
+     26         1.000
+     27         0.146         1.000
+     28         0.056        -0.100         1.000
+     29         0.041        -0.038        -0.047         1.000
+     30         0.112         0.006        -0.001         0.000         1.000
+     31         0.009        -0.558         0.000        -0.002         0.001
+     32        -0.005        -0.001         0.022         0.006         0.000
+     33        -0.028        -0.004         0.001         0.000        -0.147
+     34         0.001        -0.003         0.000        -0.001         0.110
+     35         0.026         0.008        -0.001         0.001        -0.028
+     36         0.152         0.032        -0.002         0.002         0.212
+     37        -0.160        -0.035         0.002        -0.002        -0.181
+     38         0.006         0.001         0.006        -0.009        -0.003
+     39        -0.007        -0.002        -0.007         0.003         0.002
+     40        -0.001         0.001        -0.025         0.005         0.001
+     41        -0.013         0.114         0.000         0.002         0.002
+     42        -0.016         0.134         0.001         0.004         0.003
+     43        -0.009         0.071         0.004         0.004         0.003
+     44         0.070         0.039        -0.003        -0.022        -0.001
+     45        -0.036        -0.048         0.000         0.016        -0.002
+     46        -0.007        -0.105         0.041         0.006         0.001
+
+
+           ESTIMATED CORRELATION MATRIX FOR PARAMETER ESTIMATES
+                 31            32            33            34            35
+              ________      ________      ________      ________      ________
+     31         1.000
+     32         0.000         1.000
+     33        -0.001         0.000         1.000
+     34        -0.002         0.000        -0.675         1.000
+     35         0.004         0.000         0.275        -0.681         1.000
+     36         0.010        -0.002        -0.136        -0.018         0.166
+     37        -0.012         0.001         0.116         0.052        -0.199
+     38         0.000        -0.600         0.002         0.000        -0.002
+     39         0.000         0.324        -0.001         0.000         0.002
+     40         0.000         0.141         0.000         0.000         0.000
+     41        -0.159         0.000        -0.001        -0.001         0.004
+     42        -0.191         0.000        -0.002        -0.002         0.005
+     43        -0.110         0.000        -0.002        -0.001         0.004
+     44         0.056         0.001         0.001         0.004        -0.008
+     45         0.021        -0.001         0.001        -0.003         0.003
+     46         0.013        -0.005        -0.001        -0.001         0.002
+
+
+           ESTIMATED CORRELATION MATRIX FOR PARAMETER ESTIMATES
+                 36            37            38            39            40
+              ________      ________      ________      ________      ________
+     36         1.000
+     37        -0.825         1.000
+     38        -0.008         0.009         1.000
+     39         0.007        -0.007        -0.449         1.000
+     40         0.002        -0.002        -0.210         0.018         1.000
+     41         0.011        -0.012         0.000         0.000         0.000
+     42         0.016        -0.017         0.000         0.000         0.000
+     43         0.013        -0.014         0.000         0.000         0.000
+     44        -0.016         0.019        -0.001         0.001         0.000
+     45         0.001        -0.003         0.001        -0.001         0.000
+     46         0.008        -0.009         0.007        -0.004        -0.004
+
+
+           ESTIMATED CORRELATION MATRIX FOR PARAMETER ESTIMATES
+                 41            42            43            44            45
+              ________      ________      ________      ________      ________
+     41         1.000
+     42         0.626         1.000
+     43         0.250         0.631         1.000
+     44        -0.067        -0.122        -0.138         1.000
+     45        -0.014        -0.027        -0.032        -0.405         1.000
+     46        -0.012        -0.011        -0.001        -0.064         0.029
+
+
+           ESTIMATED CORRELATION MATRIX FOR PARAMETER ESTIMATES
+                 46
+              ________
+     46         1.000
+
+
+RESULTS SAVING INFORMATION
+
+  Order of data
+
+    Parameter estimates
+     (saved in order shown in Technical 1 output)
+    Standard errors
+     (saved in order shown in Technical 1 output)
+    StdYX standardized coefficients
+     (saved in order shown in Technical 1 output)
+    Standard errors for StdYX standardized coefficients
+     (saved in order shown in Technical 1 output)
+    Chi-square : Value
+    Chi-square : Degrees of Freedom
+    Chi-square : P-Value
+    CFI
+    TLI
+    H0 Loglikelihood
+    H1 Loglikelihood
+    Number of Free Parameters
+    Akaike (AIC)
+    Bayesian (BIC)
+    Sample-Size Adjusted BIC
+    RMSEA : Estimate
+    RMSEA : Low CI
+    RMSEA : High CI
+    RMSEA : Probability
+    SRMR
+
+  Save file
+    results.txt
+
+  Save file format           Free
+
+
+SAVEDATA INFORMATION
+
+
+  Estimated Covariance Matrix for the Parameter Estimates
+
+  Save file
+    tech3.txt
+  Save format      Free
+
+  Estimates
+
+  Save file
+    estimates.txt
+  Save format      Free
+
+     Beginning Time:  11:14:06
+        Ending Time:  11:14:07
+       Elapsed Time:  00:00:01
 
 
 
