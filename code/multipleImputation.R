@@ -2,6 +2,7 @@ setwd(file.path('~', 'Dropbox', 'FireAtTheFringe'))  # Set working directory
 d = read.csv("data/clean_with_neighborsDS_and_proximity.csv")
 library(dplyr)
 library(Amelia)
+library(mvtnorm)
 
 # Merge acres and sqft:
 d$a8acres = ifelse(is.na(d$a8acres) & !is.na(d$a8sqfeet),
@@ -28,7 +29,7 @@ cityRates =
 averaged$cityRate = cityRates$avgDS[match(averaged$city, cityRates$city)]
 
 ### Output for SEM:
-write.csv(averaged, 'data/multipleImputed.csv', row.names = FALSE)
+# write.csv(averaged, 'data/multipleImputed.csv', row.names = FALSE)
 
 str(averaged)
 ### Non-SEM modeling:
@@ -59,23 +60,50 @@ cityRates =
     group_by(imp, city) %>%
     summarise(avgDS = mean(dsBehaviors))
 imp$cityRate = cityRates$avgDS[match(imp$city, cityRates$city)]
+imp$logDist = log(1 + imp$near_03f)
+imp$cityRate4 = imp$cityRate^4
+imp$cityRate2 = imp$cityRate^2
+imp$cityRateExp = exp(imp$cityRate)
 
-for(i in c(1:5, 8))
+# corrplot(cor(imp[, -which(names(imp) == 'city')]))
+
+par(mfrow = c(3, 3))
+lapply(names(imp)[-which(names(imp) == 'city')], function(x) {
+    dens(imp[[x]], main = x)
+    })
+
+# Standardize all predictors:
+for(i in names(imp)[-which(names(imp) %in% c('city', 'dsBehaviors'))])
     imp[[i]] = scale(imp[[i]])
 
-corrplot(cor(imp[, -7]))
+# Squash DS into [0, 1]
+imp$dsBehaviors = (imp$dsBehaviors - min(imp$dsBehaviors)) / max(imp$dsBehaviors)
 
 models = list(ExpSurvey = lm(dsBehaviors ~ policyBeliefs + effectiveness + experience + risk + cityRate, data = imp),
-              ExpDirect = lm(dsBehaviors ~ policyBeliefs + effectiveness + near_03f + risk + cityRate, data = imp))
-lapply(models, summary)
-lapply(models, AIC)
-m = models$ExpDirect
+              ExpDirect = lm(dsBehaviors ~ policyBeliefs + effectiveness + near_03f + risk + cityRate, data = imp),
+              ExpLog = lm(dsBehaviors ~ policyBeliefs + effectiveness + logDist + risk + cityRate, data = imp),
+              ExpLog2 = lm(dsBehaviors ~ policyBeliefs + effectiveness + logDist + risk + cityRate2, data = imp),
+              ExpLog4 = lm(dsBehaviors ~ policyBeliefs + effectiveness + logDist + risk + cityRate4, data = imp),
+              ExpLogExp = lm(dsBehaviors ~ policyBeliefs + effectiveness + logDist + risk + cityRateExp, data = imp)
+              )
+sapply(models, AIC)
+# library(stargazer)
+# stargazer(models, type = 'text')
+m = models[[sapply(models, AIC) %>% which.min]]
 summary(m)
-library(mvtnorm)
-params = rmvnorm(1e3, sigma = vcov(m))
-library(rethinking)
-preds = link(m)
-meanPreds = apply(preds, 2, mean)
-plot(imp$dsBehaviors, meanPreds, col = adjustcolor('firebrick', .4), xlab = 'observed', ylab = 'predicted')
 
-write.csv(imp, 'data/multipleImputed')
+saveRDS(m, 'data/derived/model.RDS')
+saveRDS(imp, 'data/derived/imputedData.RDS')
+
+# What are the differences across towns?
+# table(imp$city) %>% sort
+# ggplot(imp, aes(x = city, y = dsBehaviors)) +
+#     geom_boxplot(fill = "gray") +
+#     theme_bw() +
+#     theme(axis.text.x=element_text(angle = -90, hjust = 0, size = 12))
+
+# How does the MVNormal assumption look across our sample:
+# graphics.off()
+# preds = c('policyBeliefs', 'effectiveness', 'risk', 'logDist')
+# pairs(imp[, preds], col = adjustcolor('blue', .1))
+
