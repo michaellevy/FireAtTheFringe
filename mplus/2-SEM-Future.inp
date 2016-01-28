@@ -4,11 +4,15 @@ DATA:	FILE = mplusdata.csv;
 	!LISTWISE = ON;
 
 VARIABLE:
-	NAMES ARE id biocen1-biocen4 anthro1-anthro5 
-		respons1-respons5 freedom1-freedom4 effect1-effect7 
-		dsnow1-dsnow7 dsfut1-dsfut7 risk1-risk3 
-		trust1-trust3 trustFS1-trustFS4 exp1-exp3 
-		neighb1-neighb7 nearcnf near03f;
+	NAMES ARE ! Every variable in data set
+		id 
+		belief1-belief4 
+		risk1-risk3 
+		effect1-effect7 
+		dsnow1-dsnow7 
+		dsfut1-dsfut7 
+		exp1-exp3 
+		near03f;
 
 	!CATEGORICAL ARE 
 		!dsnow1-dsnow7;
@@ -18,20 +22,14 @@ VARIABLE:
 	MISSING ARE ALL (99);
 
 	USEVARIABLES ARE 
-		biocen1-biocen4 
-		anthro1-anthro5 
-		!respons1-respons5 
-		!freedom1-freedom4 
-		effect1-effect7
-		!dsnow1-dsnow7
-		dsfut1-dsfut7
+		belief1-belief4 
 		risk1-risk3 
-		!trust1-trust3
-		trustFS1-trustFS4 
+		effect4-effect7
+		!dsnow1-dsnow7
+		dsfut4-dsfut7
 		!exp1		! injured - only 2% yes
 		exp2		! property destroyed/damaged
 		exp3		! evacuated
-		!neighb1-neighb7
 		!near03f		! Have problems with model when this is included
 		;
 
@@ -43,71 +41,46 @@ MODEL:
 
 ! Measurement Models
 
-	biocen BY biocen1-biocen4;
-	anthro BY anthro1-anthro5;
-	!respons BY respons1;
-	!respons BY respons2;
-	!respons BY respons3;	! drop respons3 (not sig)
-	!respons BY respons4;
-	!respons BY respons5;	
-	!freedom BY freedom1-freedom4;
-	!experien BY exp2 exp3;	! drop exp1 (injured) because only 2% yes
-	effect BY effect1-effect7;
+	belief BY belief1-belief4;
+	effect BY effect4-effect7;
 	risk BY risk1-risk3;
-	!trust BY trust1-trust3;
-	trust BY trustFS1-trustFS4;
-	!norm BY neighb1-neighb7;
 	!current BY dsnow1-dsnow7;
-	future BY dsfut1-dsfut7;
-		
+	future BY dsfut4-dsfut7;
+	!experien BY exp2 exp3;	! drop exp1 (injured) because only 2% yes
+			
 ! Structural Models
 
-	effect ON biocen;
-	effect ON anthro;
-	!effect ON respons;
-	!effect ON freedom;
-	effect ON exp2;
-	effect ON exp3;
+	effect ON belief;
+	!effect ON exp2;
+	!effect ON exp3;
 	!effect ON near03f;
 
-	risk ON biocen;
-	risk ON anthro;
-	!risk ON respons;
-	!risk ON freedom;
+	risk ON belief;
 	risk ON exp2;
 	risk ON exp3;
 	!risk ON near03f;
 
-	trust ON biocen;
-	trust ON anthro;
-	!trust ON respons;
-	!trust ON freedom;
-	trust ON exp2;
-	trust ON exp3;
-	!trust ON near03f;
-	
-	!norm ON effect risk trust;
-	
-	!future ON biocen;
-	!future ON anthro;
-        	future ON exp2;
-	future ON exp3;
+        	!future ON exp2;
+	!future ON exp3;
 	!future ON near03f;
+	future ON belief;
 	future ON effect;
 	future ON risk;
-	future ON trust;
-	!future ON norm;		! Non identification error message;
-				! problem in beta matrix (regression coefficients)
-				! between norm and future
+
+! Correlated Errors
+
+	belief1 WITH belief2;
+	belief3 WITH belief4;
+	effect4 WITH effect5;
 
 OUTPUT:
-	!SAMPSTAT;			! Descriptive stats for variables
+	SAMPSTAT;			! Descriptive stats for variables
 	!RESIDUAL;			! Requests standardized and normalized residuals
 	STDYX;			! Requests fully standardized solution
 	!MODINDICES (ALL);		! Method to improve model (at p<.05)
-	TECH1;			! Identifies paramaters for error messages
-	TECH3;			! Requests estimated covariance and correlation 
+	!TECH1;			! Identifies paramaters for error messages
+	!TECH3;			! Requests estimated covariance and correlation 
 				! matrices for the parameter estimates
 				
 SAVEDATA:
-	TECH3 IS parametermatrix.csv;
+	!TECH3 IS tech3.txt;	! Save parameter matrix
