@@ -21,15 +21,16 @@ corrplot(cor(mi$imputations[[1]][, -(1:2)]), tl.cex = .5)
 noCities = lapply(mi$imputations, function(x) x[, -2])
 averaged = Reduce('+', noCities) / length(mi$imputations)
 averaged$city = dd$city
+averaged = mutate(averaged, numBehaviors = rowSums(averaged[, grep('f2[d-g]1', names(averaged))]))
 cityRates = 
-    mutate(averaged, numBeh = rowSums(averaged[, grep('f2[d-g]1', names(averaged))])) %>%
-    group_by(city) %>%
-    summarise(avgDS = mean(numBeh))
+    group_by(averaged, city) %>%
+    summarise(avgDS = mean(numBehaviors))
 averaged$cityRate = cityRates$avgDS[match(averaged$city, cityRates$city)]
+
 ### Output for SEM:
 write.csv(averaged, 'data/multipleImputed.csv', row.names = FALSE)
 
-
+str(averaged)
 ### Non-SEM modeling:
 cats = 
     lapply(mi$imputations, function(d) {
