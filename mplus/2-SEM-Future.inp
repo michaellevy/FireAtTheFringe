@@ -30,7 +30,7 @@ VARIABLE:
 		!exp1		! injured - only 2% yes
 		exp2		! property destroyed/damaged
 		exp3		! evacuated
-		!near03f		! Have problems with model when this is included
+		near03f		! Have problems with model when this is included
 		;
 
 ANALYSIS:
@@ -58,7 +58,7 @@ MODEL:
 	risk ON belief;
 	risk ON exp2;
 	risk ON exp3;
-	!risk ON near03f;
+	risk ON near03f;
 
         	!future ON exp2;
 	!future ON exp3;
@@ -77,10 +77,11 @@ OUTPUT:
 	SAMPSTAT;			! Descriptive stats for variables
 	!RESIDUAL;			! Requests standardized and normalized residuals
 	STDYX;			! Requests fully standardized solution
-	!MODINDICES (ALL);		! Method to improve model (at p<.05)
-	!TECH1;			! Identifies paramaters for error messages
-	!TECH3;			! Requests estimated covariance and correlation 
+	MODINDICES (ALL);		! Method to improve model (at p<.05)
+	TECH1;			! Identifies paramaters for error messages
+	TECH3;			! Requests estimated covariance and correlation 
 				! matrices for the parameter estimates
 				
 SAVEDATA:
-	!TECH3 IS tech3.txt;	! Save parameter matrix
+	!TECH1 IS tech1.txt;
+	TECH3 IS tech3.txt;	! Save parameter matrix
