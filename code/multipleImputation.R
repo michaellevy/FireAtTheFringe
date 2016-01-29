@@ -56,6 +56,11 @@ cats =
 imp = Reduce("+", cats) / length(cats)
 
 imp$city = d$city
+imp$city = as.character(imp$city)
+imp$city = 
+    ifelse(imp$city %in% c('Pine Valley', 'Boulevard'), 'Pine Valley-Boulevard',
+           ifelse(imp$city %in% c('El Cajon', 'Lakeside'), 'El Cajon-Lakeside',
+                  ifelse(imp$city %in% c('Santa Ysabel', 'Julian'), 'Santa Ysabel-Julian', imp$city)))
 cityRates = 
     group_by(imp, city) %>%
     summarise(avgDS = mean(dsBehaviors))
@@ -91,16 +96,17 @@ sapply(models, AIC)
 # stargazer(models, type = 'text')
 m = models[[sapply(models, AIC) %>% which.min]]
 summary(m)
+formula(m)
 
 saveRDS(m, 'data/derived/model.RDS')
 saveRDS(imp, 'data/derived/imputedData.RDS')
 
 # What are the differences across towns?
-# table(imp$city) %>% sort
-# ggplot(imp, aes(x = city, y = dsBehaviors)) +
-#     geom_boxplot(fill = "gray") +
-#     theme_bw() +
-#     theme(axis.text.x=element_text(angle = -90, hjust = 0, size = 12))
+table(imp$city) %>% sort
+ggplot(imp, aes(x = city, y = dsBehaviors)) +
+    geom_violin(fill = "gray") +
+    theme_bw() +
+    theme(axis.text.x=element_text(angle = -90, hjust = 0, size = 12))
 
 # How does the MVNormal assumption look across our sample:
 # graphics.off()

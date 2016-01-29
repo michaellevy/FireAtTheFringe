@@ -20,4 +20,4 @@ drawSamples = function(N, mod = m, dat = imp, predictors = names(coef(mod))[-gre
     return('Wrote samples to data/derived/')
 }
 
-# drawSamples(1e2)
+drawSamples(1e2)
