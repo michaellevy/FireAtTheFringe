@@ -1,5 +1,7 @@
 library(dplyr)
 library(rethinking)
+library(tidyr)
+library(ggplot2)
 d = readRDS('data/derived/imputedData.RDS')
 summary(d)
 
@@ -35,6 +37,10 @@ summary(mOld)
 
 d2 = select(d, dsBehaviors, policyBeliefs, effectiveness, risk, logDist, city)
 d2$cityIndex = coerce_index(d2$city)
+d2 = lapply(d2, function(x) {
+    attributes(x) = NULL
+    x
+})
 
 m2 = 
     map2stan(
@@ -54,5 +60,39 @@ m2 =
     )
 plot(m2)
 precis(m2)
-par(mfrow = c(1, 1))
-plot(coeftab(mOld, m2))
+dev.off()
+plot(coeftab(mOld, m2), cex = .75)
+# Still no major changes from old model in terms of point estimates, but
+# now have appropriate measures of uncertainty among and within towns and
+# have accounted for that level of clustering in the data.
+
+# Draw new simulated individuals, e.g. one from each town:
+simOriginal = sim(m2)
+
+dPred = group_by(as.data.frame(d2), cityIndex) %>%
+    summarise(policyBeliefs = mean(policyBeliefs),
+              effectiveness = mean(effectiveness),
+              risk = mean(risk),
+              logDist = mean(logDist))
+sim1 = sim(m2, data = dPred) %>% as.data.frame
+colnames(sim1) = unique(d2$city)
+p1 = 
+gather(sim1, city, adoption) %>% 
+    ggplot(aes(adoption, fill = city)) +
+    geom_density(alpha = .3)
+
+# And if we bump everyone's effectiveness perception a bit:
+dPredBumpEff = dPred
+dPredBumpEff$effectiveness = dPredBumpEff$effectiveness + .2
+sim2 = sim(m2, data = dPredBumpEff) %>% as.data.frame()
+colnames(sim2) = unique(d2$city)
+p2 = 
+    gather(sim2, city, adoption) %>% 
+    ggplot(aes(adoption, fill = city)) +
+    geom_density(alpha = .3)
+cowplot::plot_grid(p1, p2, ncol = 1)
+
+
+##### Next up:
+# 1. Model as binomial process with N = 6 for each case
+# 2. Simultaniously impute missing data and estimate model
