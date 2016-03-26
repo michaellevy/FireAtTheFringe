@@ -3,7 +3,7 @@ library(rethinking)
 library(tidyr)
 library(ggplot2)
 d = readRDS('data/derived/imputedData.RDS')
-summary(d)
+str(d)
 
 ##### First "reproduce" old model with Bayesian style
 d1 = select(d, dsBehaviors, policyBeliefs, effectiveness, risk, logDist, cityRate)
@@ -32,9 +32,6 @@ summary(mOld)
 # Basically identical. Except now we have an estimated value for the variance.
 
 ##### Add varying intercepts by town
-# Note: Squashed dsBeh into [0, 1], but it's a 0-6 count
-# Probably should model this as binomial with n = 6
-
 d2 = select(d, dsBehaviors, policyBeliefs, effectiveness, risk, logDist, city)
 d2$cityIndex = coerce_index(d2$city)
 d2 = lapply(d2, function(x) {
@@ -66,33 +63,72 @@ plot(coeftab(mOld, m2), cex = .75)
 # now have appropriate measures of uncertainty among and within towns and
 # have accounted for that level of clustering in the data.
 
-# Draw new simulated individuals, e.g. one from each town:
-simOriginal = sim(m2)
 
-dPred = group_by(as.data.frame(d2), cityIndex) %>%
-    summarise(policyBeliefs = mean(policyBeliefs),
-              effectiveness = mean(effectiveness),
-              risk = mean(risk),
-              logDist = mean(logDist))
-sim1 = sim(m2, data = dPred) %>% as.data.frame
-colnames(sim1) = unique(d2$city)
-p1 = 
-gather(sim1, city, adoption) %>% 
-    ggplot(aes(adoption, fill = city)) +
-    geom_density(alpha = .3)
+# Model as binomial process with N = 4 for each case
+d2$numBehaviors = d2$dsBehaviors * 4   # undoing what was done in multipleImputation.R
 
-# And if we bump everyone's effectiveness perception a bit:
-dPredBumpEff = dPred
-dPredBumpEff$effectiveness = dPredBumpEff$effectiveness + .2
-sim2 = sim(m2, data = dPredBumpEff) %>% as.data.frame()
-colnames(sim2) = unique(d2$city)
-p2 = 
-    gather(sim2, city, adoption) %>% 
-    ggplot(aes(adoption, fill = city)) +
-    geom_density(alpha = .3)
-cowplot::plot_grid(p1, p2, ncol = 1)
+m3 = 
+    map2stan(
+        alist(
+            numBehaviors ~ dbinom( 4 , p ) ,
+            logit(p) <- a_city[cityIndex] + bPolicy * policyBeliefs + 
+                bEffectiveness * effectiveness + bRisk * risk + bDistance * logDist,
+            a_city[cityIndex] ~ dnorm(a, sigma_cities),
+            sigma_cities ~ dcauchy(0, 2),
+            a ~ dnorm(.5, 1),
+            c(bPolicy, bEffectiveness, bRisk, bDistance) ~ dnorm(0, 1)
+        ), 
+        data = d2
+        , chains = 3 #, cores = 3
+        , iter = 1e4, warmup = 2.5e3
+    )
+plot(m3)
+dev.off()
+plot(precis(m3, depth = 1))
+paramSamps = extract.samples(m3, n = 1e4)
+betas = as.data.frame(paramSamps[4:7])
+corrplot::corrplot(cor(betas), method = 'ellipse', diag = FALSE, addCoef.col = 'black', type = 'upper')
+gather(betas, parameter, coefficient) %>%
+    ggplot(aes(x = parameter, y = coefficient)) + 
+    geom_violin(fill = 'gray') +
+    geom_hline(yintercept = 0, linetype = 'dashed') +
+    theme_bw()
+# Or as a table:
+tab = precis(m3, depth = 2, prob = .95)@output
+rownames(tab)[1:7] = paste0('a_', sort(unique(d2$city)))
+knitr::kable(tab[c(10:13, 9, 8, 1:7), 1:4], digits = 2, align = rep('c', 4))
 
+simOrig = sim(m3, data = d2)
+dd2 = d2
+dd2$effectiveness = dd2$effectiveness + 2
+simEff = sim(m3, data = dd2)
+ddd2 = d2
+ddd2$risk = ddd2$risk + 2
+simRisk = sim(m3, data = ddd2)
 
-##### Next up:
-# 1. Model as binomial process with N = 6 for each case
-# 2. Simultaniously impute missing data and estimate model
+sims = 
+    rbind(
+        cbind(t(simOrig), city = d2$city, simulation = rep('original_data')),
+        cbind(t(simEff), city = d2$city, simulation = rep('effectiveness_promoted')),
+        cbind(t(simRisk), city = d2$city, simulation = rep('greater_perceived_risk'))
+    ) %>% as.data.frame %>%
+    gather(data, number_behaviors, -city, -simulation)
+sims$number_behaviors = as.integer(sims$number_behaviors)
+sims$simulation = factor(sims$simulation, levels = rev(levels(sims$simulation)))
+
+interventionResponsesPlot = 
+    ggplot(sims, aes(x = number_behaviors, fill = simulation)) + 
+    geom_density() +
+    facet_grid(simulation ~ city) +
+    theme_bw() + 
+    scale_fill_brewer(type = 'qual', palette = 'Dark2', guide = 'none') 
+
+ggsave('results/interventionEffects.png', interventionResponsesPlot, width = 10, height = 7)
+
+############# ISSUE:
+# Can't reestimate this model at each timestep, so either have to say the 
+# "culture" of each town is fixed over time, or
+# go back to the average adoption of a town as a predictor.
+
+#### To do:
+# Simultaniously impute missing data and estimate model to get info flowing both ways.
