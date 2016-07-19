@@ -66,6 +66,7 @@ plot(coeftab(mOld, m2), cex = .75)
 
 # Model as binomial process with N = 4 for each case
 d2$numBehaviors = d2$dsBehaviors * 4   # undoing what was done in multipleImputation.R
+saveRDS(d2, "data/derived/dataVImodel.RDS")
 
 m3 = 
     map2stan(
@@ -82,10 +83,11 @@ m3 =
         , chains = 3 #, cores = 3
         , iter = 1e4, warmup = 2.5e3
     )
+saveRDS(m3, "data/derived/varyInterceptModel.RDS")
 plot(m3)
 dev.off()
 plot(precis(m3, depth = 1))
-paramSamps = extract.samples(m3, n = 1e4)
+paramSamps = extract.samples(m3, n = 5e3)
 betas = as.data.frame(paramSamps[4:7])
 corrplot::corrplot(cor(betas), method = 'ellipse', diag = FALSE, addCoef.col = 'black', type = 'upper')
 gather(betas, parameter, coefficient) %>%
@@ -93,10 +95,31 @@ gather(betas, parameter, coefficient) %>%
     geom_violin(fill = 'gray') +
     geom_hline(yintercept = 0, linetype = 'dashed') +
     theme_bw()
+
 # Or as a table:
 tab = precis(m3, depth = 2, prob = .95)@output
-rownames(tab)[1:7] = paste0('a_', sort(unique(d2$city)))
-knitr::kable(tab[c(10:13, 9, 8, 1:7), 1:4], digits = 2, align = rep('c', 4))
+rownames(tab)[1:7] = paste0('\\alpha_{', sort(unique(d2$city)))
+betas = grepl("^b", rownames(tab))
+rownames(tab)[betas] = substr(rownames(tab)[betas], 1, 2)
+rownames(tab) = stringr::str_replace(rownames(tab), "^b", "\\\\beta_{")
+rownames(tab) = stringr::str_replace(rownames(tab), "sigma_cities", "\\\\sigma_{town")
+intercept = rownames(tab) == "a"
+rownames(tab)[intercept] = "\\alpha"
+rownames(tab)[!intercept] = paste0(rownames(tab)[!intercept], "}")
+rownames(tab) = paste0("$", rownames(tab), "$")
+colnames(tab)[2:4] = c("SD", "Lower 95% CI", "Upper 95% CI")
+mdTab = round(tab[c(10:13, 9, 8, 1:7), 1:4], 2)
+# separate = mdTab[1, ]
+# rownames(separate) = "Varying Intercepts"
+# separate[, 1:4] = rep("", 4)
+# mdTab = rbind(
+#   tab[1:6, ],
+#   separate,
+#   tab[7:13, ]
+# )
+# Copy and paste this into markdown writeup:
+(coefTab = knitr::kable(mdTab, digits = 2, align = rep('c', 4)))
+
 
 simOrig = sim(m3, data = d2)
 dd2 = d2
