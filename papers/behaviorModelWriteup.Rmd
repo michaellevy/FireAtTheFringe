@@ -1,7 +1,6 @@
 ---
-title: "Behavior model writeup"
-author: "Michael Levy"
-date: "May 17, 2016"
+title: "Empirical parameterization of agent behavior for a coupled model of fire in the wildland-urban interface"
+date: "`r format(Sys.time(), '%Y-%m-%d')`"
 output: pdf_document
 bibliography: fireFringe.bib
 ---
@@ -16,22 +15,73 @@ d = readRDS('../data/derived/dataVImodel.RDS') %>% as.data.frame()
 knitr::opts_chunk$set(fig.pos = 'H!', echo = FALSE, results = "hide", warning = FALSE)
 ```
 
+## Introduction
+
+### Broad Justification: WUI fire is a problem and we need models that include society (Katie)
+
+Already a problem, getting worse with climate change, DS behavior matters for the owner and broader fire patterns, therefore we need models that include homeowner behavior.
+
+### ABM Justification (Patrick)
+
+Most models omit humans, econ models of behavior assume rational self-interest but that fails to capture key dynamics in collective action challenges like this. ABMs to the rescue: can capture social dynamics with agents responding to each other and can capture biophysical -> social feedback with agents responding to events in their environment.
+
+### Broad overview of our larger endeavor (Kenny?)
+
+- Set out to build coupled model of fire and society. 
+- Located in San Diego because fire is big problem, potential for action, etc
+- Full model situates homeowners on the landscape, simulates ignition and spread w/ homeowners responsive to social environment and fire experience, etc.
+    - DS behavior empirically parameterized based on survey responses
+
+Here, we do not aim to document the complete mechanics of the agent-based model. That description is forthcoming and will comply with the ODD protocol (cite). Here, we describe the motivation for, mechanics of, and findings from an empirical parameterization of agent-behavior for a CHANS model. The parameterization is based on survey data and employs a Bayesian, multi-level model that quantifies and preserves uncertainty in human behavior and provides a natural, principled mechanism for generating agents.
+
+## Background
+
+### Description of the system (Kenny)
+
+Don't want to spend too much time here, but a paragraph on the SD WUI's salient features, especially the town structure, fire dynamics. Previous findings from this survey.
+
+### What is known about the drivers of DS behavior (Katie)
+
+Anything that can be said about social influences and influence of experience with fire is extra great.
+
+### Getting behavior into an ABM (Patrick)
+
+Lots of handwaving historically, cite calls for need for empirical parameterization. 
+
+Maybe something here about ways empirical parameterization has been done and how those don't fit with most research in Katie and Kenny's community. We wanted to take insights from all this work that's been done on human fire behavior and apply that to agent beahvior, e.g. in our construction of aggregated predictors.
+
+### Why a multi-level model (Mike)
+
+Heterogeniety in behavior at town-level, don't want to ignore, but fixed effects over-learn. Pooling is awesome, quantifies uncertainty incorporating sample size, so we can do something principled in towns where we have few observations. Cite predictive benefits.
+
+Generative aspect: Is there anything unique about Bayesian here? Don't have to make distributional assumption about posterior. 
+
+### How we'll use the statistical model in the ABM (Mike)
+
+- Q: Have we pinned down what decisions we want agents making at each timestep?  Do we ever add new agents? Do we want existing homes to be able to decrease their DS behavior, or only add?
+
+
 
 ## Methods
 
-To empirically parameterize homeowner-agent behavior, we conditioned a multi-level Bayesian statistical model on data from 637 homeowner survey respondents. We then use the model to generate new households drawn from the distribution implied by the model. The outcome variable of the model is the number of defensible space practices adopted by each homeowner, which we instantiate as a binomially distributed process. The model contains varying intercepts at the level of town ($\alpha_{town}$), which allows the model to pool information across towns in determining the base adoption rate and models the effect of social forces on homeowner behavior. Experience with fire is included as a predictor as the natural logarithm of the distance of the home from recent fires ($D$). Three additional predictors were constructed from survey responses to charactarize the psychological makeup of homeowners: policy beliefs ($P$), beliefs about the effectiveness of defensible space practices ($E$), and beliefs about risk associated with wildfire ($R$). We employed weakly regularizing priors ($\mathcal{N}(0, 1)$) for all four continuous predictors to reign-in overfitting. The model takes the form:
+### Data details (Kenny)
+
+Survey collection, briefly, cite original paper.
+
+
+To empirically parameterize homeowner-agent behavior, we conditioned a multi-level Bayesian statistical model on data from 637 homeowner survey respondents. We then use the model to generate new households drawn from the distribution implied by the model. The outcome variable of the model is the number of defensible space practices adopted by each homeowner, which we instantiate as a binomially distributed process. The model contains varying intercepts at the level of town ($\alpha_{town}$), which allows the model to pool information across towns in determining the base adoption rate and models the effect of social forces on homeowner behavior. Experience with fire is included as a predictor as the natural logarithm of the distance of the home from recent fires ($D$). Three additional predictors were constructed from survey responses to charactarize the psychological makeup of homeowners: policy beliefs ($P$), beliefs about the effectiveness of defensible space practices ($E$), and beliefs about risk associated with wildfire ($R$). We employed weakly regularizing prior, $\mathcal{N}(0, 1)$, for all four continuous predictors to reign-in overfitting. The model takes the form:
 
 $$
 \begin{aligned}
 N_i &\sim binomial(4, p_i) \\
 logit(p_i) &= \alpha_{town[i]} + \beta_{P} P + \beta_{E} E + \beta_{R} R + \beta_{D} ln(D) \\
-\alpha_{town} &\sim Normal(\alpha, \sigma_{town}) \\
-\alpha &\sim Normal(0,5, 1) \\
+\alpha_{town} &\sim Normal(\alpha, \sigma) \\
+\alpha &\sim Normal(0.5, 1) \\
+\sigma &\sim HalfCauchy(0, 2) \\
 \beta_{P} &\sim Normal(0, 1) \\
 \beta_{E} &\sim Normal(0, 1) \\
 \beta_{R} &\sim Normal(0, 1) \\
-\beta_{D} &\sim Normal(0, 1) \\
-\sigma_{town} &\sim HalfCauchy(0, 2).
+\beta_{D} &\sim Normal(0, 1). \\
 \end{aligned}
 $$
 
@@ -75,7 +125,7 @@ mosaicplot(table(reorder(d$city, d$numBehaviors, mean),
 
 Table 1 presents parameter values and 95% credibility intervals for each of the predictors in the model. Belief in the effectiveness of defensible space behaviors is a strong positive predictor of implementation of defensible space behavior. Policy beliefs, which is an aggregate measure capturing ???, and perceived risk associated with wildfire are both negatively associated with defensible space adoption, but there is ambiguity around those relationships. Individuals who are closer to recent fires tend to have adopted more defensible space behavior, but this relationship also has significant uncertainty. There is substantial town-to-town variability in the base-rate of adoption: The distribution of town-level intercepts has its mean at 0.32 and a standard deviation of 0.23. 
 
-Table: Marginal parameter 95% credibility intervals for varying intercepts model of number of defensible space behaviors adopted by a household. $\alpha$ represents the (town-level) mean intercept (of $logit(p)$) and $\sigma_{town}$ the standard deviation of the distribution of town-level $\alpha$'s.
+Table: Marginal parameter 95% credibility intervals for varying intercepts model of number of defensible space behaviors adopted by a household. $\alpha$ represents the (town-level) mean intercept (of $logit(p)$) and $\sigma$ the standard deviation of the distribution of town-level $\alpha$'s.
 
 |                                 | Mean  |  SD  | Lower 95% CI | Upper 95% CI |
 |:--------------------------------|:-----:|:----:|:------------:|:------------:|
@@ -84,7 +134,7 @@ Table: Marginal parameter 95% credibility intervals for varying intercepts model
 |$\beta_{R}$                      | -0.06 | 0.04 |    -0.15     |     0.02     |
 |$\beta_{D}$                      | -0.05 | 0.05 |    -0.15     |     0.04     |
 |$\alpha$                         | 0.32  | 0.12 |     0.07     |     0.55     |
-|$\sigma_{town}$                  | 0.23  | 0.14 |     0.03     |     0.50     |
+|$\sigma$                         | 0.23  | 0.14 |     0.03     |     0.50     |
 |$\alpha_{Alpine}$                | 0.55  | 0.09 |     0.38     |     0.72     |
 |$\alpha_{Campo}$                 | 0.22  | 0.15 |    -0.10     |     0.50     |
 |$\alpha_{Descanso}$              | 0.40  | 0.14 |     0.12     |     0.67     |
@@ -100,7 +150,7 @@ We now demonstrate how we can use the model to simulate agents. First, as a mode
 
 For 30 survey respondents sampled at random, Figure 2 shows the distribution of model-predicted defensible space behaviors with their actual number of defensible space behaviors. Note that the model preserves substantial uncertainty around how many behaviors a household adopts, and that the level of uncertainty depends on the predictor values (for example a house in a town for which less data is available will have greater uncertainty).
 
-```{r, fig.cap = "For 30 randomly sampled homes, red diamonds are empirical number of defensible space behaviors, and violin plots reflect the distribution of model-implied behaviors for simulated households with the same set of predictor values."}
+```{r, fig.cap = "For 30 survey respondents sampled randomly, red diamonds are empirical number of defensible space behaviors, and violin plots reflect the distribution of model-implied behaviors for simulated households with the same set of predictor values."}
 m = readRDS("../data/derived/varyInterceptModel.RDS")
 set.seed(3957)
 sims = sim(m, data = d)
@@ -121,7 +171,7 @@ ggplot(df, aes(reorder(key, obsValue), y = value)) +
 
 We now simulate outcomes for two scenarios: One where perceived effectiveness of defensible space increases and one where perceived risk increases. In both cases the increase is a stochastic process, drawn from a normal distribution with mean two and standard deviation one (on the scaled-predictor scale). The modeled effect on defensible space behavior is presented in Figure 3.
 
-```{r, fig.cap = "Effect of an increase in perceived risk of fire or perceived effectiveness of defensible space behavior on model-predicted number of defensible space behaviors."}
+```{r, fig.cap = "Effect of an increase in perceived risk of fire or perceived effectiveness of defensible space behavior on model-predicted number of defensible space behaviors. Green violins show the distribution of model-implied number of DS behaviors by town. Red and purple violins, respectively, show model implied number of DS behaviors with every individual in the population having had an increase in their perception of risk or effectiveness."}
 meanBump = 2
 noise = 1
 simOrig = sim(m)
@@ -160,5 +210,13 @@ ggplot(sims, aes(x = key, y = value, fill = simulation)) +
   ylab("Number defensible space behaviors") +
   xlab("")
 ```
+
+## Discussion
+
+### Substance of what we found (Katie and/or Kenny)
+
+How does it fit with other DS behavior research? With other findings from this survey?
+
+### How the ABM stuff works and will fit into ABM and coupled model (Mike)
 
 ## References

@@ -87,6 +87,8 @@ saveRDS(m3, "data/derived/varyInterceptModel.RDS")
 plot(m3)
 dev.off()
 plot(precis(m3, depth = 1))
+
+m3 = readRDS("data/derived/varyInterceptModel.RDS")
 paramSamps = extract.samples(m3, n = 5e3)
 betas = as.data.frame(paramSamps[4:7])
 corrplot::corrplot(cor(betas), method = 'ellipse', diag = FALSE, addCoef.col = 'black', type = 'upper')
@@ -102,10 +104,10 @@ rownames(tab)[1:7] = paste0('\\alpha_{', sort(unique(d2$city)))
 betas = grepl("^b", rownames(tab))
 rownames(tab)[betas] = substr(rownames(tab)[betas], 1, 2)
 rownames(tab) = stringr::str_replace(rownames(tab), "^b", "\\\\beta_{")
-rownames(tab) = stringr::str_replace(rownames(tab), "sigma_cities", "\\\\sigma_{town")
-intercept = rownames(tab) == "a"
-rownames(tab)[intercept] = "\\alpha"
-rownames(tab)[!intercept] = paste0(rownames(tab)[!intercept], "}")
+rownames(tab) = stringr::str_replace(rownames(tab), "sigma_cities", "\\\\sigma")
+noSubs = !grepl("\\{", rownames(tab))
+rownames(tab)[rownames(tab) == "a"] = "\\alpha"
+rownames(tab)[!noSubs] = paste0(rownames(tab)[!noSubs], "}")
 rownames(tab) = paste0("$", rownames(tab), "$")
 colnames(tab)[2:4] = c("SD", "Lower 95% CI", "Upper 95% CI")
 mdTab = round(tab[c(10:13, 9, 8, 1:7), 1:4], 2)
