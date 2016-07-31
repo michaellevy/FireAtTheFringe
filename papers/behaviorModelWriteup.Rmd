@@ -1,5 +1,5 @@
 ---
-title: "Empirical parameterization of agent behavior for a coupled model of fire in the wildland-urban interface"
+title: "Empirical generation of agent population for a coupled model of fire in the wildland-urban interface"
 date: "`r format(Sys.time(), '%Y-%m-%d')`"
 output: pdf_document
 bibliography: fireFringe.bib
@@ -32,35 +32,29 @@ Most models omit humans, econ models of behavior assume rational self-interest b
 - Full model situates homeowners on the landscape, simulates ignition and spread w/ homeowners responsive to social environment and fire experience, etc.
     - DS behavior empirically parameterized based on survey responses
 
-Here, we do not aim to document the complete mechanics of the agent-based model. That description is forthcoming and will comply with the ODD protocol (cite). Here, we describe the motivation for, mechanics of, and findings from an empirical parameterization of agent-behavior for a CHANS model. The parameterization is based on survey data and employs a Bayesian, multi-level model that quantifies and preserves uncertainty in human behavior and provides a natural, principled mechanism for generating agents.
-
-## Background
-
 ### Description of the system (Kenny)
 
 Don't want to spend too much time here, but a paragraph on the SD WUI's salient features, especially the town structure, fire dynamics. Previous findings from this survey.
 
 ### What is known about the drivers of DS behavior (Katie)
 
-Anything that can be said about social influences and influence of experience with fire is extra great.
+Particuarly, here we need to justify our use the effectiveness and risk constructs. Plus anything that can be said about social influences and proximity to fire is extra great.
 
-### Getting behavior into an ABM (Patrick)
+### Two-step process: generation & updating (Mike)
 
-Lots of handwaving historically, cite calls for need for empirical parameterization. 
+Two tasks for a working ABM: defining the population and their initial behavior (static) and updating their behavior (dynamic, function of physical and social environment).
 
-Maybe something here about ways empirical parameterization has been done and how those don't fit with most research in Katie and Kenny's community. We wanted to take insights from all this work that's been done on human fire behavior and apply that to agent beahvior, e.g. in our construction of aggregated predictors.
+We have cross-sectional survey data which provides an empirical foundation on which to build the population of agents. Data at a single timepoint cannot inform the dynamic updating process, so our updating is based on theory from the fire behavior literature. We defer a full descriptoin of agents' updating rules to the documentation of the coupled model but note that it employs a decision heuristic that incorporates social feedback in the form of the overall adoption rate in the agent's town and biophysicial feedback in the form of proximity to recent fire, as well as cognitive variables that prior research has demostrated are important predictors of the adoption of DS behavior. The cognitive and town-adoption variables used in the updating rules are the same as those used here in the generation of the population of agents.
 
-### Why a multi-level model (Mike)
+### Model for agent generation (Mike)
+
+Here, we describe the motivation for, mechanics of, and findings from a survey-data-based empirical generation of a population of agents for a CHANS model. The parameterization is based on survey data and employs a Bayesian, multi-level model that quantifies and preserves uncertainty in human behavior and provides a natural, principled mechanism for generating agents.
 
 Heterogeniety in behavior at town-level, don't want to ignore, but fixed effects over-learn. Pooling is awesome, quantifies uncertainty incorporating sample size, so we can do something principled in towns where we have few observations. Cite predictive benefits.
 
-Generative aspect: Is there anything unique about Bayesian here? Don't have to make distributional assumption about posterior. 
+Generative aspect: Is there anything unique about Bayesian here? Don't have to make distributional assumption about posterior.
 
-### How we'll use the statistical model in the ABM (Mike)
-
-- Q: Have we pinned down what decisions we want agents making at each timestep?  Do we ever add new agents? Do we want existing homes to be able to decrease their DS behavior, or only add?
-
-
+We identify households in the SDCNF by **[Patrick -- finish this sentence; more detailed descrption below in methods]**. To generate an agent at each household location, we draw a set of predictor values from the ECDF (or maybe we have to make some distributional assumption to define a multivariate distribution to sample from), draw a set of parameters from the model's posterior distribution, and simulate a binomial trial to determine the number of DS behaviors that agent has adopted at the model initialization. We now describe this process in detail.
 
 ## Methods
 
@@ -68,6 +62,25 @@ Generative aspect: Is there anything unique about Bayesian here? Don't have to m
 
 Survey collection, briefly, cite original paper.
 
+### WUI details (Patrick?)
+
+We identified households in the WUI by ...
+
+- WUI deliniation
+- Structure identification
+- What counts as a household
+- Assignment of households to towns
+  - Are all houses in our seven "towns"?
+
+
+### Model fitting (Mike)
+
+- Note to self: Take out fire distance, maybe do formal model comparison and model averaging. Model comparison, m4 without distance; m5 without policy beliefs:
+
+     WAIC pWAIC dWAIC weight    SE  dSE
+m5 3287.5   7.8   0.0   0.46 30.38   NA
+m4 3288.1   8.8   0.6   0.34 30.45 2.62
+m3 3289.0   9.2   1.6   0.21 30.53 3.42
 
 To empirically parameterize homeowner-agent behavior, we conditioned a multi-level Bayesian statistical model on data from 637 homeowner survey respondents. We then use the model to generate new households drawn from the distribution implied by the model. The outcome variable of the model is the number of defensible space practices adopted by each homeowner, which we instantiate as a binomially distributed process. The model contains varying intercepts at the level of town ($\alpha_{town}$), which allows the model to pool information across towns in determining the base adoption rate and models the effect of social forces on homeowner behavior. Experience with fire is included as a predictor as the natural logarithm of the distance of the home from recent fires ($D$). Three additional predictors were constructed from survey responses to charactarize the psychological makeup of homeowners: policy beliefs ($P$), beliefs about the effectiveness of defensible space practices ($E$), and beliefs about risk associated with wildfire ($R$). We employed weakly regularizing prior, $\mathcal{N}(0, 1)$, for all four continuous predictors to reign-in overfitting. The model takes the form:
 
@@ -87,7 +100,11 @@ $$
 
 All analyses were performed in R version 3.3.1 [@r_core_team_r:_2016]. For statistical modeling, we used the rethinking package [@mcelreath_rethinking:_2015] which samples posterior distributions using Hamiltonian Monte Carlo via Stan [@stan_development_team_stan:_2015]. The full reproducability suite of data and code are available in a repository at XXX (xxx.com). 
 
-Bayesian models are generative, and we now describe how we can use the model to generate new agent-households. For any set of predictor values, there is an implied distribution of defensible space behaviors. This distribution is generated by drawing (1,000) samples of parameter values from the model's joint posterior distribution, multiplying the vectors of paramter values by a vector of predictor values to obtain a distribution of $p$ values, which are then used in binomial trials to generate a distribution of number of defensible space behaviors. Note the two levels of stochasticity in this process: 1 in drawing parameters from the joint posterior distribution and another in the binomial trials for each $p$. This preserves uncertainty around defensible space behavior. There is a large stochastic element to how many behaviors a given household will implement, and this method quantifies and preserves the uncertainty in that stochasticity. 
+### Populating the model (Mike)
+
+- Defining joint distribution of predictors for each town
+
+*Rewrite this to match what we're doing now: for each house, draw one set of predictors and one set of parameters and generate a $p$.* Bayesian models are generative, and we now describe how we use the model to generate new agent-households. For any set of predictor values, there is an implied distribution of defensible space behaviors. This distribution is generated by drawing (1,000) samples of parameter values from the model's joint posterior distribution, multiplying the vectors of paramter values by a vector of predictor values to obtain a distribution of $p$ values, which are then used in binomial trials to generate a distribution of number of defensible space behaviors. Note the two levels of stochasticity in this process: 1 in drawing parameters from the joint posterior distribution and another in the binomial trials for each $p$. This preserves uncertainty around defensible space behavior. There is a large stochastic element to how many behaviors a given household will implement, and this method quantifies and preserves the uncertainty in that stochasticity. 
 
 This process works for any set of predictor values. In a presumed-stationary world, we could generate new agents from the observed sets of predictor values or a multivariate distribution parameterized from the observed data. To test the effects of interventions, we could modulate the values of specific predictors, for example, increasing the values of effectiveness of defensible space behavior by some fixed or random value to understand how an education-outreach effort might work. The varying intercepts aspect of the model also opens the possibility of generating new towns in a princpled manner, as long as we are willing to posit that the new towns come from the same distribution as the observed towns. To do so, we draw values of $\alpha_{town}$s from the posterior distribution of $\alpha$.
 
@@ -168,6 +185,9 @@ ggplot(df, aes(reorder(key, obsValue), y = value)) +
   ylab("Number of defensible space behaviors")
 
 ```
+
+
+**Probably take the following and current Figure 3 out. Replace with a pair of maps: household points colored by number of behaviors; one surveyed homes with empirical number, other all 20k with generated number.**
 
 We now simulate outcomes for two scenarios: One where perceived effectiveness of defensible space increases and one where perceived risk increases. In both cases the increase is a stochastic process, drawn from a normal distribution with mean two and standard deviation one (on the scaled-predictor scale). The modeled effect on defensible space behavior is presented in Figure 3.
 

@@ -5,9 +5,21 @@ library(ggplot2)
 d = readRDS('data/derived/imputedData.RDS')
 str(d)
 
-##### First "reproduce" old model with Bayesian style
 d1 = select(d, dsBehaviors, policyBeliefs, effectiveness, risk, logDist, cityRate)
 
+d2 = select(d, dsBehaviors, policyBeliefs, effectiveness, risk, logDist, city)
+d2$cityIndex = coerce_index(d2$city)
+d2 = lapply(d2, function(x) {
+  attributes(x) = NULL
+  x
+})
+# To model as binomial process with N = 4 for each case
+d2$numBehaviors = d2$dsBehaviors * 4   # undoing what was done in multipleImputation.R
+saveRDS(d2, "data/derived/dataVImodel.RDS")
+
+
+
+##### First "reproduce" old model with Bayesian style
 mOld = 
     map2stan(
         alist(
@@ -31,13 +43,6 @@ summary(m)
 summary(mOld)
 # Basically identical. Except now we have an estimated value for the variance.
 
-##### Add varying intercepts by town
-d2 = select(d, dsBehaviors, policyBeliefs, effectiveness, risk, logDist, city)
-d2$cityIndex = coerce_index(d2$city)
-d2 = lapply(d2, function(x) {
-    attributes(x) = NULL
-    x
-})
 
 m2 = 
     map2stan(
@@ -63,10 +68,6 @@ plot(coeftab(mOld, m2), cex = .75)
 # now have appropriate measures of uncertainty among and within towns and
 # have accounted for that level of clustering in the data.
 
-
-# Model as binomial process with N = 4 for each case
-d2$numBehaviors = d2$dsBehaviors * 4   # undoing what was done in multipleImputation.R
-saveRDS(d2, "data/derived/dataVImodel.RDS")
 
 m3 = 
     map2stan(
@@ -150,10 +151,48 @@ interventionResponsesPlot =
 
 ggsave('results/interventionEffects.png', interventionResponsesPlot, width = 10, height = 7)
 
-############# ISSUE:
-# Can't reestimate this model at each timestep, so either have to say the 
-# "culture" of each town is fixed over time, or
-# go back to the average adoption of a town as a predictor.
+##### Model Comparison
+m4 =     
+  map2stan(
+    alist(
+      numBehaviors ~ dbinom( 4 , p ) ,
+      logit(p) <- a_city[cityIndex] + bPolicy * policyBeliefs + 
+        bEffectiveness * effectiveness + bRisk * risk,
+      a_city[cityIndex] ~ dnorm(a, sigma_cities),
+      sigma_cities ~ dcauchy(0, 2),
+      a ~ dnorm(.5, 1),
+      c(bPolicy, bEffectiveness, bRisk, bDistance) ~ dnorm(0, 1)
+    ), 
+    data = d2
+    , chains = 3 #, cores = 3
+    , iter = 1e4, warmup = 2.5e3
+  )
+saveRDS(m4, "data/derived/noDistanceModel.RDS")
+
+m5 =     
+  map2stan(
+    alist(
+      numBehaviors ~ dbinom( 4 , p ) ,
+      logit(p) <- a_city[cityIndex] + bEffectiveness * effectiveness + bRisk * risk,
+      a_city[cityIndex] ~ dnorm(a, sigma_cities),
+      sigma_cities ~ dcauchy(0, 2),
+      a ~ dnorm(.5, 1),
+      c(bPolicy, bEffectiveness, bRisk, bDistance) ~ dnorm(0, 1)
+    ), 
+    data = d2
+    , chains = 3 #, cores = 3
+    , iter = 1e4, warmup = 2.5e3
+  )
+saveRDS(m5, "data/derived/noDistance-noPolicy.RDS")
+
+m3 = readRDS("data/derived/varyInterceptModel.RDS")
+m4 = readRDS("data/derived/noDistanceModel.RDS")
+m5 = readRDS("data/derived/noDistance-noPolicy.RDS")
+(comp = compare(m3, m4, m5))
+knitr::kable(round(comp@output, 2))
+plot(comp)
+
+
 
 #### To do:
 # Simultaniously impute missing data and estimate model to get info flowing both ways.
