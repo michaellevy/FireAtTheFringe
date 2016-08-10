@@ -65,7 +65,7 @@ We identify households in the SDCNF by **[Patrick -- finish this sentence; more 
 
 ### Data details (Kenny)
 
-Survey collection, briefly, cite original paper.
+Data from SDCNF-WUI residents of single-family detached homes (N = 637) used to initially parameterize agents was collected in 2008 as part of a larger study focused on the human dimensions of wildfire and public's perceptions of wildfire management (Kyle et al., 2010). The larger study collected data on, among other variables, residents' experience with wildfire, current and past defensible space (home protection) behavior, attitude towards defensible space practices, intention to practice defensible space in the future, value orientations, attitude towards wildfire management agencies, trust in and credibility of wildfire management, perceived risk of wildfire.
 
 ### WUI details (Patrick?)
 
