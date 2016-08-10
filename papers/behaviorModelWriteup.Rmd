@@ -34,7 +34,12 @@ Most models omit humans, econ models of behavior assume rational self-interest b
 
 ### Description of the system (Kenny)
 
-Don't want to spend too much time here, but a paragraph on the SD WUI's salient features, especially the town structure, fire dynamics. Previous findings from this survey.
+###Don't want to spend too much time here, but a paragraph on the SD WUI's salient features, especially the town structure, fire dynamics. Previous findings from this survey.
+
+Study area
+The study area encompasses portions of San Diego County, CA, USA surrounding the southern extent (i.e., Descanso Ranger District) of the Cleveland National Forest (CNF) located in San Diego County, California, USA. This topographically diverse area, with high levels of biodiversity and urban development, experiences a Mediterranean climate characterized by cool, wet winters and long summer droughts. The native chaparral shrublands dominating this fire-adapted, fire-prone ecosystem are extremely flammable during the late summer and autumn. When ignited, these shrublands burn in high-intensity, stand-replacing crown fires, exacerbated by the accompanying Santa Ana winds. Since the mid-1900s an average of 500 homes are lost annually to wildfire, with that rate doubling since 2000 (Calfire, 2000). In 2003 and 2007, San Diego County experienced major wildfire losses (Keeley et al. 2009), and major wildfire events are projected to continue as fire frequency increases (Keeley et al. 1999; Syphard et al., 2007). San Diego County has a population of more than three million residents, with a projected growth of one million more by 2030 (SANDAG, 2008). While most residential growth is concentrated along the coast, housing development continues eastward, toward CNF. This wildland-urban interface (WUI), which, for our purposes, we term the San Diego-Cleveland National Forest wildland-urban interface (SDCNF-WUI), covers more than 28,000 km2 (Hammer et al., 2007) or interspersed urban development and shrubland.
+
+###(or define wui parameters and references if different from Hammer et al., 2007).
 
 ### What is known about the drivers of DS behavior (Katie)
 
