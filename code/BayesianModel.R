@@ -161,7 +161,7 @@ m4 =
       a_city[cityIndex] ~ dnorm(a, sigma_cities),
       sigma_cities ~ dcauchy(0, 2),
       a ~ dnorm(.5, 1),
-      c(bPolicy, bEffectiveness, bRisk, bDistance) ~ dnorm(0, 1)
+      c(bPolicy, bEffectiveness, bRisk) ~ dnorm(0, 1)
     ), 
     data = d2
     , chains = 3 #, cores = 3
@@ -177,7 +177,7 @@ m5 =
       a_city[cityIndex] ~ dnorm(a, sigma_cities),
       sigma_cities ~ dcauchy(0, 2),
       a ~ dnorm(.5, 1),
-      c(bPolicy, bEffectiveness, bRisk, bDistance) ~ dnorm(0, 1)
+      c(bPolicy, bEffectiveness, bRisk) ~ dnorm(0, 1)
     ), 
     data = d2
     , chains = 3 #, cores = 3

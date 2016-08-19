@@ -1,6 +1,0 @@
-bare, 1
-forest, 2
-grassland, 3
-shrubland, 4
-urban, 5
-other, 6
