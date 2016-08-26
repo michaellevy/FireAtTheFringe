@@ -23,7 +23,9 @@ Already a problem, getting worse with climate change, DS behavior matters for th
 
 ### ABM Justification (Patrick)
 
-Most models omit humans, econ models of behavior assume rational self-interest but that fails to capture key dynamics in collective action challenges like this. ABMs to the rescue: can capture social dynamics with agents responding to each other and can capture biophysical -> social feedback with agents responding to events in their environment.
+Although defensible space policy applies to all homeowners in the WUI, the actual pattern of defensible space management is subject to the hetergeneity in individual experiences, knowledge, and interactions with other individuals and institutions <cite?>. In order to understand how these context-dependent drivers of behavior affect landscape scale outcomes, we require a model capable of managing multi-scale processes and actors. Agent-based models (ABMs) provide a unique and useful method for linking individual actors and actions to each other and to environmental outcomes across spatiotemporal scales <<Parker et al. 2003>>. 
+
+With respect to defensible space management in the WUI, a spatially-explicit ABM can both model the uptake of defensible space behavior in response to, for example, a recent fire or neighborhood-based fire management organization or educational campaign. One-directional couplings based on population growth estimates or commuity master plans have been integrated into past fire work to understand how urbanization patterns might affect fire spread and ignition <<I'll find citations>>. Further, by dynamically mapping changes in defensible space, we can provide a bidirectional coupling between agent-decisions and a process-based fire model (e.g., LANDIS II extensions, custom software) based on actual landscape characteristics (e.g., land cover). The first step in this process, the instantiation of empirically-parameterized agents and agent behavioral rules on landscape, is the focus of this paper.
 
 ### Broad overview of our larger endeavor (Kenny?)
 ### May need refinement to go along with Katie and Patrick's section and to align it with interpretation of results and discussion
@@ -64,7 +66,7 @@ Heterogeniety in behavior at town-level, don't want to ignore, but fixed effects
 
 Generative aspect: Is there anything unique about Bayesian here? Don't have to make distributional assumption about posterior.
 
-We identify households in the SDCNF by **[Patrick -- finish this sentence; more detailed descrption below in methods]**. To generate an agent at each household location, we draw a set of predictor values from the ECDF (or maybe we have to make some distributional assumption to define a multivariate distribution to sample from), draw a set of parameters from the model's posterior distribution, and simulate a binomial trial to determine the number of DS behaviors that agent has adopted at the model initialization. We now describe this process in detail.
+We identify households in the SDCNF using housing parcel data from the San Diego Association of Goverments (SANDAG) Geographic Information System (GIS). The source dataset includes all parcels in San Diego County as of February 1, 2016, from which we extracted those parcels labeled as single-family households. To generate an agent at each household location, we draw a set of predictor values from the ECDF (or maybe we have to make some distributional assumption to define a multivariate distribution to sample from), draw a set of parameters from the model's posterior distribution, and simulate a binomial trial to determine the number of DS behaviors that agent has adopted at the model initialization. We now describe this process in detail.
 
 ## Methods
 
@@ -76,15 +78,9 @@ Data from SDCNF-WUI residents of single-family detached homes (N = 637) used to 
 
 What questions were grouped into our risk and effectiveness variables and why. If you want to get into factor analysis, great, but a theoretical justification would probably suffice.
 
-### WUI details (Patrick?)
+### WUI details
 
-We identified households in the WUI by ...
-
-- WUI deliniation
-- Structure identification
-- What counts as a household
-- Assignment of households to towns
-  - Are all houses in our seven "towns"?
+We identified households in the WUI by selecting those parcels whose Assessor Info Zone filed was labeled as "SINGLE FAMILY RESIDENTIAL" in the SANDAG GIS parcel layer as mentioned above (cite metadata parcels.pdf). As the SADNAG GIS database does not contain building footprints, we approximated single-family houses on the landscape using the ArcPy extensions of ArcGIS 10.3. For each single-family parcel in the dataset, the ArcPy script calculates: (1) the centoid of the parcel (constrained within the original geometry), (2) a buffer with a 30 foot radius, approximating the footprint of a hosue wiht a median home size for construction in the Western US (cite http://www.census.gov/construction/chars/pdf/c25ann2014.pdf, p. 345), and (3) a 100 foot buffer of the home and within the bounds of the original pacel, corresponding to the zone of defensible space managed by that homeowner. The script is publicly available under the MIT license at https://github.com/pjbitterman/fotf_public/. Metadata from the source file were then joined with the derived files, linking the housing footprints to data required by the statistal model (e.g., city location, distance to fire). As our generated homes included all single-family residences in San Diego County, we created a subset of homes in the WUI by ..... <<I have no idea what we've decided on>>. %%here would be additioanl details that reference the Radeloff paper and the SILVIS lab data where I grabbed the WUI data from.%%
 
 
 ### Model fitting (Mike)
