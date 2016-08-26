@@ -39,6 +39,7 @@ homeEsts = data.frame(homesKDE$eval.points,
                       dens = homesKDE$estimate, 
                       id = d$surveyId[keep],
                       inBuffer = d$insideCnfBuffer[keep])
+saveRDS(homeEsts, "data/derived/structuresWithDensity.RDS")
 
 png("results/housingDensities.png", width = 500, height = 300)
 par(mfrow = c(1, 2))

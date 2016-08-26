@@ -45,6 +45,13 @@ cleandata[, which(names(cleandata) %in% notapplic)] <-
     MARGIN = c(1, 2), function(x) 
       ifelse(x == '6', NA, x))
 
+# Merge acres and sqft:
+d$a8acres = ifelse(is.na(d$a8acres) & !is.na(d$a8sqfeet),
+                   d$a8sqfeet / 43560,
+                   d$a8acres)
+# Get rid of sqft:
+d = subset(d, select = -a8sqfeet)
+
 # Write cleaned data to csv file to be read for R:
 write.csv(cleandata, 'data/cleanData.csv', row.names = FALSE)
 
