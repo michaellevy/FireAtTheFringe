@@ -5,3 +5,5 @@
 *.sps
 data/
 *.txt
+code/learningKDEdump.R
+.httr-oauth
