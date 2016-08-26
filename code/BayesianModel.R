@@ -21,37 +21,42 @@ for(i in names(d2)[!names(d2) %in% grep("city", names(d2), value = TRUE)]) {
 }
 head(d2)
 
-m5 =     
-  map2stan(
-    alist(
-      numBehaviors ~ dbinom( 4 , p ) ,
-      logit(p) <- a_city[cityIndex] + bEffectiveness * effectiveness + bRisk * risk,
-      a_city[cityIndex] ~ dnorm(a, sigma_cities),
-      sigma_cities ~ dcauchy(0, 2),
-      a ~ dnorm(.5, 1),
-      c(bEffectiveness, bRisk) ~ dnorm(0, 1)
-    ), 
-    data = d2
-    , chains = 3, cores = 3
-    , iter = 1e4, warmup = 2.5e3
-  )
-saveRDS(m5, "data/derived/noDistance-noPolicy.RDS")
-
-m6 = 
-  map2stan(
-    alist(
-      numBehaviors ~ dbinom( 4 , p ) ,
-      logit(p) <- a_city[cityIndex] + bEffectiveness * effectiveness + bRisk * risk + bHDens * logDensity,
-      a_city[cityIndex] ~ dnorm(a, sigma_cities),
-      sigma_cities ~ dcauchy(0, 2),
-      a ~ dnorm(.5, 1),
-      c(bEffectiveness, bRisk, bHDens) ~ dnorm(0, 1)
-    ), 
-    data = d2
-    , chains = 3, cores = 3
-    , iter = 1e4, warmup = 2.5e3
-  )
-saveRDS(m6, "data/derived/modelWithHousingDensity.RDS")
+if(!all(file.exists("data/derived/modelWithHousingDensity.RDS", "data/derived/noDistance-noPolicy.RDS"))) {
+  m5 =     
+    map2stan(
+      alist(
+        numBehaviors ~ dbinom( 4 , p ) ,
+        logit(p) <- a_city[cityIndex] + bEffectiveness * effectiveness + bRisk * risk,
+        a_city[cityIndex] ~ dnorm(a, sigma_cities),
+        sigma_cities ~ dcauchy(0, 2),
+        a ~ dnorm(.5, 1),
+        c(bEffectiveness, bRisk) ~ dnorm(0, 1)
+      ), 
+      data = d2
+      , chains = 3, cores = 3
+      , iter = 1e4, warmup = 2.5e3
+    )
+  saveRDS(m5, "data/derived/noDistance-noPolicy.RDS")
+  
+  m6 = 
+    map2stan(
+      alist(
+        numBehaviors ~ dbinom( 4 , p ) ,
+        logit(p) <- a_city[cityIndex] + bEffectiveness * effectiveness + bRisk * risk + bHDens * logDensity,
+        a_city[cityIndex] ~ dnorm(a, sigma_cities),
+        sigma_cities ~ dcauchy(0, 2),
+        a ~ dnorm(.5, 1),
+        c(bEffectiveness, bRisk, bHDens) ~ dnorm(0, 1)
+      ), 
+      data = d2
+      , chains = 3, cores = 3
+      , iter = 1e4, warmup = 2.5e3
+    )
+  saveRDS(m6, "data/derived/modelWithHousingDensity.RDS")  
+} else {
+  m5 = readRDS("data/derived/noDistance-noPolicy.RDS")
+  m6 = readRDS("data/derived/modelWithHousingDensity.RDS")
+}
 
 compare(m5, m6)   # 100% weight on m6 with housing density
 plot(coeftab(m5, m6))
