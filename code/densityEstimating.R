@@ -26,12 +26,17 @@ baseMap = readRDS("data/derived/baseMap.RDS")
 
 # Filter out the dense western edge:
 keep = d$myLat > d$myLong * -3.33 - 356.5
-# system.time({   # 10h
+
+
+# Choose the bandwidth with CV
+# system.time({   # Takes about 10h
 #   H = Hscv(d[keep, 4:5], verbose = TRUE)
 # })
 # myKDE = kde(d[keep, 4:5], H = H)
-saveRDS(myKDE, "data/derived/homesKDE.RDS")  # Note H is stored in here: all.equal(H, myKDE[["H"]])
-homesKDE = kde(x = d[keep, 4:5], 
+# saveRDS(myKDE, "data/derived/homesKDE.RDS")  
+
+myKDE = readRDS("data/derived/homesKDE.RDS") # Note H is stored in here: all.equal(H, myKDE[["H"]])
+homesKDE = kde(x = d[keep, 4:5],  # Takes a few minutes
                H = myKDE[["H"]], 
                eval.points = d[keep, 4:5])  
 
