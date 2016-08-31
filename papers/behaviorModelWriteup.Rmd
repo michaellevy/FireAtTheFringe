@@ -31,12 +31,11 @@ With respect to defensible space management in the WUI, a spatially-explicit ABM
 
 
 ### Broad overview of our larger endeavor (Kenny?)
-### May need refinement to go along with Katie and Patrick's section and to align it with interpretation of results and discussion
-
-- Set out to build coupled model of fire and society. 
-- Located in San Diego because fire is big problem, potential for action, etc
-- Full model situates homeowners on the landscape, simulates ignition and spread w/ homeowners responsive to social environment and fire experience, etc.
-    - DS behavior empirically parameterized based on survey responses
+-May need refinement to go along with Katie and Patrick's section and to align it with interpretation of results and discussion
+  - Set out to build coupled model of fire and society. 
+  - Located in San Diego because fire is big problem, potential for action, etc
+  - Full model situates homeowners on the landscape, simulates ignition and spread w/ homeowners responsive to social environment and fire experience, etc.
+      - DS behavior empirically parameterized based on survey responses
 
 Shifting dynamics (e.g., climate change) between interacting social and ecological systems can intensify previously benign phenomena or create novel threats to both humans and the natural environment (Moritz et al., 2014; Paveglio & Prato, 2011). For example, in recent decades, the southern California region, has experienced increasing frequency of and threat of losses from wildfire (California Department of Forestry and Fire Protection [CAL FIRE], 2000; Keeley et al. 1999; Syphard et al., 2007a), which is attributable to both social processes-i.e., urban expansion and the patterns of residential development coupled with forest management and fire suppression-and ecological conditions-i.e., seasonal weather events, topography, and climate change (Syphard et al., 2005, 2007a, 2007b, 2008).
 
