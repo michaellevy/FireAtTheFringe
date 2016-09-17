@@ -15,6 +15,7 @@ theme_set(new = theme_bw())
 lapply(list.files("../code/functions/", full.names = TRUE), source)
 d2 = readRDS('../data/derived/dataVImodel.RDS') %>% as.data.frame()
 m = readRDS("../data/derived/modelWithHousingDensity.RDS")
+strs = readRDS("../data/derived/structuresWithDensity.RDS")
 ```
 
 ## Introduction
@@ -76,32 +77,34 @@ We identify households in the SDCNF using housing parcel data from the San Diego
 
 Data from SDCNF-WUI residents of single-family detached homes (N = 637) used to initially parameterize agents was collected in 2008 as part of a larger study focused on the human dimensions of wildfire and public's perceptions of wildfire management (Kyle et al., 2010). The larger study collected data on, among other variables, residents' experience with wildfire, current and past defensible space (home protection) behavior, attitude towards defensible space practices, intention to practice defensible space in the future, value orientations, attitude towards wildfire management agencies, trust in and credibility of wildfire management, perceived risk of wildfire.
 
-#### Constructed variables (Katie)
-
-What questions were grouped into our risk and effectiveness variables and why. If you want to get into factor analysis, great, but a theoretical justification would probably suffice.
-
 ### WUI details
 
 We identified households in the WUI by selecting those parcels whose Assessor Info Zone filed was labeled as "SINGLE FAMILY RESIDENTIAL" in the SANDAG GIS parcel layer as mentioned above (cite metadata parcels.pdf). As the SADNAG GIS database does not contain building footprints, we approximated single-family houses on the landscape using the ArcPy extensions of ArcGIS 10.3. For each single-family parcel in the dataset, the ArcPy script calculates: (1) the centoid of the parcel (constrained within the original geometry), (2) a buffer with a 30 foot radius, approximating the footprint of a hosue wiht a median home size for construction in the Western US (cite http://www.census.gov/construction/chars/pdf/c25ann2014.pdf, p. 345), and (3) a 100 foot buffer of the home and within the bounds of the original pacel, corresponding to the zone of defensible space managed by that homeowner. The script is publicly available under the MIT license at https://github.com/pjbitterman/fotf_public/. Metadata from the source file were then joined with the derived files, linking the housing footprints to data required by the statistal model (e.g., city location, distance to fire). As our generated homes included all single-family residences in San Diego County, we created a subset of homes in the WUI by ..... <<I have no idea what we've decided on>>. %%here would be additioanl details that reference the Radeloff paper and the SILVIS lab data where I grabbed the WUI data from.%%
 
+### Variables used (Could use help in a couple spots from Katie and Patrick)
+
+*Note: I have described what variables we used but haven't justified the risk and effectiveness variables, either as theoretically justified predictors or the specific questions we use.*
+
+The response variable in our model is an aggregate measure of the adoption of defensible space behavior. Specifically, we use the number of four practices adopted by homeowners to protect their structures from wildfire: "Plant fire resistant plants;" "Plant trees and shrubs at least 15 feet apart;" "Prune the branches of all trees within 85 feet of your house to a height of 10 feet above the ground;" and "Reduce the density of trees within 100 feet of your home." We represent these events as a binomially distributed process, so each structure is associated with a number of defensible space behaviors, which are treated as independent and interchangable in our model. 
+
+Our predictors of defensible space include geographic and psychological variables. We use the town in which the structure exists to model the homeowner's local culture. We use housing density as another geographic predictor because structures in denser, built-up areas are much less vulnerable to wildfire (citation), which we hypothesize will reduce the motivation to undertake defensible space. We estimate housing density using ??? algorith with ??? cross validation and parameters ???, and use the logarithm density in the model to reign in the leverage of homes in very-high density areas. Our psychological variables relate to how effective homeowners believe defensible space to be at reducing fire risk and how vulnerable they feel to wildfire risk. Our effectiveness variable is the sum of Likert responses (1 = not at all effective, 5 = extremely effective) to survey questions that ask how effective each of the above-described defensible space behaviors "would be in protecting your property from wildland fire". Our risk variable is the sum of Likert responses (1 = not at all likely, 5 = extremely likely) to the questions: "To what extent do you consider the community in which you live to be at risk from wildland fire", "How likely do you think that your community will experience a fire event in the near future", and "To what extent do you consider your own home to be at risk from wildland fire". All quantitative predictors were standardized to have a mean of zero and standard deviation of one.
+
+
 
 ### Model fitting (Mike)
 
-To empirically parameterize homeowner-agent behavior, we conditioned a multi-level Bayesian statistical model on data from 637 homeowner survey respondents. We then use the model to generate new households drawn from the distribution implied by the model. The outcome variable of the model is the number of defensible space practices adopted by each homeowner, which we instantiate as a binomially distributed process. The model contains varying intercepts at the level of town ($\alpha_{town}$), which allows the model to pool information across towns in determining the base adoption rate and models the effect of social forces on homeowner behavior. Experience with fire is included as a predictor as the natural logarithm of the distance of the home from recent fires ($d2$). Three additional predictors were constructed from survey responses to charactarize the psychological makeup of homeowners: policy beliefs ($P$), beliefs about the effectiveness of defensible space practices ($E$), and beliefs about risk associated with wildfire ($R$). We employed weakly regularizing prior, $\mathcal{N}(0, 1)$, for all four continuous predictors to reign-in overfitting. The model takes the form:
-
-**Needs to be updated to model6.**
+We condition a multilevel Bayesian model of defensible space behavior, which we later use to generate the population of agents. The outcome variable is the number of defenisble space behaviors adopted, out of four, instantiated as a binomial random variable. The model contains varying intercepts at the level of town ($\alpha_{town}$) to pool information across towns in determining the effect of social forces on the base-rate of adoption. The other predictors are housing density ($D$), beliefs about the effectiveness of defensible space practices ($E$), and beliefs about risk associated with wildfire ($R$). We employed weakly regularizing priors, $\mathcal{N}(0, 1)$, for all continuous predictors to avoid overfitting. The model takes the form:
 
 $$
 \begin{aligned}
 N_i &\sim binomial(4, p_i) \\
-logit(p_i) &= \alpha_{town[i]} + \beta_{P} P + \beta_{E} E + \beta_{R} R + \beta_{D} ln(D) \\
+logit(p_i) &= \alpha_{town[i]} + \beta_{D} ln(D) + \beta_{E} E + \beta_{R} R + \beta_{R} R \\
 \alpha_{town} &\sim Normal(\alpha, \sigma) \\
 \alpha &\sim Normal(0.5, 1) \\
 \sigma &\sim HalfCauchy(0, 2) \\
-\beta_{P} &\sim Normal(0, 1) \\
+\beta_{D} &\sim Normal(0, 1) \\
 \beta_{E} &\sim Normal(0, 1) \\
-\beta_{R} &\sim Normal(0, 1) \\
-\beta_{D} &\sim Normal(0, 1). \\
+\beta_{R} &\sim Normal(0, 1). \\
 \end{aligned}
 $$
 
@@ -162,7 +165,7 @@ We now demonstrate how we use the statistical model to simulate agents. First, a
 
 For 30 survey respondents sampled at random, Figure 2 shows the distribution of model-predicted defensible space behaviors with their actual number of defensible space behaviors. Note that the model preserves substantial uncertainty around how many behaviors a household adopts, and that the level of uncertainty depends on the predictor values (for example a house in a town for which less data is available will have greater uncertainty).
 
-```{r, fig.cap = "For 30 survey respondents sampled randomly, red diamonds are empirical number of defensible space behaviors, and violin plots reflect the distribution of model-implied behaviors for simulated households with the same set of predictor values."}
+```{r prediction check, fig.cap = "For 30 survey respondents sampled randomly, red diamonds are empirical number of defensible space behaviors, and violin plots reflect the distribution of model-implied behaviors for simulated households with the same set of predictor values."}
 set.seed(3957)
 sims = sim(m, data = d2)
 samp = sample(nrow(d2), 30)
@@ -184,7 +187,33 @@ ggplot(df, aes(reorder(key, obsValue), y = value)) +
 
 For each town, define joint distribution of predictors. For each of the 20k homes, draw predictor values from the joint distribution and simulate a number of behaviors.
 
+```{r assign predictors & predict DS}
+
+# Shitty things here:
+# A. Why are we modeling DSB as function of predictors if we're just drawing predictors from MVN? Why not just draw DSB from a distribution?
+# B. risk is obviously a function of density, but we definitely don't want to build a model of that for this purpose. 
+# Actually, I'm wrong about B. 
+# corrplot::corrplot(cor(d2[, c(2, 3, 5)]), "ellipse", diag = FALSE)
+# And for A, our heuristic will be informed by this model... risk as function of fire experience, effectiveness as a function of town's DS vs. fire experience. And the heuristic will be quasi-empirical, so it needs values for effectiveness and risk... some structures will be maxed out on those variables already and so have hit their DS ceiling -- important to capture that.
+
+n = 10
+predictorSamples = 
+  lapply(as.character(unique(d2$city)), function(city) {
+    d = d2[d2$city == city, which(names(d2) %in% c("effectiveness", "risk", "logDensity"))]
+    cbind(rmvnorm(n = n, mean = colMeans(d), sigma = cov(d)), city = city) %>%
+      as.data.frame
+  }) %>%
+  do.call(rbind, .)
+
+```
+
 Generate a pair of maps: household points colored by number of behaviors; one surveyed homes with empirical number, other all 20k with generated number.
+
+```{r map DS observed and predicted}
+
+```
+
+
 
 
 ## Discussion
