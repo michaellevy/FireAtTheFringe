@@ -6,14 +6,14 @@ bibliography: fireFringe.bib
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(fig.pos = 'H!', echo = FALSE, results = "hide", warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE, results = "hide", warning = FALSE)
 library(rethinking)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
 theme_set(new = theme_bw())
 lapply(list.files("../code/functions/", full.names = TRUE), source)
-d2 = readRDS('../data/derived/dataVImodel.RDS') %>% as.data.frame()
+d2 = readRDS("../data/derived/dataStandardizedPredictors.RDS") %>% as.data.frame()
 m = readRDS("../data/derived/modelWithHousingDensity.RDS")
 strs = readRDS("../data/derived/structuresWithDensity.RDS")
 ```
@@ -32,7 +32,8 @@ With respect to defensible space management in the WUI, a spatially-explicit ABM
 
 
 ### Broad overview of our larger endeavor (Kenny?)
--May need refinement to go along with Katie and Patrick's section and to align it with interpretation of results and discussion
+
+- May need refinement to go along with Katie and Patrick's section and to align it with interpretation of results and discussion  
   - Set out to build coupled model of fire and society. 
   - Located in San Diego because fire is big problem, potential for action, etc
   - Full model situates homeowners on the landscape, simulates ignition and spread w/ homeowners responsive to social environment and fire experience, etc.
@@ -53,9 +54,10 @@ The study area encompasses portions of San Diego County, CA, USA surrounding the
 
 ### What is known about the drivers of DS behavior (Katie)
 
-Particuarly, here we need to justify our use the effectiveness and risk constructs. Plus anything that can be said about social influences and proximity to fire is extra great.
+Especially: What does the literature say about defensible space behavior as a function of effectiveness and risk? And about perceived effectiveness and risk as functions of fire and defensible space experience? Previous work on social/cultural influence... Has anyone found DS behavior to be contagious? Finally, how does housing density relate to DS behavior?
 
-### Two-step process: generation & updating (Mike)
+### A model for generating agents
+
 
 Two tasks for a working ABM: defining the population and their initial behavior (static) and updating their behavior (dynamic, function of physical and social environment).
 
@@ -63,7 +65,7 @@ We have cross-sectional survey data which provides an empirical foundation on wh
 
 ### Model for agent generation (Mike)
 
-Here, we describe the motivation for, mechanics of, and findings from a survey-data-based empirical generation of a population of agents for a CHANS model. The parameterization is based on survey data and employs a Bayesian, multi-level model that quantifies and preserves uncertainty in human behavior and provides a natural, principled mechanism for generating agents.
+Here, we describe the motivation for, mechanics of, and findings from a survey-based empirical generation of a population of agents for a CHANS model. The parameterization is based on survey data and employs a Bayesian, multi-level model that quantifies and preserves uncertainty in human behavior and provides a natural, principled mechanism for generating agents.
 
 Heterogeniety in behavior at town-level, don't want to ignore, but fixed effects over-learn. Pooling is awesome, quantifies uncertainty incorporating sample size, so we can do something principled in towns where we have few observations. Cite predictive benefits.
 
@@ -93,16 +95,16 @@ Our predictors of defensible space include geographic and psychological variable
 
 ### Model fitting (Mike)
 
-We condition a multilevel Bayesian model of defensible space behavior, which we later use to generate the population of agents. The outcome variable is the number of defenisble space behaviors adopted, out of four, instantiated as a binomial random variable. The model contains varying intercepts at the level of town ($\alpha_{town}$) to pool information across towns in determining the effect of social forces on the base-rate of adoption. The other predictors are housing density ($D$), beliefs about the effectiveness of defensible space practices ($E$), and beliefs about risk associated with wildfire ($R$). We employed weakly regularizing priors, $\mathcal{N}(0, 1)$, for all continuous predictors to avoid overfitting. The model takes the form:
+We condition a multilevel Bayesian model of defensible space behavior, which we later use to generate the population of agents. The outcome variable is the number of defenisble space behaviors adopted, out of four, instantiated as a binomial random variable. The model contains varying intercepts at the level of town ($\alpha_{town}$) to pool information across towns in determining the effect of social forces on the base-rate of adoption. The other predictors are housing density ($H$), beliefs about the effectiveness of defensible space practices ($E$), and beliefs about risk associated with wildfire ($R$). We employed weakly regularizing priors, $\mathcal{N}(0, 1)$, for all continuous predictors to avoid overfitting. The model takes the form:
 
 $$
 \begin{aligned}
 N_i &\sim binomial(4, p_i) \\
-logit(p_i) &= \alpha_{town[i]} + \beta_{D} ln(D) + \beta_{E} E + \beta_{R} R + \beta_{R} R \\
+logit(p_i) &= \alpha_{town[i]} + \beta_{H} ln(H) + \beta_{E} E + \beta_{R} R \\
 \alpha_{town} &\sim Normal(\alpha, \sigma) \\
 \alpha &\sim Normal(0.5, 1) \\
 \sigma &\sim HalfCauchy(0, 2) \\
-\beta_{D} &\sim Normal(0, 1) \\
+\beta_{H} &\sim Normal(0, 1) \\
 \beta_{E} &\sim Normal(0, 1) \\
 \beta_{R} &\sim Normal(0, 1). \\
 \end{aligned}
@@ -112,9 +114,11 @@ All analyses were performed in R version 3.3.1 [@r_core_team_r:_2016]. For stati
 
 ### Populating the model (Mike)
 
-- Defining joint distribution of predictors for each town
+Defining joint distribution of predictors for the whole study area
 
-*Rewrite this to match what we're doing now: for each house, draw one set of predictors and one set of parameters and generate a $p$.* Bayesian models are generative, and we now describe how we use the model to generate new agent-households. For any set of predictor values, there is an implied distribution of defensible space behaviors. This distribution is generated by drawing (1,000) samples of parameter values from the model's joint posterior distribution, multiplying the vectors of paramter values by a vector of predictor values to obtain a distribution of $p$ values, which are then used in binomial trials to generate a distribution of number of defensible space behaviors. Note the two levels of stochasticity in this process: 1 in drawing parameters from the joint posterior distribution and another in the binomial trials for each $p$. This preserves uncertainty around defensible space behavior. There is a large stochastic element to how many behaviors a given household will implement, and this method quantifies and preserves the uncertainty in that stochasticity. 
+*Rewrite this to match what we're doing now: for each house, draw one set of predictors and one set of parameters and generate a $p$.* 
+
+Bayesian models are generative, and we now describe how we use the model to generate new agent-households. For any set of predictor values, there is an implied distribution of defensible space behaviors. This distribution is generated by drawing (1,000) samples of parameter values from the model's joint posterior distribution, multiplying the vectors of paramter values by a vector of predictor values to obtain a distribution of $p$ values, which are then used in binomial trials to generate a distribution of number of defensible space behaviors. Note the two levels of stochasticity in this process: 1 in drawing parameters from the joint posterior distribution and another in the binomial trials for each $p$. This preserves uncertainty around defensible space behavior. There is a large stochastic element to how many behaviors a given household will implement, and this method quantifies and preserves the uncertainty in that stochasticity. 
 
 This process works for any set of predictor values. In a presumed-stationary world, we could generate new agents from the observed sets of predictor values or a multivariate distribution parameterized from the observed data. To test the effects of interventions, we could modulate the values of specific predictors, for example, increasing the values of effectiveness of defensible space behavior by some fixed or random value to understand how an education-outreach effort might work. The varying intercepts aspect of the model also opens the possibility of generating new towns in a princpled manner, as long as we are willing to posit that the new towns come from the same distribution as the observed towns. To do so, we draw values of $\alpha_{town}$s from the posterior distribution of $\alpha$.
 
@@ -123,9 +127,9 @@ This process works for any set of predictor values. In a presumed-stationary wor
 
 ### Summary Statistics
 
-Figure 1 shows the distribution of number of defensible space behaviors, out of four possible, adopted per household by town. Across all towns, the modal number of behaviors adopted is four,the median is two, and the mean `r round(mean(d2$numBehaviors), 2)`. Figure 1 also shows the number of survey responses in our dataset from each town, which are roughly proportional to the number of homes in the WUI in each town.
+Figure 1 shows the distribution of number of defensible space behaviors, out of four possible, adopted per household by town. Across all towns, the modal number of behaviors adopted is four, the median is two, and the mean is `r round(mean(d2$numBehaviors), 2)`. Figure 1 also shows the number of survey responses in our dataset from each town, which are roughly proportional to the number of homes in the WUI in each town.
 
-```{r, fig.height = 4.5, echo = FALSE, fig.cap = "Number of defensible space behaviors adopted by town. Tile heights are proportional to the number of survey respondents per town, and widths are proportional to the number of people in that town having adopted that many behvaiors."}
+```{r mosaic plot behavior by town, fig.height = 4.5, echo = FALSE, fig.cap = "Number of defensible space behaviors adopted by town. Tile heights are proportional to the number of survey respondents per town, and widths are proportional to the number of people in that town having adopted that many behvaiors."}
 # ggplot(d, aes(fill = as.factor(numBehaviors), 
 #               x = reorder(city, city, function(x) length(x)))) + 
 #   geom_bar() + 
@@ -165,19 +169,18 @@ We now demonstrate how we use the statistical model to simulate agents. First, a
 
 For 30 survey respondents sampled at random, Figure 2 shows the distribution of model-predicted defensible space behaviors with their actual number of defensible space behaviors. Note that the model preserves substantial uncertainty around how many behaviors a household adopts, and that the level of uncertainty depends on the predictor values (for example a house in a town for which less data is available will have greater uncertainty).
 
-```{r prediction check, fig.cap = "For 30 survey respondents sampled randomly, red diamonds are empirical number of defensible space behaviors, and violin plots reflect the distribution of model-implied behaviors for simulated households with the same set of predictor values."}
+```{r prediction check, fig.cap = "For 30 survey respondents sampled randomly, red marks are empirical number of defensible space behaviors, and violin plots reflect the distribution of model-implied behaviors for simulated households with the same set of predictor values."}
 set.seed(3957)
-sims = sim(m, data = d2)
 samp = sample(nrow(d2), 30)
-empDF = data.frame(key = paste0("V", samp), obsValue = d2$numBehaviors[samp])
-# ord = empDF$key[order(empDF$value)]
-simDF = as.data.frame(sims)[, samp] %>%
+sims = sim(m, data = d2[samp, ]) %>%
+  as.data.frame() %>%
+  structure(names = paste0("V", samp)) %>%
   gather()
-df = left_join(simDF, empDF, by = "key") 
-
+empDF = data.frame(key = paste0("V", samp), obsValue = d2$numBehaviors[samp])
+df = left_join(sims, empDF, by = "key") 
 ggplot(df, aes(reorder(key, obsValue), y = value)) +
   geom_violin(fill = "gray") +
-  geom_point(aes(y = obsValue), shape = 18, color = "red", size = 4) +
+  geom_point(aes(y = obsValue), shape = 4, color = "red", size = 3) +
   scale_x_discrete(name = "Household", breaks = 0) +
   ylab("Number of defensible space behaviors")
 
@@ -207,9 +210,38 @@ predictorSamples =
 
 ```
 
-Generate a pair of maps: household points colored by number of behaviors; one surveyed homes with empirical number, other all 20k with generated number.
 
-```{r map DS observed and predicted}
+
+```{r map DS observed and predicted, fig.width = 6.5, fig.height = 3, fig.cap = "Structures in the WUI colored by the number of defensible space behaviors, emprically observed (left) or predicted (right)."}
+baseMap = readRDS("../data/derived/baseMap.RDS")
+
+surveyed = 
+  baseMap +
+  geom_point(data = strs[!is.na(strs$id), ],
+             mapping = aes(x = myLong, y = myLat,
+                           color = inBuffer),  # This will change to number behaviors
+             shape = 16) +
+  guides(color = guide_legend(override.aes = list(size = 3)))
+
+# Grab the legend
+grobs = ggplotGrob(surveyed)$grobs
+legend = grobs[[which(sapply(grobs, function(x) x$name) == "guide-box")]]
+
+# Then remove it
+surveyed = surveyed +
+  theme(legend.position = "none")
+
+notSurveyed = 
+  baseMap +
+  geom_point(data = strs[is.na(strs$id), ],
+             mapping = aes(x = myLong, y = myLat,
+                           color = inBuffer),  # This will change to number behaviors
+             shape = 16) +
+  theme(legend.position = "none")
+
+cowplot::plot_grid(surveyed, notSurveyed, legend, labels = c("Surveyed", "Not Surveyed"), 
+                   nrow = 1, rel_widths = c(.4, .4, .1)) +
+  cowplot::draw_label("Colors to reflect\nDS behaviors", angle = 30, size = 60, alpha = .3)
 
 ```
 

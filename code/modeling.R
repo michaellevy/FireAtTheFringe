@@ -14,12 +14,12 @@ d2$cityIndex = coerce_index(d2$city)
 saveRDS(d2, "data/derived/dataVImodel.RDS")
 
 # Standardize all predictors, but get rid of scale-attributes before they muck up stan:
-for(i in names(d2)[!names(d2) %in% grep("city", names(d2), value = TRUE)]) {
+for(i in names(d2)[!names(d2) %in% grep("(city)|(numBeh)", names(d2), value = TRUE)]) {
   tmp = scale(d2[[i]])
   attributes(tmp) = NULL
   d2[[i]] = tmp
 }
-head(d2)
+saveRDS(d2, "data/derived/dataStandardizedPredictors.RDS")
 
 if(!all(file.exists("data/derived/modelWithHousingDensity.RDS", "data/derived/noDistance-noPolicy.RDS"))) {
   m5 =     
