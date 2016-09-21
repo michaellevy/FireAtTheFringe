@@ -1,7 +1,10 @@
 # To do
 
 - Define WUI: Which of the 151k structures are included?
-
+	- Survey definition (census tracts intersecting with a 1/2 mile buffer surrounding the NF)
+	- SILVIS definition (interface & intermix, based on housing density and vegetation)
+	- 1.5 mile national forest buffer
+	- Combination
 - Choose density estimation method
 	- Appropriate scale/kernal
 	- Or use political definition e.g. census blocks
