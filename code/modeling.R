@@ -4,22 +4,103 @@ library(tidyr)
 library(ggplot2)
 invisible(lapply(list.files("code/functions/", full.names = TRUE), source))
 d = readRDS('data/derived/imputedData.RDS')
-strs = readRDS("data/derived/structuresWithDensity.RDS")
-d2 = 
-  inner_join(d, strs[!is.na(strs$id), ], by = "id") %>% 
-  mutate(logDensity = log(dens)) %>%
-  select(numBehaviors, effectiveness, risk, city, logDensity)
-nrow(d); nrow(d2) # 28 rows lost in this merge. Maybe PO Boxes? Ignoring for now at least.
-d2$cityIndex = coerce_index(d2$city)
-saveRDS(d2, "data/derived/dataVImodel.RDS")
+strs = read.csv("data/derived/mergedPoints.csv") 
+strs = mutate(strs, logDensityTr = log(popDensityTr), logDensityBl = log(popDensityBg))
 
-# Standardize all predictors, but get rid of scale-attributes before they muck up stan:
-for(i in names(d2)[!names(d2) %in% grep("(city)|(numBeh)", names(d2), value = TRUE)]) {
+d2 = inner_join(d, strs[!is.na(strs$surveyId), ], by = c("id" = "surveyId")) %>%
+  rename(city = city.y) %>% select(-city.x)
+
+# BG density is severely right skewed so prob use log. Tr not so much
+par(mfrow = c(1, 2))
+dens(log(d2$popDensityBg)); dens(d2$popDensityTr)
+
+janitor::crosstab(d2, wuiClass10, insideCnfBuffer)  # Hmm, homes outside the 
+# buffer are really out-of-sample for us, but it's a shame to give up 1/3 of our data.
+# Try filtering and see what difference it makes
+
+numPredictors = c("effectiveness", "risk", "logDensityBl", "popDensityTr")
+
+# Standardize numeric predictors, but get rid of scale-attributes before they muck up stan:
+for(i in predictors[3:6]) {
   tmp = scale(d2[[i]])
   attributes(tmp) = NULL
   d2[[i]] = tmp
 }
-saveRDS(d2, "data/derived/dataStandardizedPredictors.RDS")
+
+d2$cityIndex = coerce_index(d2$city)
+
+dm1 = select(d2, cityIndex, effectiveness, risk, logDensityBl, wuiClass10, numBehaviors)
+m1 = map2stan(
+  alist(
+    numBehaviors ~ dbinom( 4 , p ) ,
+    logit(p) <- 
+      a_city[cityIndex] + 
+      bEffectiveness * effectiveness + 
+      bRisk * risk +
+      bDensity * logDensityBl +
+      bWUI * wuiClass10,
+    a_city[cityIndex] ~ dnorm(a, sigma_cities),
+    sigma_cities ~ dcauchy(0, 2),
+    a ~ dnorm(.5, 1),
+    c(bEffectiveness, bRisk, bDensity, bWUI) ~ dnorm(0, 1)
+  ), 
+  data = dm1
+  , chains = 3, cores = 3
+  , iter = 1e4, warmup = 2.5e3
+)
+dev.off()
+plot(coeftab(m1))
+abline(v = 0, col = "red")
+saveRDS(m1, "data/derived/modelBGdensity.RDS")
+
+# With census tract instead of blockgroup
+dm2 = select(d2, cityIndex, effectiveness, risk, popDensityTr, wuiClass10, numBehaviors)
+m2 = map2stan(
+  alist(
+    numBehaviors ~ dbinom( 4 , p ) ,
+    logit(p) <- 
+      a_city[cityIndex] + 
+      bEffectiveness * effectiveness + 
+      bRisk * risk +
+      bDensity * popDensityTr +
+      bWUI * wuiClass10,
+    a_city[cityIndex] ~ dnorm(a, sigma_cities),
+    sigma_cities ~ dcauchy(0, 2),
+    a ~ dnorm(.5, 1),
+    c(bEffectiveness, bRisk, bDensity, bWUI) ~ dnorm(0, 1)
+  ), 
+  data = dm2
+  , chains = 3, cores = 3
+  , iter = 1e4, warmup = 2.5e3
+)
+plot(coeftab(m2))
+abline(v = 0, col = "red")
+compare(m1, m2)  # Clear preference for block groups
+
+dm3 = select(d2, cityIndex, effectiveness, risk, logDensityBl, numBehaviors)
+m3 = map2stan(
+  alist(
+    numBehaviors ~ dbinom( 4 , p ) ,
+    logit(p) <- 
+      a_city[cityIndex] + 
+      bEffectiveness * effectiveness + 
+      bRisk * risk +
+      bDensity * logDensityBl,
+    a_city[cityIndex] ~ dnorm(a, sigma_cities),
+    sigma_cities ~ dcauchy(0, 2),
+    a ~ dnorm(.5, 1),
+    c(bEffectiveness, bRisk, bDensity) ~ dnorm(0, 1)
+  ), 
+  data = dm3
+  , chains = 3, cores = 3
+  , iter = 1e4, warmup = 2.5e3
+)
+compare(m1, m3)
+plot(coeftab(m1, m3))
+abline(v = 0, col = "red")
+# m1 wins. 
+
+# Old ->
 
 if(!all(file.exists("data/derived/modelWithHousingDensity.RDS", "data/derived/noDistance-noPolicy.RDS"))) {
   m5 =     
