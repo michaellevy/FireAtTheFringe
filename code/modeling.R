@@ -21,7 +21,7 @@ janitor::crosstab(d2, wuiClass10, insideCnfBuffer)  # Hmm, homes outside the
 numPredictors = c("effectiveness", "risk", "logDensityBl", "popDensityTr")
 
 # Standardize numeric predictors, but get rid of scale-attributes before they muck up stan:
-for(i in predictors[3:6]) {
+for(i in numPredictors) {
   tmp = scale(d2[[i]])
   attributes(tmp) = NULL
   d2[[i]] = tmp
@@ -48,10 +48,12 @@ m1 = map2stan(
   , chains = 3, cores = 3
   , iter = 1e4, warmup = 2.5e3
 )
-dev.off()
+png("results/estimates.png")
 plot(coeftab(m1))
 abline(v = 0, col = "red")
+dev.off()
 saveRDS(m1, "data/derived/modelBGdensity.RDS")
+write.csv(dm1, "data/derived/modelBGdensity-data.csv", row.names = FALSE)
 
 # With census tract instead of blockgroup
 dm2 = select(d2, cityIndex, effectiveness, risk, popDensityTr, wuiClass10, numBehaviors)
@@ -99,6 +101,30 @@ compare(m1, m3)
 plot(coeftab(m1, m3))
 abline(v = 0, col = "red")
 # m1 wins. 
+
+table(d2$wuiClass10)  # Group 0 and 1 together since there are only 19 0's
+dm4 = select(d2, cityIndex, effectiveness, risk, logDensityBl, wuiClass10, numBehaviors) %>%
+  mutate(wuiClass10 = ifelse(wuiClass10 < 2, 0, 1))
+m4 = map2stan(
+  alist(
+    numBehaviors ~ dbinom( 4 , p ) ,
+    logit(p) <- 
+      a_city[cityIndex] + 
+      bEffectiveness * effectiveness + 
+      bRisk * risk +
+      bDensity * logDensityBl +
+      bWUI * wuiClass10,
+    a_city[cityIndex] ~ dnorm(a, sigma_cities),
+    sigma_cities ~ dcauchy(0, 2),
+    a ~ dnorm(.5, 1),
+    c(bEffectiveness, bRisk, bDensity, bWUI) ~ dnorm(0, 1)
+  ), 
+  data = dm4
+  , chains = 3, cores = 3
+  , iter = 1e4, warmup = 2.5e3
+)
+compare(m1, m4)
+# 50/50
 
 # Old ->
 
